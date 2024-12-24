@@ -124,6 +124,17 @@ public class Scoreboard : ModSystem
                     Height = { Percent = 1.0f }
                 };
 
+                var points = ModContent.GetInstance<PointsManager>().Points[team];
+                var pointsText = $"{points} point";
+                if (points != 1)
+                    pointsText += 's';
+
+                playersList.Add(new UIText(pointsText, large: true)
+                {
+                    HAlign = 0.5f,
+                    PaddingBottom = 12.0f,
+                });
+
                 for (var i = 0; i < numberOfPlayersOnLargestTeam; i++)
                 {
                     Player player = null;
