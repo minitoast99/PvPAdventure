@@ -138,15 +138,15 @@ public class PointsManager : ModSystem
             NetworkText.FromLiteral($"Team {team} killed {npc.FullName} for {pointsToAward} point(s)"), Color.White);
     }
 
-    public void AwardPlayerKillToTeam(Team team, Player player)
+    public void AwardPlayerKillToTeam(Team killerTeam, Player victim)
     {
         var config = ModContent.GetInstance<AdventureConfig>();
 
         // Even if certain oddities allowed this to happen, no point exchanging would actually occur.
-        if (team == (Team)player.team)
+        if (killerTeam == (Team)victim.team)
             return;
 
-        var victimTeamPoints = _points[team];
+        var victimTeamPoints = _points[(Team)victim.team];
         // Find the lowest denomination of points we can take (can't take more than the other team has!)
         var pointsToTrade = Math.Min(victimTeamPoints, config.Points.PlayerKill);
 
@@ -154,13 +154,13 @@ public class PointsManager : ModSystem
         if (pointsToTrade <= 0)
             return;
 
-        _points[team] -= pointsToTrade;
-        _points[(Team)player.team] += pointsToTrade;
+        _points[(Team)victim.team] -= pointsToTrade;
+        _points[killerTeam] += pointsToTrade;
 
         NetMessage.SendData(MessageID.WorldData);
 
         // FIXME: Better message and dedicated interface
         ChatHelper.BroadcastChatMessage(
-            NetworkText.FromLiteral($"{team} awarded {pointsToTrade} for killing {player.name}"), Color.White);
+            NetworkText.FromLiteral($"{killerTeam} awarded {pointsToTrade} for killing {victim.name}"), Color.White);
     }
 }
