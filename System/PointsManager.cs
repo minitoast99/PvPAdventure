@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using PvPAdventure.System.Client.Interface;
 using Terraria;
 using Terraria.Chat;
 using Terraria.Enums;
@@ -101,6 +102,9 @@ public class PointsManager : ModSystem
             for (var j = 0; j < numberOfIdEntries; j++)
                 _downedNpcs[team].Add(reader.ReadInt16());
         }
+
+        // FIXME: Not really where this belongs? unsure.
+        ModContent.GetInstance<Scoreboard>().UiScoreboard.Invalidate();
     }
 
     public void AwardNpcKillToTeam(Team team, NPC npc)
