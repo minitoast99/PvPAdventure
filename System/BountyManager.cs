@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Chat;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent.UI.Elements;
@@ -26,9 +27,9 @@ public class BountyManager : ModSystem
 
     public UIBountyShop UiBountyShop { get; private set; }
 
-    public sealed class Page
+    public sealed class Page(IList<Item[]> bounties)
     {
-        public IList<Item[]> Bounties { get; } = new List<Item[]>();
+        public IList<Item[]> Bounties { get; } = bounties;
     }
 
     public sealed class Transaction(int id, byte team, byte pageIndex, byte bountyIndex)
@@ -209,7 +210,7 @@ public class BountyManager : ModSystem
             if (team == Team.None)
                 continue;
 
-            var page = new Page();
+            var page = new Page(new List<Item[]>());
 
             foreach (var bounty in config.Bounties)
             {
@@ -264,7 +265,7 @@ public class BountyManager : ModSystem
             for (var j = 0; j < numberOfPages; j++)
             {
                 var numberOfBounties = reader.ReadInt32();
-                var page = new Page();
+                var page = new Page(new List<Item[]>());
 
                 for (var k = 0; k < numberOfBounties; k++)
                 {
@@ -286,6 +287,26 @@ public class BountyManager : ModSystem
         TransactionId = reader.ReadInt32();
 
         UiBountyShop.Invalidate();
+    }
+
+    public void AwardToTeam(Team team)
+    {
+        var eligibleBounties = ModContent.GetInstance<AdventureConfig>().Bounties
+            .Where(IsBountyAvailable)
+            .Select(bounty => bounty.Items)
+            .Select(items => items.Select(item => new Item(item.Item.Type, item.Stack, item.Prefix.Type)).ToArray())
+            .ToList();
+
+        _bounties[team].Add(new Page(eligibleBounties));
+
+        NetMessage.SendData(MessageID.WorldData);
+
+        foreach (var player in Main.ActivePlayers)
+        {
+            if ((Team)player.team == team)
+                ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("Your team has been awarded a claim!"),
+                    Color.White, player.whoAmI);
+        }
     }
 
     // FIXME: We could be MUCH smarter.
