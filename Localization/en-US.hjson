@@ -1,0 +1,181 @@
+Mods: {
+	PvPAdventure: {
+		DiscordIdentification: {
+			WaitingForIdentityFromDiscord: Waiting for your identity from Discord...
+			WaitingForServerToAcceptIdentity: Waiting for server to accept your identity...
+			FailedToGetIdentityFromDiscord: Failed to get your identity: {0}\nBe sure to authorize the application to access your account in the Discord client
+			UnableToVerifyIdentity: Unable to verify your identity
+			LoggedInElsewhere: You are already logged in elsewhere
+			NotPermittedToJoin: You are not permitted to join
+		}
+
+		Keybinds.Scoreboard.DisplayName: Scoreboard
+
+		Configs: {
+			AdventureConfig: {
+				DisplayName: Adventure Config
+
+				Points: {
+					Label: Points
+					Tooltip: ""
+				}
+
+				Bounties: {
+					Label: Bounties
+					Tooltip: ""
+				}
+
+				BossInvulnerableProjectiles: {
+					Label: Boss Invulnerable Projectiles
+					Tooltip: ""
+				}
+
+				ItemStatisticModifications: {
+					Label: Item Statistic Modifications
+					Tooltip: ""
+				}
+			}
+
+			PointsConfig: {
+				Tooltip: ""
+
+				BossKill: {
+					Label: Boss Kill
+					Tooltip: ""
+				}
+
+				Boss: {
+					Label: Boss
+					Tooltip: ""
+				}
+
+				ForNpcIds: {
+					Label: For Npc Ids
+					Tooltip: ""
+				}
+
+				Npc: {
+					Label: Npc
+					Tooltip: ""
+				}
+
+				PlayerKill: {
+					Label: Player Kill
+					Tooltip: ""
+				}
+			}
+
+			NpcPoints: {
+				Tooltip: ""
+
+				First: {
+					Label: First
+					Tooltip: ""
+				}
+
+				Additional: {
+					Label: Additional
+					Tooltip: ""
+				}
+
+				Repeatable: {
+					Label: Repeatable
+					Tooltip: ""
+				}
+			}
+
+			Bounty: {
+				Tooltip: ""
+
+				Items: {
+					Label: Items
+					Tooltip: ""
+				}
+
+				Conditions: {
+					Label: Conditions
+					Tooltip: ""
+				}
+			}
+
+			Condition: {
+				Tooltip: ""
+				
+				WorldProgression: {
+                	Label: World Progression
+                	Tooltip: ""
+                }
+
+				SkeletronPrimeDefeated: {
+					Label: Skeletron Prime Defeated
+					Tooltip: ""
+				}
+
+				TwinsDefeated: {
+					Label: Twins Defeated
+					Tooltip: ""
+				}
+
+				DestroyerDefeated: {
+					Label: Destroyer Defeated
+					Tooltip: ""
+				}
+
+				PlanteraDefeated: {
+					Label: Plantera Defeated
+					Tooltip: ""
+				}
+
+				GolemDefeated: {
+					Label: Golem Defeated
+					Tooltip: ""
+				}
+			}
+
+			WorldProgressionState: {
+				Tooltip: ""
+				Any.Label: Any
+				PreHardmode.Label: Pre Hardmode
+				Hardmode.Label: Hardmode
+			}
+
+			ConfigItem: {
+				Tooltip: ""
+
+				Item: {
+					Label: Item
+					Tooltip: ""
+				}
+
+				Prefix: {
+					Label: Prefix
+					Tooltip: ""
+				}
+
+				Stack: {
+					Label: Stack
+					Tooltip: ""
+				}
+			}
+
+			ItemStatisticModification: {
+				Tooltip: ""
+
+				Damage: {
+					Label: Damage
+					Tooltip: ""
+				}
+
+				Knockback: {
+					Label: Knockback
+					Tooltip: ""
+				}
+
+				Defense: {
+					Label: Defense
+					Tooltip: ""
+				}
+			}
+		}
+	}
+}
