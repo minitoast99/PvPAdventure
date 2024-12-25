@@ -277,6 +277,17 @@ public class AdventurePlayer : ModPlayer
         {
             // PvP or not, reset whom we last took damage from.
             RecentDamageFromPlayer = null;
+
+            // Remove recent damage for ALL players we've attacked after we die.
+            // These are indirect post-mortem kills, which we don't want.
+            // FIXME: We would still like to attribute this to the next recent damager, which would require a stack of
+            //        recent damage.
+            foreach (var player in Main.ActivePlayers)
+            {
+                var adventurePlayer = player.GetModPlayer<AdventurePlayer>();
+                if (adventurePlayer.RecentDamageFromPlayer?.Who == Player.whoAmI)
+                    adventurePlayer.RecentDamageFromPlayer = null;
+            }
         }
     }
 
