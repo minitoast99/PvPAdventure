@@ -230,6 +230,10 @@ public class AdventurePlayer : ModPlayer
             return;
         }
 
+        // Hurting ourselves doesn't change our recent damage
+        if (info.DamageSource.SourcePlayerIndex == Player.whoAmI)
+            return;
+
         // FIXME: Configurable number here! 15 seconds right now.
         RecentDamageFromPlayer = new((byte)damagerPlayer.whoAmI, 15 * 60);
     }
@@ -243,8 +247,8 @@ public class AdventurePlayer : ModPlayer
         {
             Player killer = null;
 
-            // This was a PvP death, so we should have a SourcePlayerIndex -- this is only a sanity check.
-            if (pvp && damageSource.SourcePlayerIndex != -1)
+            // If you killed yourself, we should delegate to the recent damage.
+            if (pvp && damageSource.SourcePlayerIndex != -1 && damageSource.SourcePlayerIndex != Player.whoAmI)
             {
                 killer = Main.player[damageSource.SourcePlayerIndex];
             }
@@ -258,20 +262,16 @@ public class AdventurePlayer : ModPlayer
                     killer = Main.player[RecentDamageFromPlayer.Who];
             }
 
-            // FIXME: probably active check
-            if (killer != null)
-            {
-                // Nothing should happen for suicide
-                if (killer.whoAmI == Player.whoAmI)
-                    return;
+            // Nothing should happen for suicide
+            if (killer == null || !killer.active || killer.whoAmI == Player.whoAmI)
+                return;
 
-                ModContent.GetInstance<PointsManager>().AwardPlayerKillToTeam((Team)killer.team, Player);
-                killer.GetModPlayer<AdventurePlayer>().Kills += 1;
-                killer.GetModPlayer<AdventurePlayer>().SyncStatistics();
+            ModContent.GetInstance<PointsManager>().AwardPlayerKillToTeam((Team)killer.team, Player);
+            killer.GetModPlayer<AdventurePlayer>().Kills += 1;
+            killer.GetModPlayer<AdventurePlayer>().SyncStatistics();
 
-                Deaths += 1;
-                SyncStatistics();
-            }
+            Deaths += 1;
+            SyncStatistics();
         }
         finally
         {
