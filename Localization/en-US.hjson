@@ -34,6 +34,11 @@ Mods: {
 					Label: Item Statistic Modifications
 					Tooltip: ""
 				}
+
+				Combat: {
+					Label: Combat
+					Tooltip: ""
+				}
 			}
 
 			PointsConfig: {
@@ -173,6 +178,20 @@ Mods: {
 
 				Defense: {
 					Label: Defense
+					Tooltip: ""
+				}
+			}
+
+			CombatConfig: {
+				Tooltip: ""
+
+				MeleeInvincibilityFrames: {
+					Label: Melee Invincibility Frames
+					Tooltip: ""
+				}
+
+				RecentDamagePreservationFrames: {
+					Label: Recent Damage Preservation Frames
 					Tooltip: ""
 				}
 			}

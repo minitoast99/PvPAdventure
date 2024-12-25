@@ -114,7 +114,8 @@ public class AdventurePlayer : ModPlayer
         if (_playerMeleeInvincibleTime[target.whoAmI] > 0)
             return false;
 
-        _playerMeleeInvincibleTime[target.whoAmI] = 8;
+        _playerMeleeInvincibleTime[target.whoAmI] =
+            ModContent.GetInstance<AdventureConfig>().Combat.MeleeInvincibilityFrames;
 
         return true;
     }
@@ -234,8 +235,8 @@ public class AdventurePlayer : ModPlayer
         if (info.DamageSource.SourcePlayerIndex == Player.whoAmI)
             return;
 
-        // FIXME: Configurable number here! 15 seconds right now.
-        RecentDamageFromPlayer = new((byte)damagerPlayer.whoAmI, 15 * 60);
+        RecentDamageFromPlayer = new((byte)damagerPlayer.whoAmI,
+            ModContent.GetInstance<AdventureConfig>().Combat.RecentDamagePreservationFrames);
     }
 
     public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)

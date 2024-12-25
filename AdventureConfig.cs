@@ -14,6 +14,7 @@ public class AdventureConfig : ModConfig
     public PointsConfig Points { get; set; } = new();
     public List<Bounty> Bounties { get; set; } = new();
     public Dictionary<ItemDefinition, ItemStatisticModification> ItemStatisticModifications { get; set; } = new();
+    public CombatConfig Combat { get; set; } = new();
 
     public List<ProjectileDefinition> BossInvulnerableProjectiles { get; set; } =
     [
@@ -84,6 +85,12 @@ public class AdventureConfig : ModConfig
         public int Damage { get; set; }
         [Range(0.0f, 20.0f)] public float Knockback { get; set; }
         public int Defense { get; set; }
+    }
+
+    public class CombatConfig
+    {
+        public int MeleeInvincibilityFrames { get; set; } = 8;
+        public int RecentDamagePreservationFrames { get; set; } = 15 * 60;
     }
 
     public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref NetworkText message)
