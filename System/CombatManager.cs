@@ -1,16 +1,32 @@
+using System.IO;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace PvPAdventure.System;
 
 [Autoload(Side = ModSide.Both)]
-public class PvPOverhaul : ModSystem
+public class CombatManager : ModSystem
 {
+    private const bool PreventPersonalCombatModifications = false;
+
     public override void Load()
     {
+        // Do not draw the PvP or team icons -- the server has full control over your PvP and team.
+        // TODO: In the future, the server should send a packet relaying if the player can toggle hostile and which teams they may join.
+        //       For now, let's just totally disable it.
+        if (PreventPersonalCombatModifications && Main.netMode != NetmodeID.Server)
+            On_Main.DrawPVPIcons += _ => { };
+        
         On_Player.Hurt_HurtInfo_bool += OnPlayerHurt;
     }
 
+    public override bool HijackGetData(ref byte messageType, ref BinaryReader reader, int playerNumber)
+    {
+        return PreventPersonalCombatModifications && Main.netMode == NetmodeID.Server &&
+               (messageType is MessageID.TogglePVP or MessageID.PlayerTeam);
+    }
+    
     // FIXME: An IL patch might be slightly better.
     //        Doing it this way isn't great, because anything introduced in-between the i-frames being set isn't correct
     //        Meaning side effects are possible.
