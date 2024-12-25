@@ -13,7 +13,7 @@ Mods: {
 
 		Configs: {
 			AdventureConfig: {
-				DisplayName: Adventure Config
+				DisplayName: Server
 
 				Points: {
 					Label: Points
@@ -192,6 +192,29 @@ Mods: {
 
 				RecentDamagePreservationFrames: {
 					Label: Recent Damage Preservation Frames
+					Tooltip: ""
+				}
+			}
+
+			AdventureClientConfig: {
+				DisplayName: Client
+
+				PlayerOutline: {
+					Label: Player Outline
+					Tooltip: ""
+				}
+			}
+
+			PlayerOutlineConfig: {
+				Tooltip: ""
+
+				Self: {
+					Label: Self
+					Tooltip: ""
+				}
+
+				Team: {
+					Label: Team
 					Tooltip: ""
 				}
 			}

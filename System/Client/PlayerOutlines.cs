@@ -26,16 +26,34 @@ public class PlayerOutlines : ModSystem
     private void OnPlayerDrawLayersDrawPlayer_RenderAllLayers(On_PlayerDrawLayers.orig_DrawPlayer_RenderAllLayers orig,
         ref PlayerDrawSet drawinfo)
     {
-        if (drawinfo.shadow == 0.0f)
+        try
         {
-            var team = (Team)drawinfo.drawPlayer.team;
-            if (!drawinfo.headOnlyRender && team != Team.None)
-            {
-                _createOutlines(1.0f, 1.0f,
-                    Main.teamColor[(int)team].MultiplyRGBA(Lighting.GetColor(drawinfo.Center.ToTileCoordinates())));
-            }
-        }
+            if (drawinfo.shadow != 0.0f)
+                return;
 
-        orig(ref drawinfo);
+            if (drawinfo.headOnlyRender)
+                return;
+
+            var team = (Team)drawinfo.drawPlayer.team;
+            if (team == Team.None)
+                return;
+
+            var adventureClientConfig = ModContent.GetInstance<AdventureClientConfig>();
+
+            if (!adventureClientConfig.PlayerOutline.Self && drawinfo.drawPlayer.whoAmI == Main.myPlayer)
+                return;
+
+            // Don't show outlines for teammates, but if you want self outlines, still show it.
+            if (!adventureClientConfig.PlayerOutline.Team && team == (Team)Main.LocalPlayer.team &&
+                (!adventureClientConfig.PlayerOutline.Self || drawinfo.drawPlayer.whoAmI != Main.myPlayer))
+                return;
+
+            _createOutlines(1.0f, 1.0f,
+                Main.teamColor[(int)team].MultiplyRGBA(Lighting.GetColor(drawinfo.Center.ToTileCoordinates())));
+        }
+        finally
+        {
+            orig(ref drawinfo);
+        }
     }
 }
