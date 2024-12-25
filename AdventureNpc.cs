@@ -58,9 +58,8 @@ public class AdventureNpc : GlobalNPC
         if (lastDamageInfo == null)
             return;
 
-        // FIXME: active check probably
         var lastDamager = Main.player[lastDamageInfo.Who];
-        if (lastDamager == null)
+        if (lastDamager == null || !lastDamager.active)
             return;
 
         ModContent.GetInstance<PointsManager>().AwardNpcKillToTeam((Team)lastDamager.team, npc);
