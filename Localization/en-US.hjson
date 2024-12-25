@@ -100,11 +100,11 @@ Mods: {
 
 			Condition: {
 				Tooltip: ""
-				
+
 				WorldProgression: {
-                	Label: World Progression
-                	Tooltip: ""
-                }
+					Label: World Progression
+					Tooltip: ""
+				}
 
 				SkeletronPrimeDefeated: {
 					Label: Skeletron Prime Defeated
