@@ -155,6 +155,24 @@ public class PvPAdventure : Mod
 
                 break;
             }
+            case 3:
+            {
+                var pingPong = AdventurePlayer.PingPong.Deserialize(reader);
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    Main.player[whoAmI].GetModPlayer<AdventurePlayer>().OnPingPongReceived(pingPong);
+                }
+                else if (Main.netMode == NetmodeID.MultiplayerClient)
+                {
+                    var packet = GetPacket();
+                    // FIXME: no magic
+                    packet.Write((byte)3);
+                    pingPong.Serialize(packet);
+                    packet.Send();
+                }
+
+                break;
+            }
         }
     }
 

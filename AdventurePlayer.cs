@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Discord.Rest;
@@ -23,6 +24,14 @@ public class AdventurePlayer : ModPlayer
     public int Kills { get; private set; }
     public int Deaths { get; private set; }
     private readonly int[] _playerMeleeInvincibleTime = new int[Main.maxPlayers];
+
+    private const int TimeBetweenPingPongs = 3 * 60;
+
+    // Intentionally zero-initialize this so we get a ping/pong ASAP.
+    private int _nextPingPongTime;
+    private int _pingPongCanary;
+    private Stopwatch _pingPongStopwatch;
+    public TimeSpan? Latency { get; private set; }
 
     private DiscordRestClient _discordClient;
 
@@ -57,6 +66,21 @@ public class AdventurePlayer : ModPlayer
         {
             adventurePlayer.Kills = Kills;
             adventurePlayer.Deaths = Deaths;
+        }
+    }
+
+    public sealed class PingPong(int canary) : IPacket<PingPong>
+    {
+        public int Canary { get; set; } = canary;
+
+        public static PingPong Deserialize(BinaryReader reader)
+        {
+            return new(reader.ReadInt32());
+        }
+
+        public void Serialize(BinaryWriter writer)
+        {
+            writer.Write(Canary);
         }
     }
 
@@ -126,6 +150,12 @@ public class AdventurePlayer : ModPlayer
         {
             if (_playerMeleeInvincibleTime[i] > 0)
                 _playerMeleeInvincibleTime[i]--;
+        }
+
+        if (--_nextPingPongTime <= 0)
+        {
+            _nextPingPongTime = TimeBetweenPingPongs;
+            SendPingPong();
         }
 
         if (RecentDamageFromPlayer != null && --RecentDamageFromPlayer.TicksRemaining <= 0)
@@ -338,6 +368,31 @@ public class AdventurePlayer : ModPlayer
     public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
     {
         SyncStatistics(toWho, fromWho);
+    }
+
+    private void SendPingPong()
+    {
+        _pingPongStopwatch = Stopwatch.StartNew();
+
+        var packet = Mod.GetPacket();
+        // FIXME: no magic
+        packet.Write((byte)3);
+        new PingPong(_pingPongCanary).Serialize(packet);
+        packet.Send(Player.whoAmI);
+    }
+
+    public void OnPingPongReceived(PingPong pingPong)
+    {
+        if (_pingPongStopwatch == null)
+            return;
+
+        if (pingPong.Canary != _pingPongCanary)
+            return;
+
+        _pingPongStopwatch.Stop();
+        Latency = _pingPongStopwatch.Elapsed / 2;
+        _pingPongStopwatch = null;
+        _pingPongCanary++;
     }
 
     public override string ToString()
