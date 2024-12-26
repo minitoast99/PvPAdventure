@@ -189,7 +189,7 @@ public class AdventurePlayer : ModPlayer
             if (CanRecall())
                 return true;
 
-            if (Main.netMode != NetmodeID.Server && Player.whoAmI == Main.myPlayer)
+            if (!Main.dedServ && Player.whoAmI == Main.myPlayer)
                 PopupText.NewText(new AdvancedPopupRequest
                 {
                     Color = Color.Crimson,

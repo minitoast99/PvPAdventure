@@ -194,7 +194,7 @@ public class BountyManager : ModSystem
 
     public override void Load()
     {
-        if (Main.netMode != NetmodeID.Server)
+        if (!Main.dedServ)
             UiBountyShop = new UIBountyShop(this);
     }
 
@@ -312,10 +312,7 @@ public class BountyManager : ModSystem
     // FIXME: We could be MUCH smarter.
     public override bool HijackGetData(ref byte messageType, ref BinaryReader reader, int playerNumber)
     {
-        if (Main.netMode == NetmodeID.Server)
-            return false;
-
-        if (messageType is MessageID.PlayerTeam)
+        if (!Main.dedServ && messageType is MessageID.PlayerTeam)
             Main.QueueMainThreadAction(() => UiBountyShop.Invalidate());
 
         return false;
@@ -326,10 +323,7 @@ public class BountyManager : ModSystem
         int number,
         float number2, float number3, float number4, int number5, int number6, int number7)
     {
-        if (Main.netMode == NetmodeID.Server)
-            return false;
-
-        if (msgType == MessageID.PlayerTeam)
+        if (!Main.dedServ && msgType == MessageID.PlayerTeam)
             Main.QueueMainThreadAction(() => UiBountyShop.Invalidate());
 
         return false;
