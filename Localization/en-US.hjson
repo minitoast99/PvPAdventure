@@ -242,5 +242,6 @@ Mods: {
 
 		Item.Disabled: Cannot be used in this gamemode
 		Player.CannotRecall: Cannot recall!
+		Tiles.LockedLihzahrdChest.MapEntry: Locked Lihzahrd Chest
 	}
 }
