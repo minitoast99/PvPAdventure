@@ -325,8 +325,9 @@ public class AdventurePlayer : ModPlayer
     public override void ProcessTriggers(TriggersSet triggersSet)
     {
         var scoreboard = ModContent.GetInstance<Scoreboard>();
+        var keybinds = ModContent.GetInstance<Keybinds>();
 
-        if (ModContent.GetInstance<Keybinds>().Scoreboard.JustPressed)
+        if (keybinds.Scoreboard.JustPressed)
         {
             scoreboard.Visible = true;
             Main.InGameUI.SetState(ModContent.GetInstance<Scoreboard>().UiScoreboard);
@@ -337,10 +338,20 @@ public class AdventurePlayer : ModPlayer
             // Main.player[0].HeldItem, Main.npc.First(npc => npc.active));
             // ModContent.GetInstance<ObjectiveNotice>().AddClaimReceivedNotice((Team)Main.player[0].team);
         }
-        else if (ModContent.GetInstance<Keybinds>().Scoreboard.JustReleased)
+        else if (keybinds.Scoreboard.JustReleased)
         {
             scoreboard.Visible = false;
             Main.InGameUI.SetState(null);
+        }
+
+        if (keybinds.BountyShop.JustPressed)
+        {
+            var bountyShop = ModContent.GetInstance<BountyManager>().UiBountyShop;
+
+            if (Main.InGameUI.CurrentState == bountyShop)
+                Main.InGameUI.SetState(null);
+            else
+                Main.InGameUI.SetState(bountyShop);
         }
     }
 
