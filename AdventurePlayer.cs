@@ -152,7 +152,7 @@ public class AdventurePlayer : ModPlayer
                 _playerMeleeInvincibleTime[i]--;
         }
 
-        if (--_nextPingPongTime <= 0)
+        if (Main.dedServ && --_nextPingPongTime <= 0)
         {
             _nextPingPongTime = TimeBetweenPingPongs;
             SendPingPong();
