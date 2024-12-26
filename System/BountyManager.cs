@@ -202,28 +202,6 @@ public class BountyManager : ModSystem
     {
         foreach (var team in Enum.GetValues<Team>())
             _bounties[team] = new List<Page>();
-
-        var config = ModContent.GetInstance<AdventureConfig>();
-
-        foreach (var team in Enum.GetValues<Team>())
-        {
-            if (team == Team.None)
-                continue;
-
-            var page = new Page(new List<Item[]>());
-
-            foreach (var bounty in config.Bounties)
-            {
-                var items = bounty.Items.Select(configItem =>
-                    new Item(configItem.Item.Type, configItem.Stack, configItem.Prefix.Type)).ToArray();
-
-                if (items.Length > 0)
-                    page.Bounties.Add(items);
-            }
-
-            if (page.Bounties.Count > 0)
-                _bounties[team].Add(page);
-        }
     }
 
     public override void NetSend(BinaryWriter writer)
