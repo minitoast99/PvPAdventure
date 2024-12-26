@@ -297,6 +297,9 @@ public class BountyManager : ModSystem
             .Select(items => items.Select(item => new Item(item.Item.Type, item.Stack, item.Prefix.Type)).ToArray())
             .ToList();
 
+        if (eligibleBounties.Count == 0)
+            return;
+
         _bounties[team].Add(new Page(eligibleBounties));
 
         NetMessage.SendData(MessageID.WorldData);
