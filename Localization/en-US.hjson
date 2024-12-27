@@ -42,6 +42,16 @@ Mods: {
 					Label: Combat
 					Tooltip: ""
 				}
+
+				OnlyDisplayWorldEvilBoss: {
+					Tooltip: ""
+					Label: Only Display World Evil Boss
+				}
+
+				BossOrder: {
+					Tooltip: ""
+					Label: Boss Order
+				}
 			}
 
 			PointsConfig: {
