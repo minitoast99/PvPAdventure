@@ -358,8 +358,7 @@ public class AdventurePlayer : ModPlayer
     private void SyncStatistics(int to = -1, int ignore = -1)
     {
         var packet = Mod.GetPacket();
-        // FIXME: no magic
-        packet.Write((byte)1);
+        packet.Write((byte)AdventurePacketIdentifier.PlayerStatistics);
         new Statistics((byte)Player.whoAmI, Kills, Deaths).Serialize(packet);
         packet.Send(to, ignore);
     }
@@ -386,8 +385,7 @@ public class AdventurePlayer : ModPlayer
         _pingPongStopwatch = Stopwatch.StartNew();
 
         var packet = Mod.GetPacket();
-        // FIXME: no magic
-        packet.Write((byte)3);
+        packet.Write((byte)AdventurePacketIdentifier.PingPong);
         new PingPong(_pingPongCanary).Serialize(packet);
         packet.Send(Player.whoAmI);
     }

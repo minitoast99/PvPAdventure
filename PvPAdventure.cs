@@ -39,12 +39,11 @@ public class PvPAdventure : Mod
 
     public override void HandlePacket(BinaryReader reader, int whoAmI)
     {
-        var id = reader.ReadByte();
+        var id = (AdventurePacketIdentifier)reader.ReadByte();
 
-        // FIXME: no magic numbers
         switch (id)
         {
-            case 0:
+            case AdventurePacketIdentifier.BountyTransaction:
             {
                 var bountyTransaction = BountyManager.Transaction.Deserialize(reader);
 
@@ -98,7 +97,7 @@ public class PvPAdventure : Mod
 
                 break;
             }
-            case 1:
+            case AdventurePacketIdentifier.PlayerStatistics:
             {
                 var statistics = AdventurePlayer.Statistics.Deserialize(reader);
                 var player = Main.player[Main.dedServ ? whoAmI : statistics.Player];
@@ -111,7 +110,7 @@ public class PvPAdventure : Mod
 
                 break;
             }
-            case 2:
+            case AdventurePacketIdentifier.WorldMapLighting:
             {
                 var worldMapSyncLighting = WorldMapSyncManager.Lighting.Deserialize(reader);
 
@@ -119,8 +118,7 @@ public class PvPAdventure : Mod
                 if (Main.dedServ)
                 {
                     var packet = GetPacket();
-                    // FIXME: no magic
-                    packet.Write((byte)2);
+                    packet.Write((byte)AdventurePacketIdentifier.WorldMapLighting);
                     worldMapSyncLighting.Serialize(packet);
                     packet.Send(ignoreClient: whoAmI);
                 }
@@ -154,7 +152,7 @@ public class PvPAdventure : Mod
 
                 break;
             }
-            case 3:
+            case AdventurePacketIdentifier.PingPong:
             {
                 var pingPong = AdventurePlayer.PingPong.Deserialize(reader);
                 if (Main.dedServ)
@@ -164,8 +162,7 @@ public class PvPAdventure : Mod
                 else
                 {
                     var packet = GetPacket();
-                    // FIXME: no magic
-                    packet.Write((byte)3);
+                    packet.Write((byte)AdventurePacketIdentifier.PingPong);
                     pingPong.Serialize(packet);
                     packet.Send();
                 }

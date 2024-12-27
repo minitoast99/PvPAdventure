@@ -162,8 +162,7 @@ public class BountyManager : ModSystem
                     {
                         // FIXME: wtf??
                         var packet = ModContent.GetInstance<BountyManager>().Mod.GetPacket();
-                        // FIXME: no magic
-                        packet.Write((byte)0);
+                        packet.Write((byte)AdventurePacketIdentifier.BountyTransaction);
                         new Transaction(bountyManager.TransactionId, (byte)Main.LocalPlayer.team, 0, i1).Serialize(
                             packet);
                         packet.Send();
