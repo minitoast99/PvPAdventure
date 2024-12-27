@@ -163,22 +163,18 @@ public class AdventurePlayer : ModPlayer
             Mod.Logger.Info($"Recent damage for {this} expired (was from {RecentDamageFromPlayer.Who})");
             RecentDamageFromPlayer = null;
         }
+
+        if (AdventureItem.RecallItems[Player.inventory[Player.selectedItem].type] && !CanRecall())
+        {
+            Player.SetItemAnimation(0);
+            Player.SetItemTime(0);
+        }
     }
 
     private bool CanRecall()
     {
         return Player.lifeRegen >= 0.0 && !Player.controlLeft && !Player.controlRight && !Player.controlUp &&
                !Player.controlDown && Player.velocity == Vector2.Zero;
-    }
-
-    public override void PostUpdate()
-    {
-        // FIXME: this might be better off in preupdate
-        if (AdventureItem.RecallItems[Player.inventory[Player.selectedItem].type] && !CanRecall())
-        {
-            Player.SetItemAnimation(0);
-            Player.SetItemTime(0);
-        }
     }
 
     public override bool CanUseItem(Item item)
