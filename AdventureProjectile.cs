@@ -1,3 +1,4 @@
+using PvPAdventure.System;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -7,8 +8,14 @@ public class AdventureProjectile : GlobalProjectile
 {
     public override bool? CanCutTiles(Projectile projectile)
     {
-        if (projectile.owner == Main.myPlayer && Player.tileTargetX >= 3200)
-            return false;
+        if (projectile.owner == Main.myPlayer)
+        {
+            var region = ModContent.GetInstance<RegionManager>()
+                .GetRegionIntersecting(projectile.Hitbox.ToTileRectangle());
+
+            if (region != null && !region.CanModifyTiles)
+                return false;
+        }
 
         return null;
     }

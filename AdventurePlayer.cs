@@ -94,52 +94,109 @@ public class AdventurePlayer : ModPlayer
         On_Player.ItemCheck_UseTeleportRod += OnPlayerItemCheck_UseTeleportRod;
         On_Player.ItemCheck_UseWiringTools += OnPlayerItemCheck_UseWiringTools;
         On_Player.ItemCheck_CutTiles += OnPlayerItemCheck_CutTiles;
+
+        On_Player.HasUnityPotion += OnPlayerHasUnityPotion;
     }
 
     private void OnPlayerPlaceThing_Tiles(On_Player.orig_PlaceThing_Tiles orig, Player self)
     {
-        if (Player.tileTargetX < 3200)
+        var region = ModContent.GetInstance<RegionManager>()
+            .GetRegionContaining(new(Player.tileTargetX, Player.tileTargetY));
+
+        if (region == null || region.CanModifyTiles)
             orig(self);
     }
 
     private void OnPlayerPlaceThing_Walls(On_Player.orig_PlaceThing_Walls orig, Player self)
     {
-        if (Player.tileTargetX < 3200)
+        var region = ModContent.GetInstance<RegionManager>()
+            .GetRegionContaining(new(Player.tileTargetX, Player.tileTargetY));
+
+        if (region == null || region.CanModifyTiles)
             orig(self);
     }
 
     private void OnPlayerItemCheck_UseMiningTools(On_Player.orig_ItemCheck_UseMiningTools orig, Player self, Item sitem)
     {
-        if (Player.tileTargetX < 3200)
+        var region = ModContent.GetInstance<RegionManager>()
+            .GetRegionContaining(new(Player.tileTargetX, Player.tileTargetY));
+
+        if (region == null || region.CanModifyTiles)
             orig(self, sitem);
     }
 
     private void OnPlayerItemCheck_UseTeleportRod(On_Player.orig_ItemCheck_UseTeleportRod orig, Player self, Item sitem)
     {
-        if (Player.tileTargetX < 3200)
+        var region = ModContent.GetInstance<RegionManager>()
+            .GetRegionContaining(new(Player.tileTargetX, Player.tileTargetY));
+
+        if (region == null || region.CanModifyTiles)
             orig(self, sitem);
     }
 
     private void OnPlayerItemCheck_UseWiringTools(On_Player.orig_ItemCheck_UseWiringTools orig, Player self, Item sitem)
     {
-        if (Player.tileTargetX < 3200)
+        var region = ModContent.GetInstance<RegionManager>()
+            .GetRegionContaining(new(Player.tileTargetX, Player.tileTargetY));
+
+        if (region == null || region.CanModifyTiles)
             orig(self, sitem);
     }
 
     private void OnPlayerItemCheck_CutTiles(On_Player.orig_ItemCheck_CutTiles orig, Player self, Item sitem,
         Rectangle itemrectangle, bool[] shouldignore)
     {
-        if (Player.tileTargetX < 3200)
+        var region = ModContent.GetInstance<RegionManager>().GetRegionIntersecting(itemrectangle.ToTileRectangle());
+
+        if (region == null || region.CanModifyTiles)
             orig(self, sitem, itemrectangle, shouldignore);
+    }
+
+    private bool OnPlayerHasUnityPotion(On_Player.orig_HasUnityPotion orig, Player self)
+    {
+        var region = ModContent.GetInstance<RegionManager>().GetRegionIntersecting(self.Hitbox.ToTileRectangle());
+
+        // By default, you cannot wormhole.
+        if (region == null || !region.CanUseWormhole)
+            return false;
+
+        return orig(self);
     }
 
     public override bool CanHitPvp(Item item, Player target)
     {
+        var myRegion = ModContent.GetInstance<RegionManager>().GetRegionIntersecting(Player.Hitbox.ToTileRectangle());
+
+        if (myRegion != null && !myRegion.AllowCombat)
+            return false;
+
+        var targetRegion = ModContent.GetInstance<RegionManager>()
+            .GetRegionIntersecting(target.Hitbox.ToTileRectangle());
+
+        if (targetRegion != null && !targetRegion.AllowCombat)
+            return false;
+
         if (_playerMeleeInvincibleTime[target.whoAmI] > 0)
             return false;
 
         _playerMeleeInvincibleTime[target.whoAmI] =
             ModContent.GetInstance<AdventureConfig>().Combat.MeleeInvincibilityFrames;
+
+        return true;
+    }
+
+    public override bool CanHitPvpWithProj(Projectile proj, Player target)
+    {
+        var myRegion = ModContent.GetInstance<RegionManager>().GetRegionIntersecting(Player.Hitbox.ToTileRectangle());
+
+        if (myRegion != null && !myRegion.AllowCombat)
+            return false;
+
+        var targetRegion = ModContent.GetInstance<RegionManager>()
+            .GetRegionIntersecting(target.Hitbox.ToTileRectangle());
+
+        if (targetRegion != null && !targetRegion.AllowCombat)
+            return false;
 
         return true;
     }
