@@ -12,4 +12,10 @@ public class AdventureProjectile : GlobalProjectile
 
         return null;
     }
+
+    public override void SetDefaults(Projectile entity)
+    {
+        // All projectiles are important.
+        entity.netImportant = true;
+    }
 }
