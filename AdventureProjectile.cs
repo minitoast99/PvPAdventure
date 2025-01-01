@@ -18,4 +18,10 @@ public class AdventureProjectile : GlobalProjectile
         // All projectiles are important.
         entity.netImportant = true;
     }
+
+    public override void PostAI(Projectile projectile)
+    {
+        // Ignore net spam restraints.
+        projectile.netSpam = 0;
+    }
 }
