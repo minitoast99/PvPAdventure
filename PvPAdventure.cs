@@ -120,7 +120,14 @@ public class PvPAdventure : Mod
                     var packet = GetPacket();
                     packet.Write((byte)AdventurePacketIdentifier.WorldMapLighting);
                     worldMapSyncLighting.Serialize(packet);
-                    packet.Send(ignoreClient: whoAmI);
+
+                    var team = Main.player[whoAmI].team;
+                    foreach (var player in Main.ActivePlayers)
+                    {
+                        // Map will sync to teammates and everyone without a team.
+                        if (player.team == (int)Team.None || player.team == team)
+                            packet.Send(player.whoAmI);
+                    }
                 }
                 // On the client, we use it to update the lighting of the world map tiles.
                 else
