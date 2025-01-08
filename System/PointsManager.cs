@@ -135,6 +135,14 @@ public class PointsManager : ModSystem
 
         _downedNpcs[team].Add((short)npc.type);
 
+        // If this is part of the Eater of Worlds, mark ALL parts as defeated.
+        if (AdventureNpc.IsPartOfEaterOfWorlds((short)npc.type))
+        {
+            _downedNpcs[team].Add(NPCID.EaterofWorldsHead);
+            _downedNpcs[team].Add(NPCID.EaterofWorldsBody);
+            _downedNpcs[team].Add(NPCID.EaterofWorldsTail);
+        }
+
         NetMessage.SendData(MessageID.WorldData);
 
         // FIXME: Better message and dedicated interface

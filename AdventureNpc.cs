@@ -34,7 +34,21 @@ public class AdventureNpc : GlobalNPC
     {
         orig(self, player);
 
-        self.GetGlobalNPC<AdventureNpc>().LastDamageFromPlayer = new DamageInfo((byte)player);
+        // If this is part of the Eater of Worlds, then mark ALL segments as last damaged by this player.
+        if (IsPartOfEaterOfWorlds((short)self.type))
+        {
+            foreach (var npc in Main.ActiveNPCs)
+            {
+                if (!IsPartOfEaterOfWorlds((short)npc.type))
+                    continue;
+
+                npc.GetGlobalNPC<AdventureNpc>().LastDamageFromPlayer = new DamageInfo((byte)player);
+            }
+        }
+        else
+        {
+            self.GetGlobalNPC<AdventureNpc>().LastDamageFromPlayer = new DamageInfo((byte)player);
+        }
     }
 
     public override bool? CanBeHitByProjectile(NPC npc, Projectile projectile)
@@ -70,4 +84,7 @@ public class AdventureNpc : GlobalNPC
         if (ModContent.GetInstance<GameManager>()?.CurrentPhase == GameManager.Phase.Waiting)
             maxSpawns = 0;
     }
+
+    public static bool IsPartOfEaterOfWorlds(short type) =>
+        type is NPCID.EaterofWorldsHead or NPCID.EaterofWorldsBody or NPCID.EaterofWorldsTail;
 }
