@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.Map;
 using Terraria.ModLoader;
 
@@ -59,6 +60,9 @@ public class WorldMapSyncManager : ModSystem
     {
         var updated = orig(self, x, y, light);
 
+        if (Main.netMode == NetmodeID.SinglePlayer)
+            return updated;
+
         // FIXME: Relying on the return value means that one player traversing a revealed area for them will not
         //        properly reveal the area for a player who hasn't revealed it. Causes a lot of false lighting and
         //        black tiles. Without this check though, it's very verbose I believe. Also causes black streaks across
@@ -78,6 +82,9 @@ public class WorldMapSyncManager : ModSystem
     // FIXME: Somewhere that makes sense
     public override void PostUpdatePlayers()
     {
+        if (Main.netMode == NetmodeID.SinglePlayer)
+            return;
+
         lock (_betterMapTileUpdates)
         {
             if (_betterMapTileUpdates.Count == 0)
