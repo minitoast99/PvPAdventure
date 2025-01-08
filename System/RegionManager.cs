@@ -12,6 +12,7 @@ namespace PvPAdventure.System;
 public class RegionManager : ModSystem
 {
     private readonly List<Region> _regions = [];
+    public IReadOnlyList<Region> Regions => _regions;
 
     public class Region
     {
@@ -168,10 +169,6 @@ public class RegionManager : ModSystem
             _regions.Add(new Region
             {
                 Area = new(Main.spawnTileX - 25, Main.spawnTileY - 25, 50, 50),
-                CanUseWormhole = true,
-                CanRandomTeleport = true,
-                CanEnter = false,
-                CanExit = true,
                 Order = 10
             });
 

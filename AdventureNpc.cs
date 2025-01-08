@@ -64,4 +64,10 @@ public class AdventureNpc : GlobalNPC
 
         ModContent.GetInstance<PointsManager>().AwardNpcKillToTeam((Team)lastDamager.team, npc);
     }
+
+    public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
+    {
+        if (ModContent.GetInstance<GameManager>()?.CurrentPhase == GameManager.Phase.Waiting)
+            maxSpawns = 0;
+    }
 }
