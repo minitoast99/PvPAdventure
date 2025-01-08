@@ -77,7 +77,6 @@ public class Scoreboard : ModSystem
             var root = new UIElement
             {
                 Top = { Pixels = 325 },
-                Left = { Percent = 0.5f },
                 Width = { Percent = 1.0f },
                 Height = { Percent = 1.0f }
             };
@@ -187,6 +186,12 @@ public class Scoreboard : ModSystem
                 element.Append(playersPanel);
                 root.Append(element);
             }
+
+            root.Left = new()
+            {
+                Percent = 0.5f,
+                Pixels = -xOffset + (xOffset / 2.0f),
+            };
 
             Append(root);
         }
