@@ -23,6 +23,7 @@ public class RegionManager : ModSystem
         public bool AllowCombat { get; set; }
         public bool CanUseWormhole { get; set; }
         public bool CanRandomTeleport { get; set; }
+        public bool CanRecall { get; set; }
         public bool CanEnter { get; set; }
         public bool CanExit { get; set; }
     }
@@ -100,6 +101,7 @@ public class RegionManager : ModSystem
             writer.Write(region.AllowCombat);
             writer.Write(region.CanUseWormhole);
             writer.Write(region.CanRandomTeleport);
+            writer.Write(region.CanRecall);
             writer.Write(region.CanEnter);
             writer.Write(region.CanExit);
         }
@@ -124,6 +126,7 @@ public class RegionManager : ModSystem
             var allowCombat = reader.ReadBoolean();
             var canUseWormhole = reader.ReadBoolean();
             var canRandomTeleport = reader.ReadBoolean();
+            var canRecall = reader.ReadBoolean();
             var canEnter = reader.ReadBoolean();
             var canExit = reader.ReadBoolean();
 
@@ -135,6 +138,7 @@ public class RegionManager : ModSystem
                 AllowCombat = allowCombat,
                 CanUseWormhole = canUseWormhole,
                 CanRandomTeleport = canRandomTeleport,
+                CanRecall = canRecall,
                 CanEnter = canEnter,
                 CanExit = canExit
             });

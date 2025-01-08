@@ -231,8 +231,10 @@ public class AdventurePlayer : ModPlayer
 
     private bool CanRecall()
     {
+        var region = ModContent.GetInstance<RegionManager>().GetRegionIntersecting(Player.Hitbox.ToTileRectangle());
+
         return Player.lifeRegen >= 0.0 && !Player.controlLeft && !Player.controlRight && !Player.controlUp &&
-               !Player.controlDown && Player.velocity == Vector2.Zero;
+               !Player.controlDown && Player.velocity == Vector2.Zero && (region == null || region.CanRecall);
     }
 
     public override bool CanUseItem(Item item)
