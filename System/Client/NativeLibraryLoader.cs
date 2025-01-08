@@ -40,9 +40,4 @@ public class NativeLibraryLoader : ModSystem
 
         return NativeLibrary.Load(nativeLibraryPathOnDisk);
     }
-
-    public override void Unload()
-    {
-        Mod.Logger.Info("unloading hahahaha");
-    }
 }
