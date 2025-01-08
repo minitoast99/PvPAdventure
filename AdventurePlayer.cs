@@ -12,6 +12,7 @@ using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameInput;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -246,7 +247,7 @@ public class AdventurePlayer : ModPlayer
                 PopupText.NewText(new AdvancedPopupRequest
                 {
                     Color = Color.Crimson,
-                    Text = "Cannot recall!",
+                    Text = Language.GetTextValue("Mods.PvPAdventure.Player.CannotRecall"),
                     Velocity = new(0.0f, -4.0f),
                     DurationInFrames = 60 * 2
                 }, Player.Top);

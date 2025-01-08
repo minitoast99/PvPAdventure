@@ -236,8 +236,11 @@ Mods: {
 					Tooltip: ""
 				}
 			}
+
+			CannotModify: You are not permitted to modify this config.
 		}
 
 		Item.Disabled: Cannot be used in this gamemode
+		Player.CannotRecall: Cannot recall!
 	}
 }

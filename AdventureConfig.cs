@@ -123,7 +123,7 @@ public class AdventureConfig : ModConfig
     {
         if (pendingConfig is AdventureConfig)
         {
-            message = NetworkText.FromLiteral("You are not permitted to modify this config.");
+            message = NetworkText.FromKey("Mods.PvPAdventure.Config.CannotModify");
             return false;
         }
 
