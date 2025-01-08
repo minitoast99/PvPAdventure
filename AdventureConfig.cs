@@ -16,6 +16,7 @@ public class AdventureConfig : ModConfig
     public List<Bounty> Bounties { get; set; } = new();
     public Dictionary<ItemDefinition, ItemStatisticModification> ItemStatisticModifications { get; set; } = new();
     public CombatConfig Combat { get; set; } = new();
+    public List<ItemDefinition> PreventUse { get; set; } = new();
 
     public List<NPCDefinition> BossOrder { get; set; } =
     [

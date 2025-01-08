@@ -52,6 +52,11 @@ Mods: {
 					Tooltip: ""
 					Label: Boss Order
 				}
+
+				PreventUse: {
+					Label: Prevent Use
+					Tooltip: ""
+				}
 			}
 
 			PointsConfig: {
@@ -232,5 +237,7 @@ Mods: {
 				}
 			}
 		}
+
+		Item.Disabled: Cannot be used in this gamemode
 	}
 }
