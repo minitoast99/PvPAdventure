@@ -95,6 +95,13 @@ public class AdventureNpc : GlobalNPC
             maxSpawns = 0;
     }
 
+    public override void PostAI(NPC npc)
+    {
+        // Reduce the timeLeft requirement for Queen Bee despawn.
+        if (npc.type == NPCID.QueenBee && npc.timeLeft <= NPC.activeTime - (4.5 * 60))
+            npc.active = false;
+    }
+
     public static bool IsPartOfEaterOfWorlds(short type) =>
         type is NPCID.EaterofWorldsHead or NPCID.EaterofWorldsBody or NPCID.EaterofWorldsTail;
 
