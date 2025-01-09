@@ -22,6 +22,11 @@ public class AdventureNpc : GlobalNPC
     {
         if (Main.dedServ)
             On_NPC.PlayerInteraction += OnNPCPlayerInteraction;
+
+        // Prevent Empress of Light from targeting players during daytime, so she will despawn.
+        On_NPC.TargetClosest += OnNPCTargetClosest;
+        // Prevent Empress of Light from being enraged, so she won't instantly kill players.
+        On_NPC.ShouldEmpressBeEnraged += OnNPCShouldEmpressBeEnraged;
     }
 
     public override void OnSpawn(NPC npc, IEntitySource source)
@@ -59,6 +64,25 @@ public class AdventureNpc : GlobalNPC
         {
             self.GetGlobalNPC<AdventureNpc>().LastDamageFromPlayer = new DamageInfo((byte)player);
         }
+    }
+
+    private void OnNPCTargetClosest(On_NPC.orig_TargetClosest orig, NPC self, bool facetarget)
+    {
+        if (self.type == NPCID.HallowBoss && Main.IsItDay())
+        {
+            self.target = -1;
+            return;
+        }
+
+        orig(self, facetarget);
+    }
+
+    private bool OnNPCShouldEmpressBeEnraged(On_NPC.orig_ShouldEmpressBeEnraged orig)
+    {
+        if (Main.remixWorld)
+            return orig();
+
+        return false;
     }
 
     public override bool? CanBeHitByProjectile(NPC npc, Projectile projectile)
