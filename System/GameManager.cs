@@ -106,8 +106,8 @@ public class GameManager : ModSystem
                     if (npc.townNPC || npc.isLikeATownNPC || npc.type == NPCID.TargetDummy)
                         continue;
 
-                    npc.active = false;
-                    npc.type = NPCID.None;
+                    npc.life = 0;
+                    npc.netSkip = -1;
                     NetMessage.SendData(MessageID.SyncNPC, number: npc.whoAmI);
                 }
 
