@@ -202,6 +202,12 @@ public class AdventurePlayer : ModPlayer
         return true;
     }
 
+    public override void ResetEffects()
+    {
+        // FIXME: This does not truly belong here.
+        Player.hostile = true;
+    }
+
     public override void PreUpdate()
     {
         for (var i = 0; i < _playerMeleeInvincibleTime.Length; i++)
