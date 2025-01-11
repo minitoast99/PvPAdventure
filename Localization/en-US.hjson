@@ -148,6 +148,11 @@ Mods: {
 					Label: Golem Defeated
 					Tooltip: ""
 				}
+
+				SkeletronDefeated: {
+					Label: Skeletron Defeated
+					Tooltip: ""
+				}
 			}
 
 			WorldProgressionState: {

@@ -343,6 +343,10 @@ public class BountyManager : ModSystem
         if (bounty.Conditions.GolemDefeated && !NPC.downedGolemBoss)
             return false;
 
+        // This set requires Golem to be defeated, but it is not.
+        if (bounty.Conditions.SkeletronDefeated && !NPC.downedBoss3)
+            return false;
+
         return true;
     }
 }

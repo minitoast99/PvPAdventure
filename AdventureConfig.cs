@@ -83,6 +83,7 @@ public class AdventureConfig : ModConfig
         public bool DestroyerDefeated { get; set; }
         public bool PlanteraDefeated { get; set; }
         public bool GolemDefeated { get; set; }
+        public bool SkeletronDefeated { get; set; }
     }
 
     public class Bounty
