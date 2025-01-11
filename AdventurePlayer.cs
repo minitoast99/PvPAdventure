@@ -101,6 +101,8 @@ public class AdventurePlayer : ModPlayer
         On_Player.HasUnityPotion += OnPlayerHasUnityPotion;
 
         IL_Player.KillMe += EditPlayerKillMe;
+        // Always consider the respawn time for non-pvp deaths.
+        On_Player.GetRespawnTime += OnPlayerGetRespawnTime;
     }
 
     private void OnPlayerPlaceThing_Tiles(On_Player.orig_PlaceThing_Tiles orig, Player self)
@@ -178,6 +180,8 @@ public class AdventurePlayer : ModPlayer
             // ...and remove the load and subsequent branch.
             .RemoveRange(2);
     }
+
+    private int OnPlayerGetRespawnTime(On_Player.orig_GetRespawnTime orig, Player self, bool pvp) => orig(self, false);
 
     public override bool CanHitPvp(Item item, Player target)
     {
