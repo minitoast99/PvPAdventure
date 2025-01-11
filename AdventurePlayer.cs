@@ -103,6 +103,7 @@ public class AdventurePlayer : ModPlayer
         IL_Player.KillMe += EditPlayerKillMe;
         // Always consider the respawn time for non-pvp deaths.
         On_Player.GetRespawnTime += OnPlayerGetRespawnTime;
+        On_Player.Spawn += OnPlayerSpawn;
     }
 
     private void OnPlayerPlaceThing_Tiles(On_Player.orig_PlaceThing_Tiles orig, Player self)
@@ -168,6 +169,16 @@ public class AdventurePlayer : ModPlayer
             return false;
 
         return orig(self);
+    }
+
+    private void OnPlayerSpawn(On_Player.orig_Spawn orig, Player self, PlayerSpawnContext context)
+    {
+        // Don't count this as a PvP death.
+        self.pvpDeath = false;
+        orig(self, context);
+        // Remove immune and immune time applied during spawn.
+        self.immune = false;
+        self.immuneTime = 0;
     }
 
     private void EditPlayerKillMe(ILContext il)
