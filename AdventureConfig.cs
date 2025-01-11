@@ -110,6 +110,7 @@ public class AdventureConfig : ModConfig
         public class PlayerDamageBalanceConfig
         {
             public Dictionary<ItemDefinition, float> ItemDamageMultipliers { get; set; } = new();
+            public Dictionary<ProjectileDefinition, float> ProjectileDamageMultipliers { get; set; } = new();
         }
 
         public int MeleeInvincibilityFrames { get; set; } = 8;

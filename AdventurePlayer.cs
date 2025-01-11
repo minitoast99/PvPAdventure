@@ -472,6 +472,14 @@ public class AdventurePlayer : ModPlayer
                     out var multiplier))
                 modifiers.IncomingDamageMultiplier *= multiplier;
         }
+
+        if (modifiers.DamageSource.SourceProjectileType != ProjectileID.None)
+        {
+            var projectileDefinition = new ProjectileDefinition(modifiers.DamageSource.SourceProjectileType);
+            if (adventureConfig.Combat.PlayerDamageBalance.ProjectileDamageMultipliers.TryGetValue(projectileDefinition,
+                    out var multiplier))
+                modifiers.IncomingDamageMultiplier *= multiplier;
+        }
     }
 
     private void SendPingPong()
