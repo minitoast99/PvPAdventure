@@ -14,6 +14,7 @@ using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 using Terraria.ModLoader.IO;
 
 namespace PvPAdventure;
@@ -440,6 +441,23 @@ public class AdventurePlayer : ModPlayer
     public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
     {
         SyncStatistics(toWho, fromWho);
+    }
+
+    public override void ModifyHurt(ref Player.HurtModifiers modifiers)
+    {
+        if (!modifiers.PvP)
+            return;
+
+        var adventureConfig = ModContent.GetInstance<AdventureConfig>();
+
+        var sourceItem = modifiers.DamageSource.SourceItem;
+        if (sourceItem != null && !sourceItem.IsAir)
+        {
+            var itemDefinition = new ItemDefinition(sourceItem.type);
+            if (adventureConfig.Combat.PlayerDamageBalance.ItemDamageMultipliers.TryGetValue(itemDefinition,
+                    out var multiplier))
+                modifiers.IncomingDamageMultiplier *= multiplier;
+        }
     }
 
     private void SendPingPong()

@@ -1,11 +1,38 @@
 using PvPAdventure.System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace PvPAdventure;
 
 public class AdventureProjectile : GlobalProjectile
 {
+    private IEntitySource _entitySource;
+    public override bool InstancePerEntity => true;
+
+    public override void Load()
+    {
+        On_PlayerDeathReason.ByProjectile += OnPlayerDeathReasonByProjectile;
+    }
+
+    private PlayerDeathReason OnPlayerDeathReasonByProjectile(On_PlayerDeathReason.orig_ByProjectile orig,
+        int playerindex, int projectileindex)
+    {
+        var self = orig(playerindex, projectileindex);
+
+        var projectile = Main.projectile[projectileindex];
+        var adventureProjectile = projectile.GetGlobalProjectile<AdventureProjectile>();
+        if (adventureProjectile._entitySource is EntitySource_ItemUse entitySourceItemUse)
+            self.SourceItem = entitySourceItemUse.Item;
+
+        return self;
+    }
+
+    public override void OnSpawn(Projectile projectile, IEntitySource source)
+    {
+        _entitySource = source;
+    }
+
     public override bool? CanCutTiles(Projectile projectile)
     {
         if (projectile.owner == Main.myPlayer)

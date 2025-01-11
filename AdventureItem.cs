@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 
 namespace PvPAdventure;
 
@@ -20,20 +21,6 @@ public class AdventureItem : GlobalItem
         {
             item.useTime = 60 * 8;
             item.useAnimation = 60 * 8;
-        }
-
-        var adventureConfig = ModContent.GetInstance<AdventureConfig>();
-
-        // FIXME: Can't construct item definition this early...
-        var statisticModification =
-            adventureConfig.ItemStatisticModifications.SingleOrDefault(kv => kv.Key.Type == item.type);
-        // FIXME: Dumb!!!
-        if (statisticModification.Value != null)
-        {
-            // FIXME: Optional values!
-            item.damage = statisticModification.Value.Damage;
-            item.knockBack = statisticModification.Value.Knockback;
-            item.defense = statisticModification.Value.Defense;
         }
     }
 
@@ -61,8 +48,20 @@ public class AdventureItem : GlobalItem
 
     public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
     {
-        if (ModContent.GetInstance<AdventureConfig>().PreventUse
-            .Any(itemDefinition => item.type == itemDefinition.Type))
+        var adventureConfig = ModContent.GetInstance<AdventureConfig>();
+
+        var itemDefinition = new ItemDefinition(item.type);
+        if (adventureConfig.Combat.PlayerDamageBalance.ItemDamageMultipliers.TryGetValue(itemDefinition,
+                out var multiplier))
+        {
+            tooltips.Add(new TooltipLine(Mod, "CombatPlayerDamageBalance", $"-{(1.0f - multiplier) * 100}% PvP damage")
+            {
+                IsModifier = true,
+                IsModifierBad = true
+            });
+        }
+
+        if (adventureConfig.PreventUse.Contains(itemDefinition))
         {
             tooltips.Add(new TooltipLine(Mod, "Disabled", Language.GetTextValue("Mods.PvPAdventure.Item.Disabled"))
             {

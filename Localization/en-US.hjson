@@ -33,11 +33,6 @@ Mods: {
 					Tooltip: ""
 				}
 
-				ItemStatisticModifications: {
-					Label: Item Statistic Modifications
-					Tooltip: ""
-				}
-
 				Combat: {
 					Label: Combat
 					Tooltip: ""
@@ -181,25 +176,6 @@ Mods: {
 				}
 			}
 
-			ItemStatisticModification: {
-				Tooltip: ""
-
-				Damage: {
-					Label: Damage
-					Tooltip: ""
-				}
-
-				Knockback: {
-					Label: Knockback
-					Tooltip: ""
-				}
-
-				Defense: {
-					Label: Defense
-					Tooltip: ""
-				}
-			}
-
 			CombatConfig: {
 				Tooltip: ""
 
@@ -210,6 +186,11 @@ Mods: {
 
 				RecentDamagePreservationFrames: {
 					Label: Recent Damage Preservation Frames
+					Tooltip: ""
+				}
+
+				PlayerDamageBalance: {
+					Label: Player Damage Balance
 					Tooltip: ""
 				}
 			}
@@ -238,6 +219,20 @@ Mods: {
 			}
 
 			CannotModify: You are not permitted to modify this config.
+
+			PlayerDamageBalanceConfig: {
+				Tooltip: ""
+
+				ItemDamageMultipliers: {
+					Label: Item Damage Multipliers
+					Tooltip: ""
+				}
+
+				ProjectileDamageMultipliers: {
+					Label: Projectile Damage Multipliers
+					Tooltip: ""
+				}
+			}
 		}
 
 		Item.Disabled: Cannot be used in this gamemode
