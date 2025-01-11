@@ -76,7 +76,9 @@ public class BountyManager : ModSystem
             try
             {
                 Main.inventoryScale = InventoryScale;
-                base.DrawSelf(spriteBatch);
+                var item = itemArray[itemIndex];
+                var position = GetDimensions().Center() + new Vector2(52f, 52f) * -0.5f * Main.inventoryScale;
+                ItemSlot.Draw(spriteBatch, ref item, itemSlotContext, position);
             }
             finally
             {
@@ -125,9 +127,22 @@ public class BountyManager : ModSystem
             {
                 Width = { Percent = 1.0f },
                 Height = { Percent = 1.0f },
-                PaddingTop = 60.0f,
-                PaddingBottom = 30.0f, PaddingLeft = 30.0f, PaddingRight = 30.0f,
+                PaddingTop = 60.0f, PaddingBottom = 30.0f, PaddingLeft = 30.0f, PaddingRight = 30.0f
             };
+
+            var scrollbar = new UIScrollbar
+            {
+                Top = { Pixels = -5f },
+                Height =
+                {
+                    Pixels = -20.0f,
+                    Percent = 1.0f
+                },
+                HAlign = 1.0f,
+                VAlign = 1.0f
+            };
+            scrollbar.SetView(100.0f, 1000.0f);
+            bountyList.SetScrollbar(scrollbar);
 
             root.Append(bountyList);
 
