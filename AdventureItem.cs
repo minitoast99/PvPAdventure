@@ -54,7 +54,8 @@ public class AdventureItem : GlobalItem
         if (adventureConfig.Combat.PlayerDamageBalance.ItemDamageMultipliers.TryGetValue(itemDefinition,
                 out var multiplier))
         {
-            tooltips.Add(new TooltipLine(Mod, "CombatPlayerDamageBalance", $"-{(1.0f - multiplier) * 100}% PvP damage")
+            // FIXME: The mod config is very imprecise with floating points. Do some rounding to make the UI cleaner.
+            tooltips.Add(new TooltipLine(Mod, "CombatPlayerDamageBalance", $"-{(int)((1.0f - multiplier) * 100)}% PvP damage")
             {
                 IsModifier = true,
                 IsModifierBad = true
