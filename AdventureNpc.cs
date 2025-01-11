@@ -32,7 +32,8 @@ public class AdventureNpc : GlobalNPC
     public override void OnSpawn(NPC npc, IEntitySource source)
     {
         if (npc.isLikeATownNPC)
-            npc.dontTakeDamage = true;
+            // FIXME: Should be marked as dontTakeDamage instead, doesn't function for some reason.
+            npc.immortal = true;
     }
 
     private static void OnNPCPlayerInteraction(On_NPC.orig_PlayerInteraction orig, NPC self, int player)
