@@ -14,7 +14,7 @@ namespace PvPAdventure;
 
 public class PvPAdventure : Mod
 {
-    private const bool AllowLoadingWhilstDisconnected = true;
+    private const bool AllowLoadingWhilstDisconnected = false;
 
     public override void Load()
     {

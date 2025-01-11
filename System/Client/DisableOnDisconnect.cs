@@ -8,7 +8,7 @@ namespace PvPAdventure.System.Client;
 [Autoload(Side = ModSide.Client)]
 public class DisableOnDisconnect : ModSystem
 {
-    private const bool Enabled = false;
+    private const bool Enabled = true;
     private bool _waitingForPlayerToChangeMenu;
 
     public override void Load()

@@ -8,7 +8,7 @@ namespace PvPAdventure.System;
 [Autoload(Side = ModSide.Both)]
 public class CombatManager : ModSystem
 {
-    private const bool PreventPersonalCombatModifications = false;
+    private const bool PreventPersonalCombatModifications = true;
 
     public override void Load()
     {
