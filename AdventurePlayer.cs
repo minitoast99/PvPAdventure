@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Discord.Rest;
 using Microsoft.Xna.Framework;
+using MonoMod.Cil;
 using PvPAdventure.System;
 using PvPAdventure.System.Client;
 using PvPAdventure.System.Client.Interface;
@@ -98,6 +99,8 @@ public class AdventurePlayer : ModPlayer
         On_Player.ItemCheck_CutTiles += OnPlayerItemCheck_CutTiles;
 
         On_Player.HasUnityPotion += OnPlayerHasUnityPotion;
+
+        IL_Player.KillMe += EditPlayerKillMe;
     }
 
     private void OnPlayerPlaceThing_Tiles(On_Player.orig_PlaceThing_Tiles orig, Player self)
@@ -163,6 +166,17 @@ public class AdventurePlayer : ModPlayer
             return false;
 
         return orig(self);
+    }
+
+    private void EditPlayerKillMe(ILContext il)
+    {
+        var cursor = new ILCursor(il);
+        // Find the call to DropCoins...
+        cursor.GotoNext(i => i.MatchCall<Player>("DropCoins"))
+            // ...but go backwards to find the load to the 'pvp' parameter of the KillMe method
+            .GotoPrev(i => i.MatchLdarg(4))
+            // ...and remove the load and subsequent branch.
+            .RemoveRange(2);
     }
 
     public override bool CanHitPvp(Item item, Player target)
