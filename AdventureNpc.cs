@@ -1,4 +1,6 @@
 using System.Linq;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using PvPAdventure.System;
 using Terraria;
 using Terraria.DataStructures;
@@ -27,6 +29,9 @@ public class AdventureNpc : GlobalNPC
         On_NPC.TargetClosest += OnNPCTargetClosest;
         // Prevent Empress of Light from being enraged, so she won't instantly kill players.
         On_NPC.ShouldEmpressBeEnraged += OnNPCShouldEmpressBeEnraged;
+        // Clients and servers sync the Shimmer buff upon all collisions constantly for NPCs.
+        // Mark it as quiet so just the server does this.
+        IL_NPC.Collision_WaterCollision += EditNPCCollision_WaterCollision;
     }
 
     public override void OnSpawn(NPC npc, IEntitySource source)
@@ -85,6 +90,22 @@ public class AdventureNpc : GlobalNPC
 
         return false;
     }
+
+    private void EditNPCCollision_WaterCollision(ILContext il)
+    {
+        var cursor = new ILCursor(il);
+        // Find the store to shimmerWet...
+        cursor.GotoNext(i => i.MatchStfld<Entity>("shimmerWet"));
+        // ...to find the call to AddBuff...
+        cursor.GotoNext(i => i.MatchCall<NPC>("AddBuff"));
+        // ...to go back to the "quiet" parameter...
+        cursor.Index -= 1;
+        // ...to remove it...
+        cursor.Remove();
+        // ...and replace it with true.
+        cursor.Emit(OpCodes.Ldc_I4_1);
+    }
+
 
     public override bool? CanBeHitByProjectile(NPC npc, Projectile projectile)
     {
