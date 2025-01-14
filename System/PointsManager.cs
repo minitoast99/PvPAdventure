@@ -144,11 +144,24 @@ public class PointsManager : ModSystem
             _downedNpcs[team].Add(NPCID.EaterofWorldsTail);
         }
 
+        string fullName;
+
+        if (npc.type == NPCID.Retinazer || npc.type == NPCID.Spazmatism)
+        {
+            _downedNpcs[team].Add(NPCID.Spazmatism);
+            _downedNpcs[team].Add(NPCID.Retinazer);
+            fullName = "The Twins";
+        }
+        else
+        {
+            fullName = npc.FullName;
+        }
+
         NetMessage.SendData(MessageID.WorldData);
 
         // FIXME: Better message and dedicated interface
         ChatHelper.BroadcastChatMessage(
-            NetworkText.FromLiteral($"Team {team} killed {npc.FullName} for {pointsToAward} point(s)"), Color.White);
+            NetworkText.FromLiteral($"Team {team} killed {fullName} for {pointsToAward} point(s)"), Color.White);
     }
 
     public void AwardPlayerKillToTeam(Team killerTeam, Player victim)
