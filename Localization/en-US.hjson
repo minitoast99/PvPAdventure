@@ -267,6 +267,35 @@ Mods: {
 					Label: Projectile Damage Multipliers
 					Tooltip: ""
 				}
+
+				ItemFalloff: {
+					Label: Item Falloff
+					Tooltip: ""
+				}
+
+				ProjectileFalloff: {
+					Label: Projectile Falloff
+					Tooltip: ""
+				}
+
+				DefaultFalloff: {
+					Tooltip: ""
+					Label: Default Falloff
+				}
+			}
+
+			Falloff: {
+				Coefficient: {
+					Tooltip: ""
+					Label: Coefficient
+				}
+
+				Forward: {
+					Label: Forward
+					Tooltip: ""
+				}
+
+				Tooltip: ""
 			}
 		}
 

@@ -478,23 +478,44 @@ public class AdventurePlayer : ModPlayer
             return;
 
         var adventureConfig = ModContent.GetInstance<AdventureConfig>();
+        var playerDamageBalance = adventureConfig.Combat.PlayerDamageBalance;
+
+        var sourcePlayer = Main.player[modifiers.DamageSource.SourcePlayerIndex];
+        var tileDistance = Player.Distance(sourcePlayer.position) / 16.0f;
+
+        var hasIncurredFalloff = false;
 
         var sourceItem = modifiers.DamageSource.SourceItem;
         if (sourceItem != null && !sourceItem.IsAir)
         {
             var itemDefinition = new ItemDefinition(sourceItem.type);
-            if (adventureConfig.Combat.PlayerDamageBalance.ItemDamageMultipliers.TryGetValue(itemDefinition,
-                    out var multiplier))
+            if (playerDamageBalance.ItemDamageMultipliers.TryGetValue(itemDefinition, out var multiplier))
                 modifiers.IncomingDamageMultiplier *= multiplier;
+
+            if (playerDamageBalance.ItemFalloff.TryGetValue(itemDefinition, out var falloff) &&
+                falloff != null)
+            {
+                modifiers.IncomingDamageMultiplier *= falloff.CalculateMultiplier(tileDistance);
+                hasIncurredFalloff = true;
+            }
         }
 
         if (modifiers.DamageSource.SourceProjectileType != ProjectileID.None)
         {
             var projectileDefinition = new ProjectileDefinition(modifiers.DamageSource.SourceProjectileType);
-            if (adventureConfig.Combat.PlayerDamageBalance.ProjectileDamageMultipliers.TryGetValue(projectileDefinition,
-                    out var multiplier))
+            if (playerDamageBalance.ProjectileDamageMultipliers.TryGetValue(projectileDefinition, out var multiplier))
                 modifiers.IncomingDamageMultiplier *= multiplier;
+
+            if (playerDamageBalance.ProjectileFalloff.TryGetValue(projectileDefinition, out var falloff) &&
+                falloff != null)
+            {
+                modifiers.IncomingDamageMultiplier *= falloff.CalculateMultiplier(tileDistance);
+                hasIncurredFalloff = true;
+            }
         }
+
+        if (!hasIncurredFalloff && playerDamageBalance.DefaultFalloff != null)
+            modifiers.IncomingDamageMultiplier *= playerDamageBalance.DefaultFalloff.CalculateMultiplier(tileDistance);
     }
 
     private void SendPingPong()

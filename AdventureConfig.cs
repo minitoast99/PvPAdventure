@@ -139,6 +139,25 @@ public class AdventureConfig : ModConfig
         {
             public Dictionary<ItemDefinition, float> ItemDamageMultipliers { get; set; } = new();
             public Dictionary<ProjectileDefinition, float> ProjectileDamageMultipliers { get; set; } = new();
+
+            public class Falloff
+            {
+                [Increment(0.0001f)]
+                [Range(0.0f, 1.0f)]
+                public float Coefficient { get; set; }
+
+                [Increment(0.05f)]
+                [Range(0.0f, 100.0f)]
+                public float Forward { get; set; }
+
+                public float CalculateMultiplier(float tileDistance) =>
+                    (float)Math.Min(Math.Pow(Math.E, -(Coefficient * (tileDistance - Forward) / 100.0)), 1.0);
+            }
+
+            public Dictionary<ItemDefinition, Falloff> ItemFalloff { get; set; } = new();
+            public Dictionary<ProjectileDefinition, Falloff> ProjectileFalloff { get; set; } = new();
+
+            [DefaultValue(null)] [NullAllowed] public Falloff DefaultFalloff { get; set; }
         }
 
         [Range(0, 5 * 60)] [DefaultValue(8)] public int MeleeInvincibilityFrames { get; set; }
