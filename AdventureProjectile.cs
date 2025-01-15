@@ -1,6 +1,8 @@
+using Microsoft.Xna.Framework;
 using PvPAdventure.System;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace PvPAdventure;
@@ -45,6 +47,14 @@ public class AdventureProjectile : GlobalProjectile
         }
 
         return null;
+    }
+
+    public override bool OnTileCollide(Projectile projectile, Vector2 oldVelocity)
+    {
+        if (projectile.type == ProjectileID.RainbowRodBullet)
+            projectile.Kill();
+
+        return true;
     }
 
     public override void SetDefaults(Projectile entity)
