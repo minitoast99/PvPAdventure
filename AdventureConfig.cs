@@ -17,6 +17,11 @@ public class AdventureConfig : ModConfig
     public CombatConfig Combat { get; set; } = new();
     public List<ItemDefinition> PreventUse { get; set; } = new();
 
+    public List<NPCDefinition> NpcSpawnAnnouncements { get; set; } = new()
+    {
+        new(NPCID.CultistBoss)
+    };
+
     public List<NPCDefinition> BossOrder { get; set; } =
     [
         new(NPCID.KingSlime),

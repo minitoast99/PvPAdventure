@@ -3,10 +3,13 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using PvPAdventure.System;
 using Terraria;
+using Terraria.Chat;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 
 namespace PvPAdventure;
 
@@ -39,6 +42,17 @@ public class AdventureNpc : GlobalNPC
         if (npc.isLikeATownNPC)
             // FIXME: Should be marked as dontTakeDamage instead, doesn't function for some reason.
             npc.immortal = true;
+
+        var adventureConfig = ModContent.GetInstance<AdventureConfig>();
+
+        if (adventureConfig.NpcSpawnAnnouncements.Contains(new NPCDefinition(npc.type)))
+        {
+            if (Main.netMode == NetmodeID.SinglePlayer)
+                Main.NewText(Language.GetTextValue("Announcement.HasAwoken", npc.TypeName), 175, 75);
+            else if (Main.netMode == NetmodeID.Server)
+                ChatHelper.BroadcastChatMessage(NetworkText.FromKey("Announcement.HasAwoken", npc.GetTypeNetName()),
+                    new(175, 75, 255));
+        }
     }
 
     private static void OnNPCPlayerInteraction(On_NPC.orig_PlayerInteraction orig, NPC self, int player)

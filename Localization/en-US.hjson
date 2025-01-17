@@ -52,6 +52,11 @@ Mods: {
 					Label: Prevent Use
 					Tooltip: ""
 				}
+
+				NpcSpawnAnnouncements: {
+					Label: Npc Spawn Announcements
+					Tooltip: ""
+				}
 			}
 
 			PointsConfig: {
