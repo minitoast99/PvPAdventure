@@ -17,14 +17,29 @@ public class AdventureProjectile : GlobalProjectile
         On_PlayerDeathReason.ByProjectile += OnPlayerDeathReasonByProjectile;
     }
 
+    private static EntitySource_ItemUse GetItemUseSource(Projectile projectile, Projectile lastProjectile)
+    {
+        var adventureProjectile = projectile.GetGlobalProjectile<AdventureProjectile>();
+
+        if (adventureProjectile._entitySource is EntitySource_ItemUse entitySourceItemUse)
+            return entitySourceItemUse;
+
+        if (adventureProjectile._entitySource is EntitySource_Parent entitySourceParent &&
+            entitySourceParent.Entity is Projectile projectileParent && projectileParent != lastProjectile)
+            return GetItemUseSource(projectileParent, projectile);
+
+        return null;
+    }
+
     private PlayerDeathReason OnPlayerDeathReasonByProjectile(On_PlayerDeathReason.orig_ByProjectile orig,
         int playerindex, int projectileindex)
     {
         var self = orig(playerindex, projectileindex);
 
         var projectile = Main.projectile[projectileindex];
-        var adventureProjectile = projectile.GetGlobalProjectile<AdventureProjectile>();
-        if (adventureProjectile._entitySource is EntitySource_ItemUse entitySourceItemUse)
+        var entitySourceItemUse = GetItemUseSource(projectile, null);
+
+        if (entitySourceItemUse != null)
             self.SourceItem = entitySourceItemUse.Item;
 
         return self;
