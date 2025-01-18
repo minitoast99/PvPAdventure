@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -6,6 +7,7 @@ using Terraria;
 using Terraria.Chat;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -147,6 +149,12 @@ public class AdventureNpc : GlobalNPC
             return;
 
         ModContent.GetInstance<PointsManager>().AwardNpcKillToTeam((Team)lastDamager.team, npc);
+    }
+
+    public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+    {
+        if (IsPartOfEaterOfWorlds((short)npc.type))
+            npcLoot.Add(ItemDropRule.ByCondition(new Conditions.LegacyHack_IsBossAndNotExpert(), ItemID.WormScarf));
     }
 
     public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
