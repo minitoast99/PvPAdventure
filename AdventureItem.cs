@@ -56,7 +56,8 @@ public class AdventureItem : GlobalItem
                 out var multiplier))
         {
             // FIXME: The mod config is very imprecise with floating points. Do some rounding to make the UI cleaner.
-            tooltips.Add(new TooltipLine(Mod, "CombatPlayerDamageBalance", $"-{(int)((1.0f - multiplier) * 100)}% PvP damage")
+            tooltips.Add(new TooltipLine(Mod, "CombatPlayerDamageBalance",
+                $"-{(int)((1.0f - multiplier) * 100)}% PvP damage")
             {
                 IsModifier = true,
                 IsModifierBad = true
