@@ -55,6 +55,10 @@ public class AdventureConfig : ModConfig
 
     public Dictionary<int, int> InvasionSizes { get; set; } = new();
 
+    [Range(0, 60 * 60)]
+    [DefaultValue(4 * 60)]
+    public int RecallFrames { get; set; }
+
     public class PointsConfig
     {
         public Dictionary<NPCDefinition, NpcPoints> Npc { get; set; } = new();

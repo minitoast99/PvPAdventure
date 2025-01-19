@@ -62,6 +62,11 @@ Mods: {
 					Label: Invasion Sizes
 					Tooltip: ""
 				}
+
+				RecallFrames: {
+					Label: Recall Frames
+					Tooltip: ""
+				}
 			}
 
 			PointsConfig: {

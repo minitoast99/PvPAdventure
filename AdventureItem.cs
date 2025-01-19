@@ -19,8 +19,9 @@ public class AdventureItem : GlobalItem
     {
         if (RecallItems[item.type])
         {
-            item.useTime = 60 * 8;
-            item.useAnimation = 60 * 8;
+            var recallTime = ModContent.GetInstance<AdventureConfig>().RecallFrames;
+            item.useTime = recallTime * 2;
+            item.useAnimation = recallTime * 2;
         }
     }
 
