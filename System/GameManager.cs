@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.Enums;
@@ -45,6 +46,8 @@ public class GameManager : ModSystem
         On_WorldGen.TriggerLunarApocalypse += _ => { };
 
         On_Main.StartInvasion += OnMainStartInvasion;
+        // Only send world map pings to teammates.
+        On_NetPingModule.Deserialize += OnNetPingModuleDeserialize;
     }
 
     private void OnMainStartInvasion(On_Main.orig_StartInvasion orig, int type)
@@ -64,6 +67,28 @@ public class GameManager : ModSystem
             Mod.Logger.Info($"Reducing invasion {type} size from {Main.invasionSize} to {invasionSize}");
             Main.invasionSize = Main.invasionSizeStart = Main.invasionProgressMax = invasionSize;
         }
+    }
+
+    // NOTE: This should only ever be applied to the server.
+    private bool OnNetPingModuleDeserialize(On_NetPingModule.orig_Deserialize orig, NetPingModule self,
+        BinaryReader reader, int userid)
+    {
+        var position = reader.ReadVector2();
+        var packet = NetPingModule.Serialize(position);
+
+        var senderTeam = (Team)Main.player[userid].team;
+
+        foreach (var client in Netplay.Clients)
+        {
+            if (!client.IsActive)
+                continue;
+
+            var player = Main.player[client.Id];
+            if (!player.active || player.team == (int)Team.None || player.team == (int)senderTeam)
+                NetManager.Instance.SendToClient(packet, client.Id);
+        }
+
+        return true;
     }
 
     public override void PostUpdateTime()
