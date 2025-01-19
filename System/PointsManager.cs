@@ -321,6 +321,8 @@ public class PointsManager : ModSystem
                 playersList.Add(new UIText(pointsText, 0.5f, large: true)
                 {
                     HAlign = 0.5f,
+                    // So we don't get cut off by our parent panel at the top.
+                    PaddingTop = 4.0f,
                     PaddingBottom = 12.0f,
                 });
 
