@@ -67,6 +67,11 @@ Mods: {
 					Label: Recall Frames
 					Tooltip: ""
 				}
+
+				SpawnImmuneFrames: {
+					Label: Spawn Immune Frames
+					Tooltip: ""
+				}
 			}
 
 			PointsConfig: {

@@ -59,6 +59,10 @@ public class AdventureConfig : ModConfig
     [DefaultValue(4 * 60)]
     public int RecallFrames { get; set; }
 
+    [Range(0, 30 * 60)]
+    [DefaultValue(1.5 * 60)]
+    public int SpawnImmuneFrames { get; set; }
+
     public class PointsConfig
     {
         public Dictionary<NPCDefinition, NpcPoints> Npc { get; set; } = new();

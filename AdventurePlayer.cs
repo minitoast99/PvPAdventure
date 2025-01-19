@@ -176,8 +176,9 @@ public class AdventurePlayer : ModPlayer
         self.pvpDeath = false;
         orig(self, context);
         // Remove immune and immune time applied during spawn.
-        self.immune = false;
-        self.immuneTime = 0;
+        var adventureConfig = ModContent.GetInstance<AdventureConfig>();
+        self.immuneTime = adventureConfig.SpawnImmuneFrames;
+        self.immune = self.immuneTime > 0;
     }
 
     private void EditPlayerKillMe(ILContext il)
