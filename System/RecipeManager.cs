@@ -38,7 +38,6 @@ namespace PvPAdventure.System
 
                     Recipe.Create(lootTable[i])
                         .AddIngredient(lootTable[j], amountOfMaterial)
-                        .AddTile(TileID.WorkBenches)
                         .Register();
                 }
             }
