@@ -17,7 +17,8 @@ namespace PvPAdventure.System
             [
                 ItemID.GolemFist, ItemID.PossessedHatchet, ItemID.Stynger, ItemID.StaffofEarth, ItemID.HeatRay,
                 ItemID.SunStone, ItemID.EyeoftheGolem
-            ]
+            ],
+            [ItemID.Flairon, ItemID.Tsunami, ItemID.RazorbladeTyphoon, ItemID.BubbleGun, ItemID.TempestStaff]
         ];
 
         public override void AddRecipes()
