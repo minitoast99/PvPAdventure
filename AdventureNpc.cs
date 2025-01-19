@@ -140,8 +140,11 @@ public class AdventureNpc : GlobalNPC
     {
         var config = ModContent.GetInstance<AdventureConfig>();
 
-        if (npc.boss &&
-            config.BossInvulnerableProjectiles.Any(projectileDefinition =>
+        var isBoss = npc.boss
+                     || IsPartOfEaterOfWorlds((short)npc.type)
+                     || IsPartOfTheDestroyer((short)npc.type);
+
+        if (isBoss && config.BossInvulnerableProjectiles.Any(projectileDefinition =>
                 projectileDefinition.Type == projectile.type))
             return false;
 
