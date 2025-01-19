@@ -53,6 +53,8 @@ public class AdventureConfig : ModConfig
         new(ProjectileID.BouncyDynamite)
     ];
 
+    public Dictionary<int, int> InvasionSizes { get; set; } = new();
+
     public class PointsConfig
     {
         public Dictionary<NPCDefinition, NpcPoints> Npc { get; set; } = new();

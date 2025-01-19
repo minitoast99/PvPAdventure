@@ -57,6 +57,11 @@ Mods: {
 					Label: Npc Spawn Announcements
 					Tooltip: ""
 				}
+
+				InvasionSizes: {
+					Label: Invasion Sizes
+					Tooltip: ""
+				}
 			}
 
 			PointsConfig: {

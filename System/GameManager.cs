@@ -33,16 +33,37 @@ public class GameManager : ModSystem
         }
     }
 
-    public override void Load()
-    {
-        // Prevent the world from entering the lunar apocalypse (killing cultist and spawning pillars)
-        On_WorldGen.TriggerLunarApocalypse += _ => { };
-    }
-
     public enum Phase
     {
         Waiting,
         Playing,
+    }
+
+    public override void Load()
+    {
+        // Prevent the world from entering the lunar apocalypse (killing cultist and spawning pillars)
+        On_WorldGen.TriggerLunarApocalypse += _ => { };
+
+        On_Main.StartInvasion += OnMainStartInvasion;
+    }
+
+    private void OnMainStartInvasion(On_Main.orig_StartInvasion orig, int type)
+    {
+        orig(type);
+
+        if (Main.invasionType == InvasionID.None)
+            return;
+
+        var adventureConfig = ModContent.GetInstance<AdventureConfig>();
+        if (!adventureConfig.InvasionSizes.TryGetValue(type, out var invasionSize))
+            return;
+
+        // We shouldn't increase the invasion size, only ever decrease it.
+        if (Main.invasionSize > invasionSize)
+        {
+            Mod.Logger.Info($"Reducing invasion {type} size from {Main.invasionSize} to {invasionSize}");
+            Main.invasionSize = Main.invasionSizeStart = Main.invasionProgressMax = invasionSize;
+        }
     }
 
     public override void PostUpdateTime()
