@@ -37,6 +37,8 @@ public class AdventureNpc : GlobalNPC
         // Clients and servers sync the Shimmer buff upon all collisions constantly for NPCs.
         // Mark it as quiet so just the server does this.
         IL_NPC.Collision_WaterCollision += EditNPCCollision_WaterCollision;
+        // Ensure that transformed NPCs (usually those bound) are also immortal.
+        On_NPC.Transform += OnNPCTransform;
     }
 
     public override void SetDefaults(NPC entity)
@@ -125,6 +127,14 @@ public class AdventureNpc : GlobalNPC
         cursor.Emit(OpCodes.Ldc_I4_1);
     }
 
+    private void OnNPCTransform(On_NPC.orig_Transform orig, NPC self, int newtype)
+    {
+        orig(self, newtype);
+
+        if (self.isLikeATownNPC)
+            // FIXME: Should be marked as dontTakeDamage instead, doesn't function for some reason.
+            self.immortal = true;
+    }
 
     public override bool? CanBeHitByProjectile(NPC npc, Projectile projectile)
     {
