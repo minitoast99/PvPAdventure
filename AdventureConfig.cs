@@ -63,6 +63,16 @@ public class AdventureConfig : ModConfig
     [DefaultValue(1.5 * 60)]
     public int SpawnImmuneFrames { get; set; }
 
+    public List<string> CrashoutMessages { get; set; } =
+    [
+        "Is it break yet?",
+        "Getting mogged by Matte \"Heat Ray\" Sevai",
+        "If you aren't good enough, go play THC",
+        "39 buried. 0 Tabis.",
+        "That right there is 100% skill issue",
+        "Too many surface RTPs"
+    ];
+
     public class PointsConfig
     {
         public Dictionary<NPCDefinition, NpcPoints> Npc { get; set; } = new();

@@ -286,4 +286,23 @@ public class GameManager : ModSystem
         public override string Command => "timeleft";
         public override CommandType Type => CommandType.World;
     }
+
+    public class CrashoutCommand : ModCommand
+    {
+        public override void Action(CommandCaller caller, string input, string[] args)
+        {
+            if (Main.netMode == NetmodeID.SinglePlayer)
+                return;
+
+            var crashoutMessages = ModContent.GetInstance<AdventureConfig>().CrashoutMessages;
+            var message = crashoutMessages[Main.rand.Next(0, crashoutMessages.Count)];
+
+            ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral($"{caller.Player.name} crashed out: {message}"),
+                Color.Red, caller.Player.whoAmI);
+            NetMessage.SendData(MessageID.Kick, caller.Player.whoAmI, text: NetworkText.FromLiteral(message));
+        }
+
+        public override string Command => "crashout";
+        public override CommandType Type => CommandType.World;
+    }
 }

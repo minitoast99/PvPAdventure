@@ -72,6 +72,11 @@ Mods: {
 					Label: Spawn Immune Frames
 					Tooltip: ""
 				}
+
+				CrashoutMessages: {
+					Label: Crashout Messages
+					Tooltip: ""
+				}
 			}
 
 			PointsConfig: {
