@@ -279,6 +279,7 @@ public class BountyManager : ModSystem
         TransactionId = reader.ReadInt32();
 
         UiBountyShop.Invalidate();
+        ModContent.GetInstance<PointsManager>().UiScoreboard.Invalidate();
     }
 
     public void AwardToTeam(Team team)

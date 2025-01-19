@@ -318,7 +318,18 @@ public class PointsManager : ModSystem
                 if (points != 1)
                     pointsText += 's';
 
-                playersList.Add(new UIText(pointsText, large: true)
+                playersList.Add(new UIText(pointsText, 0.5f, large: true)
+                {
+                    HAlign = 0.5f,
+                    PaddingBottom = 12.0f,
+                });
+
+                var bountyShards = ModContent.GetInstance<BountyManager>().Bounties[team].Count;
+                var bountyShardsText = $"{bountyShards} bounty shard";
+                if (bountyShards != 1)
+                    bountyShardsText += 's';
+
+                playersList.Add(new UIText(bountyShardsText, 0.5f, large: true)
                 {
                     HAlign = 0.5f,
                     PaddingBottom = 12.0f,
