@@ -8,6 +8,7 @@ using MonoMod.Cil;
 using PvPAdventure.System;
 using PvPAdventure.System.Client;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameInput;
@@ -445,6 +446,9 @@ public class AdventurePlayer : ModPlayer
             else
                 Main.InGameUI.SetState(bountyShop);
         }
+
+        if (keybinds.TeamChat.JustPressed)
+            ModContent.GetInstance<TeamChatManager>().Open();
     }
 
     private void SyncStatistics(int to = -1, int ignore = -1)

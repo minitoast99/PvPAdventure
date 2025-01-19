@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.Chat;
 using Terraria.Chat.Commands;
 using Terraria.GameContent;
@@ -21,10 +22,14 @@ public class TeamChatManager : ModSystem
 
     private Channel _channel = Channel.All;
     private FieldInfo _chatCommandIdName;
+    private MethodInfo _soundEnginePlaySoundLegacy;
 
     public override void Load()
     {
         _chatCommandIdName = typeof(ChatCommandId).GetField("_name", BindingFlags.Instance | BindingFlags.NonPublic);
+        _soundEnginePlaySoundLegacy =
+            typeof(SoundEngine).GetMethod("PlaySound", BindingFlags.Static | BindingFlags.NonPublic,
+                [typeof(int), typeof(int), typeof(int), typeof(int), typeof(float), typeof(float)]);
 
         // Pick a channel when you open the chat.
         On_Main.OpenPlayerChat += OnMainOpenPlayerChat;
@@ -81,5 +86,37 @@ public class TeamChatManager : ModSystem
         }
 
         return chatMessage;
+    }
+
+    public void Open()
+    {
+        // Copied from Main.DoUpdate_Enter_ToggleChat
+        if (!Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt) &&
+            !Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightAlt) &&
+            Main.hasFocus)
+        {
+            if (!Main.InGameUI.IsVisible &&
+                !Main.ingameOptionsWindow &&
+                Main.chatRelease &&
+                !Main.drawingPlayerChat &&
+                !Main.editSign &&
+                !Main.editChest &&
+                !Main.gameMenu &&
+                !Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
+            {
+                _channel = Channel.Team;
+
+                // SoundEngine.PlaySound(10);
+                _soundEnginePlaySoundLegacy.Invoke(null, [10, -1, -1, 1, 1.0f, 0.0f]);
+                Main.OpenPlayerChat();
+                Main.chatText = "";
+            }
+
+            Main.chatRelease = false;
+        }
+        else
+        {
+            Main.chatRelease = true;
+        }
     }
 }
