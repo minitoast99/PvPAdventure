@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using MonoMod.Cil;
 using PvPAdventure.System;
 using PvPAdventure.System.Client;
-using PvPAdventure.System.Client.Interface;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -416,13 +415,13 @@ public class AdventurePlayer : ModPlayer
 
     public override void ProcessTriggers(TriggersSet triggersSet)
     {
-        var scoreboard = ModContent.GetInstance<Scoreboard>();
+        var pointsManager = ModContent.GetInstance<PointsManager>();
         var keybinds = ModContent.GetInstance<Keybinds>();
 
         if (keybinds.Scoreboard.JustPressed)
         {
-            scoreboard.Visible = true;
-            Main.InGameUI.SetState(ModContent.GetInstance<Scoreboard>().UiScoreboard);
+            pointsManager.BossCompletion.Active = true;
+            Main.InGameUI.SetState(pointsManager.UiScoreboard);
             // Main.InGameUI.SetState(ModContent.GetInstance<BountyManager>().UiBountyShop);
             // ModContent.GetInstance<ObjectiveNotice>()
             // .AddPlayerDeathNotice(Main.player[0], Main.player[0], Main.player[0].HeldItem);
@@ -432,7 +431,7 @@ public class AdventurePlayer : ModPlayer
         }
         else if (keybinds.Scoreboard.JustReleased)
         {
-            scoreboard.Visible = false;
+            pointsManager.BossCompletion.Active = false;
             Main.InGameUI.SetState(null);
         }
 

@@ -3,7 +3,6 @@ using System.IO;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using PvPAdventure.System;
-using PvPAdventure.System.Client.Interface;
 using Terraria;
 using Terraria.Enums;
 using Terraria.ID;
@@ -106,7 +105,7 @@ public class PvPAdventure : Mod
 
                 // FIXME: bruh thats a little dumb maybe
                 if (!Main.dedServ)
-                    ModContent.GetInstance<Scoreboard>().UiScoreboard.Invalidate();
+                    ModContent.GetInstance<PointsManager>().UiScoreboard.Invalidate();
 
                 break;
             }
