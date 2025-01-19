@@ -421,16 +421,8 @@ public class PointsManager : ModSystem
                 new Vector2((containerPadding + (numberOfBosses * horizontalSpaceBetweenBossHeads)) - teamIconXOffset,
                     245);
 
-            // Horizontally center the dialog, with a slight bias towards the right, mostly on 1920x1080, decreasingly
-            // so as our width increases.
-            // The bias is so we are put slightly past the inventory slots.
-            // This likely doesn't work very well on resolutions that are lower than 1920x1080
-            //
             // Cast to int so no strange aliasing occurs on anything we render -- we only work with whole numbers in the end.
-            var containerPosition =
-                new Vector2(
-                    (int)(((Main.screenWidth / 2.0f) - (containerSize.X / 2.0f)) +
-                          (60.0f * (1920.0f / Main.screenWidth))), 740);
+            var containerPosition = new Vector2((int)((Main.screenWidth / 2.0f) - (containerSize.X / 2.0f)), 740);
 
             Utils.DrawInvBG(Main.spriteBatch, containerPosition.X, containerPosition.Y, containerSize.X,
                 containerSize.Y);
