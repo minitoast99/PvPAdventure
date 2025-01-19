@@ -39,12 +39,15 @@ public class AdventureNpc : GlobalNPC
         IL_NPC.Collision_WaterCollision += EditNPCCollision_WaterCollision;
     }
 
+    public override void SetDefaults(NPC entity)
+    {
+        if (entity.isLikeATownNPC)
+            // FIXME: Should be marked as dontTakeDamage instead, doesn't function for some reason.
+            entity.immortal = true;
+    }
+
     public override void OnSpawn(NPC npc, IEntitySource source)
     {
-        if (npc.isLikeATownNPC)
-            // FIXME: Should be marked as dontTakeDamage instead, doesn't function for some reason.
-            npc.immortal = true;
-
         var adventureConfig = ModContent.GetInstance<AdventureConfig>();
 
         if (adventureConfig.NpcSpawnAnnouncements.Contains(new NPCDefinition(npc.type)))
