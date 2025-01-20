@@ -1,6 +1,6 @@
 displayName = PvP Adventure
 author = James Puleo <james@jame.xyz>
-version = 0.1.0
+version = 0.2.0
 hideCode = true
 homepage = https://tpvpa.terraria.sh
 dllReferences = Discord.Net.Rest, Discord.Net.Core, Newtonsoft.Json, System.Linq.Async
