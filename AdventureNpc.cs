@@ -39,6 +39,50 @@ public class AdventureNpc : GlobalNPC
         IL_NPC.Collision_WaterCollision += EditNPCCollision_WaterCollision;
         // Ensure that transformed NPCs (usually those bound) are also immortal.
         On_NPC.Transform += OnNPCTransform;
+        On_NPC.ScaleStats += OnNPCScaleStats;
+    }
+
+    private void OnNPCScaleStats(On_NPC.orig_ScaleStats orig, NPC self, int? activeplayerscount,
+        GameModeData gamemodedata, float? strengthoverride)
+    {
+        try
+        {
+            // If we aren't in expert mode, don't even try to change anything.
+            if (!Main.expertMode)
+                return;
+
+            // If this is a boss, we want it to scale based on the number of players on a specific team...
+            if (self.boss || IsPartOfEaterOfWorlds((short)self.type) || IsPartOfTheDestroyer((short)self.type))
+            {
+                // FIXME: Ignore None team
+                var closestPlayerIndex = self.FindClosestPlayer();
+                if (closestPlayerIndex == -1)
+                {
+                    Mod.Logger.Warn(
+                        $"Cannot find closest player to scale boss stats of {self.whoAmI}/{self.type}/{self.FullName}, bailing.");
+                    return;
+                }
+
+                var closestPlayer = Main.player[closestPlayerIndex];
+
+                var numberOfPlayersOnThisTeam = Main.player
+                    .Where(player => player.active)
+                    .Where(player => !player.ghost)
+                    .Where(player => player.team == closestPlayer.team)
+                    .Count();
+
+                activeplayerscount = numberOfPlayersOnThisTeam;
+            }
+            // ...but otherwise, we want it to scale as if it were normal mode.
+            else
+            {
+                gamemodedata = GameModeData.NormalMode;
+            }
+        }
+        finally
+        {
+            orig(self, activeplayerscount, gamemodedata, strengthoverride);
+        }
     }
 
     public override void SetDefaults(NPC entity)
