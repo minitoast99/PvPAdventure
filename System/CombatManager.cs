@@ -36,7 +36,7 @@ public class CombatManager : ModSystem
     {
         orig(self, info, quiet);
 
-        if (info.PvP)
+        if (ModContent.GetInstance<AdventureConfig>().Combat.MeleeInvincibilityFrames > 0 && info.PvP)
         {
             self.immune = false;
             self.immuneTime = 0;
