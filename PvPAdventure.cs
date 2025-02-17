@@ -13,19 +13,12 @@ namespace PvPAdventure;
 
 public class PvPAdventure : Mod
 {
-    private const bool AllowLoadingWhilstDisconnected = false;
-
     public override void Load()
     {
         // This mod should only ever be loaded when connecting to a server, it should never be loaded beforehand.
         // We don't use Netplay.Disconnect here, as that's not initialized to true (but rather to default value, aka false), so instead
         // we'll check the connection status of our own socket.
-        if (!Main.dedServ)
-        {
-            if (!AllowLoadingWhilstDisconnected && !Netplay.Connection.Socket.IsConnected())
-                throw new Exception("This mod should only be loaded whilst connected to a server.");
-        }
-        else
+        if (Main.dedServ)
         {
             ModContent.GetInstance<DiscordIdentification>().PlayerJoin += (_, args) =>
             {
