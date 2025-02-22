@@ -77,6 +77,11 @@ Mods: {
 					Label: Crashout Messages
 					Tooltip: ""
 				}
+
+				ShareWorldMap: {
+					Label: Share World Map
+					Tooltip: ""
+				}
 			}
 
 			PointsConfig: {

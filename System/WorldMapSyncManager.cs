@@ -63,6 +63,9 @@ public class WorldMapSyncManager : ModSystem
         if (Main.netMode == NetmodeID.SinglePlayer)
             return updated;
 
+        if (!ModContent.GetInstance<AdventureConfig>().ShareWorldMap)
+            return updated;
+
         // FIXME: Relying on the return value means that one player traversing a revealed area for them will not
         //        properly reveal the area for a player who hasn't revealed it. Causes a lot of false lighting and
         //        black tiles. Without this check though, it's very verbose I believe. Also causes black streaks across
@@ -83,6 +86,9 @@ public class WorldMapSyncManager : ModSystem
     public override void PostUpdatePlayers()
     {
         if (Main.netMode == NetmodeID.SinglePlayer)
+            return;
+
+        if (!ModContent.GetInstance<AdventureConfig>().ShareWorldMap)
             return;
 
         lock (_betterMapTileUpdates)

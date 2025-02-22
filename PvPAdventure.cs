@@ -106,6 +106,9 @@ public class PvPAdventure : Mod
             {
                 var worldMapSyncLighting = WorldMapSyncManager.Lighting.Deserialize(reader);
 
+                if (!ModContent.GetInstance<AdventureConfig>().ShareWorldMap)
+                    break;
+
                 // On the server, we just forward this to everyone else.
                 if (Main.dedServ)
                 {

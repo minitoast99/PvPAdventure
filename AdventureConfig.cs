@@ -73,6 +73,8 @@ public class AdventureConfig : ModConfig
         "Too many surface RTPs"
     ];
 
+    [DefaultValue(true)] public bool ShareWorldMap { get; set; }
+
     public class PointsConfig
     {
         public Dictionary<NPCDefinition, NpcPoints> Npc { get; set; } = new();
