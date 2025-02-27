@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Terraria;
 using Terraria.ID;
@@ -19,6 +20,8 @@ public class CombatManager : ModSystem
             On_Main.DrawPVPIcons += _ => { };
 
         On_Player.Hurt_HurtInfo_bool += OnPlayerHurt;
+        // Remove random damage variation.
+        On_Main.DamageVar_float_int_float += OnMainDamageVar;
     }
 
     public override bool HijackGetData(ref byte messageType, ref BinaryReader reader, int playerNumber)
@@ -41,5 +44,10 @@ public class CombatManager : ModSystem
             self.immune = false;
             self.immuneTime = 0;
         }
+    }
+
+    private int OnMainDamageVar(On_Main.orig_DamageVar_float_int_float orig, float dmg, int percent, float luck)
+    {
+        return (int)Math.Round(dmg);
     }
 }
