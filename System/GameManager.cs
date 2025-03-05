@@ -44,6 +44,8 @@ public class GameManager : ModSystem
     {
         // Prevent the world from entering the lunar apocalypse (killing cultist and spawning pillars)
         On_WorldGen.TriggerLunarApocalypse += _ => { };
+        // Prevent tombstones.
+        On_Player.DropTombstone += (_, _, _, _, _) => { };
 
         On_Main.StartInvasion += OnMainStartInvasion;
         // Only send world map pings to teammates.
