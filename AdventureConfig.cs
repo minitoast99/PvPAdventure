@@ -4,6 +4,7 @@ using System.ComponentModel;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
 namespace PvPAdventure;
@@ -169,11 +170,30 @@ public class AdventureConfig : ModConfig
         public PlayerDamageBalanceConfig PlayerDamageBalance { get; set; } = new();
     }
 
+    [Description("Discord IDs that are allowed to modify the server configuration")]
+    public List<string> AllowConfigModification { get; set; } = new();
+
     public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref NetworkText message)
     {
-        if (pendingConfig is AdventureConfig)
+        if (pendingConfig is not AdventureConfig pendingAdventureConfig)
+            return true;
+
+        var adventureConfig = ModContent.GetInstance<AdventureConfig>();
+        var discordId = Main.player[whoAmI].GetModPlayer<AdventurePlayer>().DiscordUser?.Id;
+        if (discordId == null)
+            return false;
+
+        if (!adventureConfig.AllowConfigModification.Contains(discordId.ToString()))
         {
-            message = NetworkText.FromKey("Mods.PvPAdventure.Config.CannotModify");
+            message = NetworkText.FromKey("Mods.PvPAdventure.Configs.CannotModify");
+            return false;
+        }
+
+        // You must have access by this point, but then you removed yourself!
+        // Don't do that.
+        if (!pendingAdventureConfig.AllowConfigModification.Contains(discordId.ToString()))
+        {
+            message = NetworkText.FromKey("Mods.PvPAdventure.Configs.CannotModify");
             return false;
         }
 

@@ -83,6 +83,11 @@ Mods: {
 					Label: Share World Map
 					Tooltip: ""
 				}
+
+				AllowConfigModification: {
+					Label: Allow Config Modification
+					Tooltip: ""
+				}
 			}
 
 			PointsConfig: {
