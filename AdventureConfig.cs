@@ -79,6 +79,10 @@ public class AdventureConfig : ModConfig
     [Description("Discord IDs that are allowed to modify the server configuration")]
     public List<string> AllowConfigModification { get; set; } = new();
 
+    [Description("Percent chance that our bound NPCs spawn")]
+    [DefaultValue(0.25f)]
+    public float BoundSpawnChance { get; set; }
+
     public class PointsConfig
     {
         public Dictionary<NPCDefinition, NpcPoints> Npc { get; set; } = new();

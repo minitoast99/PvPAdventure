@@ -94,6 +94,27 @@ public class AdventureNpc : GlobalNPC
 
     public override void OnSpawn(NPC npc, IEntitySource source)
     {
+        // Due to the new bound NPCs we've added, it's now possible that a town NPC moving in can conflict with a bound
+        // NPC already spawned in the world. We'll have to remove all of them, as natural spawns take precedent.
+        // This check is here because it's cheap and likely to always be the case for our bound NPCs.
+        if (npc.isLikeATownNPC)
+        {
+            foreach (var worldNpc in Main.ActiveNPCs)
+            {
+                if (worldNpc.whoAmI == npc.whoAmI)
+                    continue;
+
+                // This NPC in the world is a bound NPC of ours, and it transforms into the NPC that just spawned...
+                if (worldNpc.ModNPC is BoundNpc boundWorldNpc && npc.type == boundWorldNpc.TransformInto)
+                {
+                    // ...so now it must go.
+                    worldNpc.life = 0;
+                    worldNpc.netSkip = -1;
+                    NetMessage.SendData(MessageID.SyncNPC, number: npc.whoAmI);
+                }
+            }
+        }
+
         var adventureConfig = ModContent.GetInstance<AdventureConfig>();
 
         if (adventureConfig.NpcSpawnAnnouncements.Contains(new NPCDefinition(npc.type)))
