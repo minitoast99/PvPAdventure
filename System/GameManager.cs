@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using Humanizer;
+using Humanizer.Localisation;
 using Terraria;
 using Terraria.Enums;
 using Terraria.ID;
@@ -14,10 +16,10 @@ using Terraria.Net;
 
 namespace PvPAdventure.System;
 
-[Autoload(Side = ModSide.Server)]
+[Autoload(Side = ModSide.Both)]
 public class GameManager : ModSystem
 {
-    private int TimeRemaining { get; set; }
+    public int TimeRemaining { get; set; }
     private int? _startGameCountdown = 0;
     private Phase _currentPhase;
 
@@ -29,8 +31,13 @@ public class GameManager : ModSystem
             if (_currentPhase == value)
                 return;
 
-            OnPhaseChange(value);
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+                OnPhaseChange(value);
+
             _currentPhase = value;
+
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+                NetMessage.SendData(MessageID.WorldData);
         }
     }
 
@@ -48,8 +55,10 @@ public class GameManager : ModSystem
         On_Player.DropTombstone += (_, _, _, _, _) => { };
 
         On_Main.StartInvasion += OnMainStartInvasion;
-        // Only send world map pings to teammates.
-        On_NetPingModule.Deserialize += OnNetPingModuleDeserialize;
+
+        if (Main.dedServ)
+            // Only send world map pings to teammates.
+            On_NetPingModule.Deserialize += OnNetPingModuleDeserialize;
     }
 
     private void OnMainStartInvasion(On_Main.orig_StartInvasion orig, int type)
@@ -99,6 +108,9 @@ public class GameManager : ModSystem
         {
             case Phase.Waiting:
             {
+                if (Main.netMode == NetmodeID.MultiplayerClient)
+                    break;
+
                 if (_startGameCountdown.HasValue)
                 {
                     if (--_startGameCountdown <= 0)
@@ -135,6 +147,7 @@ public class GameManager : ModSystem
             NetworkText.FromLiteral($"The game will begin in {_startGameCountdown / 60} seconds."), Color.Green);
     }
 
+    // NOTE: This is not called on multiplayer clients (see CurrentPhase property).
     private void OnPhaseChange(Phase newPhase)
     {
         switch (newPhase)
@@ -146,7 +159,6 @@ public class GameManager : ModSystem
                 spawnRegion.CanRandomTeleport = false;
                 spawnRegion.CanUseWormhole = false;
                 spawnRegion.CanExit = false;
-                NetMessage.SendData(MessageID.WorldData);
 
                 // Remove everything that is hostile
                 foreach (var npc in Main.ActiveNPCs)
@@ -179,7 +191,6 @@ public class GameManager : ModSystem
                 spawnRegion.CanRandomTeleport = true;
                 spawnRegion.CanUseWormhole = true;
                 spawnRegion.CanExit = true;
-                NetMessage.SendData(MessageID.WorldData);
 
                 UpdateFreezeTime(false);
 
@@ -202,16 +213,31 @@ public class GameManager : ModSystem
         _startGameCountdown = null;
         TimeRemaining = 0;
 
-        // If we are already waiting, we need to do a subset of things we would have done during phase change.
-        if (CurrentPhase == Phase.Waiting)
+        if (Main.dedServ)
         {
-            UpdateFreezeTime(true);
+            // If we are already waiting, we need to do a subset of things we would have done during phase change.
+            if (CurrentPhase == Phase.Waiting)
+            {
+                UpdateFreezeTime(true);
+            }
+            // ...but otherwise, simply changing our phase will handle it.
+            else
+            {
+                CurrentPhase = Phase.Waiting;
+            }
         }
-        // ...but otherwise, simply changing our phase will handle it.
-        else
-        {
-            CurrentPhase = Phase.Waiting;
-        }
+    }
+
+    public override void NetSend(BinaryWriter writer)
+    {
+        writer.Write(TimeRemaining);
+        writer.Write((int)CurrentPhase);
+    }
+
+    public override void NetReceive(BinaryReader reader)
+    {
+        TimeRemaining = reader.ReadInt32();
+        CurrentPhase = (Phase)reader.ReadInt32();
     }
 
     public class TeamCommand : ModCommand
@@ -282,7 +308,9 @@ public class GameManager : ModSystem
             if (gameManager.CurrentPhase != Phase.Playing)
                 return;
 
-            caller.Reply($"{gameManager.TimeRemaining / 60} seconds remain", Color.Green);
+            caller.Reply(
+                $"{TimeSpan.FromSeconds(gameManager.TimeRemaining / 60.0).Humanize(2, minUnit: TimeUnit.Second)} remain",
+                Color.Green);
         }
 
         public override string Command => "timeleft";
