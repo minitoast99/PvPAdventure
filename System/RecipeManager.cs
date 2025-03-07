@@ -13,6 +13,8 @@ namespace PvPAdventure.System
             [ItemID.FlyingKnife, ItemID.DaedalusStormbow, ItemID.CrystalVileShard, ItemID.IlluminantHook],
             [ItemID.ChainGuillotines, ItemID.DartRifle, ItemID.ClingerStaff, ItemID.PutridScent, ItemID.WormHook],
             [ItemID.FetidBaghnakhs, ItemID.DartPistol, ItemID.SoulDrain, ItemID.FleshKnuckles, ItemID.TendonHook],
+            [ItemID.TitanGlove, ItemID.MagicDagger, ItemID.StarCloak, ItemID.CrossNecklace, ItemID.PhilosophersStone, ItemID.DualHook],
+            [ItemID.RazorbladeTyphoon, ItemID.Flairon, ItemID.BubbleGun, ItemID.Tsunami, ItemID.TempestStaff],
             [ItemID.BreakerBlade, ItemID.ClockworkAssaultRifle, ItemID.LaserRifle, ItemID.FireWhip],
             [
                 ItemID.GolemFist, ItemID.PossessedHatchet, ItemID.Stynger, ItemID.StaffofEarth, ItemID.HeatRay,
