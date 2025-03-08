@@ -93,6 +93,11 @@ Mods: {
 					Label: Bound Spawn Chance
 					Tooltip: ""
 				}
+
+				RemovePrefixes: {
+					Label: Remove Prefixes
+					Tooltip: ""
+				}
 			}
 
 			PointsConfig: {

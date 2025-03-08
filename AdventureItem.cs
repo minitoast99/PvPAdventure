@@ -6,6 +6,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
+using Terraria.Utilities;
 
 namespace PvPAdventure;
 
@@ -72,4 +73,16 @@ public class AdventureItem : GlobalItem
             });
         }
     }
+
+    public override bool? PrefixChance(Item item, int pre, UnifiedRandom rand)
+    {
+        // Prevent the item from spawning with a prefix, being placed into a reforge window, and loading with a prefix.
+        if ((pre == -1 || pre == -3 || pre > 0) && ModContent.GetInstance<AdventureConfig>().RemovePrefixes)
+            return false;
+
+        return null;
+    }
+
+    // This is likely unnecessary if we are overriding PrefixChance, but might as well.
+    public override bool CanReforge(Item item) => !ModContent.GetInstance<AdventureConfig>().RemovePrefixes;
 }

@@ -83,6 +83,8 @@ public class AdventureConfig : ModConfig
     [DefaultValue(0.25f)]
     public float BoundSpawnChance { get; set; }
 
+    public bool RemovePrefixes { get; set; }
+
     public class PointsConfig
     {
         public Dictionary<NPCDefinition, NpcPoints> Npc { get; set; } = new();
