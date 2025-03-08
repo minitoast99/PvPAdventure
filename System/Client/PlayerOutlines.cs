@@ -48,7 +48,7 @@ public class PlayerOutlines : ModSystem
                 (!adventureClientConfig.PlayerOutline.Self || drawinfo.drawPlayer.whoAmI != Main.myPlayer))
                 return;
 
-            _createOutlines(1.0f, 1.0f,
+            _createOutlines(drawinfo.drawPlayer.stealth, 1.0f,
                 Main.teamColor[(int)team].MultiplyRGBA(Lighting.GetColor(drawinfo.Center.ToTileCoordinates())));
         }
         finally
