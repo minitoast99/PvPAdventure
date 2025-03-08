@@ -76,6 +76,9 @@ public class AdventureConfig : ModConfig
 
     [DefaultValue(true)] public bool ShareWorldMap { get; set; }
 
+    [Description("Discord IDs that are allowed to modify the server configuration")]
+    public List<string> AllowConfigModification { get; set; } = new();
+
     public class PointsConfig
     {
         public Dictionary<NPCDefinition, NpcPoints> Npc { get; set; } = new();
@@ -169,9 +172,6 @@ public class AdventureConfig : ModConfig
 
         public PlayerDamageBalanceConfig PlayerDamageBalance { get; set; } = new();
     }
-
-    [Description("Discord IDs that are allowed to modify the server configuration")]
-    public List<string> AllowConfigModification { get; set; } = new();
 
     public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref NetworkText message)
     {
