@@ -253,6 +253,11 @@ Mods: {
 					Label: Player Outline
 					Tooltip: ""
 				}
+
+				ShiftEnterOpensAllChat: {
+					Label: Shift Enter Opens All Chat
+					Tooltip: ""
+				}
 			}
 
 			PlayerOutlineConfig: {

@@ -7,6 +7,7 @@ public class AdventureClientConfig : ModConfig
     public override ConfigScope Mode => ConfigScope.ClientSide;
 
     public PlayerOutlineConfig PlayerOutline { get; set; } = new();
+    public bool ShiftEnterOpensAllChat { get; set; }
 
     public class PlayerOutlineConfig
     {
