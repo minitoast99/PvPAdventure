@@ -323,9 +323,17 @@ Mods: {
 			Bound: {
 				Merchant.DisplayName: Bound Merchant
 				ArmsDealer.DisplayName: Bound Arms Dealer
-				Steampunker.DisplayName: Chained Steampunker
-				Truffle.DisplayName: Buried Truffle
 				WitchDoctor.DisplayName: Bound Witch Doctor
+
+				Steampunker: {
+					DisplayName: Chained Steampunker
+					Chat: At long last, I'm saved! The strangest people chained me up, they mentioned something about a hardcore challenge...
+				}
+
+				Truffle: {
+					DisplayName: Buried Truffle
+					Chat: At long last, I'm saved! The strangest people buried me here, they mentioned something about a hardcore challenge...
+				}
 
 				Cyborg: {
 					DisplayName: Deactivated Cyborg
