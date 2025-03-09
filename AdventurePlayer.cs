@@ -450,7 +450,7 @@ public class AdventurePlayer : ModPlayer
         }
 
         if (keybinds.TeamChat.JustPressed)
-            ModContent.GetInstance<TeamChatManager>().Open();
+            ModContent.GetInstance<TeamChatManager>().OpenAllChat();
     }
 
     private void SyncStatistics(int to = -1, int ignore = -1)

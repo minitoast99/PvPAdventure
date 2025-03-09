@@ -92,7 +92,7 @@ public class TeamChatManager : ModSystem
         return chatMessage;
     }
 
-    public void Open()
+    public void OpenAllChat()
     {
         // Copied from Main.DoUpdate_Enter_ToggleChat
         if (!Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt) &&
@@ -108,7 +108,7 @@ public class TeamChatManager : ModSystem
                 !Main.gameMenu &&
                 !Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
             {
-                _channel = Channel.Team;
+                _channel = Channel.All;
 
                 // SoundEngine.PlaySound(10);
                 _soundEnginePlaySoundLegacy.Invoke(null, [10, -1, -1, 1, 1.0f, 0.0f]);
