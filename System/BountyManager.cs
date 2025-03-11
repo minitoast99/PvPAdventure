@@ -282,8 +282,10 @@ public class BountyManager : ModSystem
         ModContent.GetInstance<PointsManager>().UiScoreboard.Invalidate();
     }
 
-    public void AwardToTeam(Team team)
+    public void Award(Player killer, Player victim)
     {
+        var team = (Team)killer.team;
+
         var eligibleBounties = ModContent.GetInstance<AdventureConfig>().Bounties
             .Where(IsBountyAvailable)
             .Select(bounty => bounty.Items)
@@ -295,13 +297,26 @@ public class BountyManager : ModSystem
 
         _bounties[team].Add(new Page(eligibleBounties));
 
+        var firstPersonMessage = NetworkText.FromLiteral("+1 Bounty Shard");
+        var thirdPersonMessage =
+            NetworkText.FromLiteral(
+                $"{team} Team awarded +1 Bounty Shard for defeating [c/{Main.teamColor[victim.team].Hex3()}:{victim.name}]!");
+
+        NetMessage.SendData(MessageID.CombatTextString,
+            text: firstPersonMessage,
+            number: (int)Main.teamColor[(int)team].PackedValue,
+            number2: killer.position.X,
+            number3: killer.position.Y - 20.0f
+        );
+
         NetMessage.SendData(MessageID.WorldData);
 
         foreach (var player in Main.ActivePlayers)
         {
             if ((Team)player.team == team)
-                ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("Your team has been awarded a claim!"),
-                    Color.White, player.whoAmI);
+                ChatHelper.SendChatMessageToClient(firstPersonMessage, Main.teamColor[(int)team], player.whoAmI);
+            else
+                ChatHelper.SendChatMessageToClient(thirdPersonMessage, Main.teamColor[(int)team], player.whoAmI);
         }
     }
 

@@ -155,6 +155,32 @@ public class PointsManager : ModSystem
         }
     }
 
+    private void VisualizePointChange(int change, Team team, Vector2 at, string defeated = null)
+    {
+        var firstPersonMessage = NetworkText.FromLiteral(FormatPointsVisually(change));
+        NetworkText thirdPersonMessage = null;
+
+        if (change > 0 && defeated != null)
+            thirdPersonMessage =
+                NetworkText.FromLiteral(
+                    $"{team} Team awarded +{change} point{(change == 1 ? "" : "s")} for defeating {defeated}!");
+
+        NetMessage.SendData(MessageID.CombatTextString,
+            text: firstPersonMessage,
+            number: (int)Main.teamColor[(int)team].PackedValue,
+            number2: at.X,
+            number3: at.Y
+        );
+
+        foreach (var player in Main.ActivePlayers)
+        {
+            if ((Team)player.team == team)
+                ChatHelper.SendChatMessageToClient(firstPersonMessage, Main.teamColor[(int)team], player.whoAmI);
+            else if (thirdPersonMessage != null)
+                ChatHelper.SendChatMessageToClient(thirdPersonMessage, Main.teamColor[(int)team], player.whoAmI);
+        }
+    }
+
     public void AwardNpcKillToTeam(Team team, NPC npc)
     {
         var config = ModContent.GetInstance<AdventureConfig>();
@@ -205,17 +231,7 @@ public class PointsManager : ModSystem
             fullName = npc.FullName;
         }
 
-        NetMessage.SendData(MessageID.CombatTextString,
-            text: NetworkText.FromLiteral(FormatPointsVisually(pointsToAward)),
-            number: (int)Main.teamColor[(int)team].PackedValue,
-            number2: npc.position.X,
-            number3: npc.position.Y
-        );
-
-        ChatHelper.BroadcastChatMessage(
-            NetworkText.FromLiteral(
-                $"{team} Team awarded +{pointsToAward} point{(pointsToAward == 1 ? "" : "s")} for defeating [c/F58522:{fullName}]!"),
-            Main.teamColor[(int)team]);
+        VisualizePointChange(pointsToAward, team, npc.position, $"[c/F58522:{fullName}]");
 
         NetMessage.SendData(MessageID.WorldData);
     }
@@ -242,21 +258,11 @@ public class PointsManager : ModSystem
         _points[killerTeam] += pointsToTrade;
 
         if (victimTeamPoints > killerTeamPints)
-            ModContent.GetInstance<BountyManager>().AwardToTeam(killerTeam);
+            ModContent.GetInstance<BountyManager>().Award(killer, victim);
 
-        NetMessage.SendData(MessageID.CombatTextString,
-            text: NetworkText.FromLiteral(FormatPointsVisually(pointsToTrade)),
-            number: (int)Main.teamColor[killer.team].PackedValue,
-            number2: killer.position.X,
-            number3: killer.position.Y
-        );
-
-        NetMessage.SendData(MessageID.CombatTextString,
-            text: NetworkText.FromLiteral(FormatPointsVisually(-pointsToTrade)),
-            number: (int)Main.teamColor[victim.team].PackedValue,
-            number2: victim.position.X,
-            number3: victim.position.Y
-        );
+        VisualizePointChange(pointsToTrade, (Team)killer.team, killer.position,
+            $"[c/{Main.teamColor[victim.team].Hex3()}:{victim.name}]");
+        VisualizePointChange(-pointsToTrade, (Team)victim.team, victim.position);
 
         NetMessage.SendData(MessageID.WorldData);
     }
