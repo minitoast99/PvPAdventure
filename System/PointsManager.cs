@@ -212,11 +212,12 @@ public class PointsManager : ModSystem
             number3: npc.position.Y
         );
 
-        NetMessage.SendData(MessageID.WorldData);
-
-        // FIXME: Better message and dedicated interface
         ChatHelper.BroadcastChatMessage(
-            NetworkText.FromLiteral($"Team {team} killed {fullName} for {pointsToAward} point(s)"), Color.White);
+            NetworkText.FromLiteral(
+                $"{team} Team awarded +{pointsToAward} point{(pointsToAward == 1 ? "" : "s")} for defeating [c/F58522:{fullName}]!"),
+            Main.teamColor[(int)team]);
+
+        NetMessage.SendData(MessageID.WorldData);
     }
 
     public void AwardPlayerKillToTeam(Player killer, Player victim)
