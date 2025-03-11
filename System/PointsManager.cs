@@ -205,6 +205,13 @@ public class PointsManager : ModSystem
             fullName = npc.FullName;
         }
 
+        NetMessage.SendData(MessageID.CombatTextString,
+            text: NetworkText.FromLiteral(FormatPointsVisually(pointsToAward)),
+            number: (int)Main.teamColor[(int)team].PackedValue,
+            number2: npc.position.X,
+            number3: npc.position.Y
+        );
+
         NetMessage.SendData(MessageID.WorldData);
 
         // FIXME: Better message and dedicated interface
@@ -212,9 +219,10 @@ public class PointsManager : ModSystem
             NetworkText.FromLiteral($"Team {team} killed {fullName} for {pointsToAward} point(s)"), Color.White);
     }
 
-    public void AwardPlayerKillToTeam(Team killerTeam, Player victim)
+    public void AwardPlayerKillToTeam(Player killer, Player victim)
     {
         var config = ModContent.GetInstance<AdventureConfig>();
+        var killerTeam = (Team)killer.team;
 
         // Even if certain oddities allowed this to happen, no point exchanging would actually occur.
         if (killerTeam == (Team)victim.team)
@@ -235,11 +243,21 @@ public class PointsManager : ModSystem
         if (victimTeamPoints > killerTeamPints)
             ModContent.GetInstance<BountyManager>().AwardToTeam(killerTeam);
 
-        NetMessage.SendData(MessageID.WorldData);
+        NetMessage.SendData(MessageID.CombatTextString,
+            text: NetworkText.FromLiteral(FormatPointsVisually(pointsToTrade)),
+            number: (int)Main.teamColor[killer.team].PackedValue,
+            number2: killer.position.X,
+            number3: killer.position.Y
+        );
 
-        // FIXME: Better message and dedicated interface
-        ChatHelper.BroadcastChatMessage(
-            NetworkText.FromLiteral($"{killerTeam} awarded {pointsToTrade} for killing {victim.name}"), Color.White);
+        NetMessage.SendData(MessageID.CombatTextString,
+            text: NetworkText.FromLiteral(FormatPointsVisually(-pointsToTrade)),
+            number: (int)Main.teamColor[victim.team].PackedValue,
+            number2: victim.position.X,
+            number3: victim.position.Y
+        );
+
+        NetMessage.SendData(MessageID.WorldData);
     }
 
     public class UIScoreboard(PointsManager pointsManager) : UIState
@@ -495,4 +513,7 @@ public class PointsManager : ModSystem
             return base.DrawSelf();
         }
     }
+
+    private static string FormatPointsVisually(int points) =>
+        $"{points:+0;-#} point{(Math.Abs(points) == 1 ? "" : "s")}";
 }

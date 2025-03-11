@@ -390,7 +390,7 @@ public class AdventurePlayer : ModPlayer
             if (killer == null || !killer.active || killer.whoAmI == Player.whoAmI)
                 return;
 
-            ModContent.GetInstance<PointsManager>().AwardPlayerKillToTeam((Team)killer.team, Player);
+            ModContent.GetInstance<PointsManager>().AwardPlayerKillToTeam(killer, Player);
             killer.GetModPlayer<AdventurePlayer>().Kills += 1;
             killer.GetModPlayer<AdventurePlayer>().SyncStatistics();
 
