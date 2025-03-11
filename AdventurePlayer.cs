@@ -9,6 +9,7 @@ using PvPAdventure.System;
 using PvPAdventure.System.Client;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent.UI.Chat;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.Localization;
@@ -394,6 +395,9 @@ public class AdventurePlayer : ModPlayer
 
             Deaths += 1;
             SyncStatistics();
+
+            damageSource.SourceCustomReason =
+                $"[c/{Main.teamColor[killer.team].Hex3()}:{killer.name}] {ItemTagHandler.GenerateTag(damageSource.SourceItem ?? new Item(ItemID.Skull))} [c/{Main.teamColor[Player.team].Hex3()}:{Player.name}]";
         }
         finally
         {
