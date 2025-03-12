@@ -449,7 +449,7 @@ public class AdventurePlayer : ModPlayer
                 Main.InGameUI.SetState(bountyShop);
         }
 
-        if (keybinds.TeamChat.JustPressed)
+        if (keybinds.AllChat.JustPressed)
             ModContent.GetInstance<TeamChatManager>().OpenAllChat();
     }
 

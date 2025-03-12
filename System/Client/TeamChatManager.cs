@@ -108,11 +108,10 @@ public class TeamChatManager : ModSystem
                 !Main.gameMenu &&
                 !Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
             {
-                _channel = Channel.All;
-
                 // SoundEngine.PlaySound(10);
                 _soundEnginePlaySoundLegacy.Invoke(null, [10, -1, -1, 1, 1.0f, 0.0f]);
                 Main.OpenPlayerChat();
+                _channel = Channel.All;
                 Main.chatText = "";
             }
 

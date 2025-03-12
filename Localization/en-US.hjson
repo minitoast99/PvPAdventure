@@ -12,7 +12,7 @@ Mods: {
 		Keybinds: {
 			Scoreboard.DisplayName: Scoreboard
 			BountyShop.DisplayName: Bounty Shop
-			TeamChat.DisplayName: Team Chat
+			AllChat.DisplayName: All Chat
 		}
 
 		Configs: {
