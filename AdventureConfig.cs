@@ -121,6 +121,7 @@ public class AdventureConfig : ModConfig
         public bool PlanteraDefeated { get; set; }
         public bool GolemDefeated { get; set; }
         public bool SkeletronDefeated { get; set; }
+        public bool CollectedAllMechanicalBossSouls { get; set; }
     }
 
     public class Bounty

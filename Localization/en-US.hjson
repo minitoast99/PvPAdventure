@@ -199,6 +199,11 @@ Mods: {
 					Label: Skeletron Defeated
 					Tooltip: ""
 				}
+
+				CollectedAllMechanicalBossSouls: {
+					Label: Collected All Mechanical Boss Souls
+					Tooltip: ""
+				}
 			}
 
 			WorldProgressionState: {
@@ -348,5 +353,7 @@ Mods: {
 				Chat: At long last, I'm saved! The strangest people tied me up, they mentioned something about a hardcore challenge...
 			}
 		}
+
+		Bounty.CollectedAllMechanicalBossSouls: "[c/32FF82:Cries of tortured souls emanate from the Bounty Shop...]"
 	}
 }

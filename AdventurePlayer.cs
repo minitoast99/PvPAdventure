@@ -27,8 +27,12 @@ public class AdventurePlayer : ModPlayer
     public DamageInfo RecentDamageFromPlayer { get; private set; }
     public int Kills { get; private set; }
     public int Deaths { get; private set; }
+
     private readonly int[] _playerMeleeInvincibleTime = new int[Main.maxPlayers];
-    private HashSet<int> _itemPickups = new();
+
+    // FIXME: You cannot ship this.
+    // STOPSHIP
+    public HashSet<int> _itemPickups = new();
 
     private const int TimeBetweenPingPongs = 3 * 60;
 

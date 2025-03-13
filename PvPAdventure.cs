@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using PvPAdventure.System;
@@ -180,6 +181,8 @@ public class PvPAdventure : Mod
                 {
                     var player = Main.player[whoAmI];
                     itemPickup.Apply(player.GetModPlayer<AdventurePlayer>());
+                    ModContent.GetInstance<BountyManager>()
+                        .OnPlayerItemPickupsUpdated(player, itemPickup.Items.ToHashSet());
                 }
 
                 break;
