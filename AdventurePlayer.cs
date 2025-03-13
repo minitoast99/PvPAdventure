@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord.Rest;
 using Microsoft.Xna.Framework;
@@ -26,6 +28,7 @@ public class AdventurePlayer : ModPlayer
     public int Kills { get; private set; }
     public int Deaths { get; private set; }
     private readonly int[] _playerMeleeInvincibleTime = new int[Main.maxPlayers];
+    private HashSet<int> _itemPickups = new();
 
     private const int TimeBetweenPingPongs = 3 * 60;
 
@@ -68,6 +71,34 @@ public class AdventurePlayer : ModPlayer
         {
             adventurePlayer.Kills = Kills;
             adventurePlayer.Deaths = Deaths;
+        }
+    }
+
+    public sealed class ItemPickups(int[] items) : IPacket<ItemPickups>
+    {
+        public int[] Items { get; } = items;
+
+        public static ItemPickups Deserialize(BinaryReader reader)
+        {
+            var length = reader.ReadInt32();
+            var items = new int[length];
+            for (var i = 0; i < items.Length; i++)
+                items[i] = reader.ReadInt32();
+
+            return new(items);
+        }
+
+        public void Serialize(BinaryWriter writer)
+        {
+            writer.Write(Items.Length);
+
+            foreach (var item in Items)
+                writer.Write(item);
+        }
+
+        public void Apply(AdventurePlayer adventurePlayer)
+        {
+            adventurePlayer._itemPickups.UnionWith(items);
         }
     }
 
@@ -461,21 +492,43 @@ public class AdventurePlayer : ModPlayer
         packet.Send(to, ignore);
     }
 
+    private void SyncSingleItemPickup(int item, int to = -1, int ignore = -1)
+    {
+        var packet = Mod.GetPacket();
+        packet.Write((byte)AdventurePacketIdentifier.PlayerItemPickups);
+        new ItemPickups([item]).Serialize(packet);
+        packet.Send(to, ignore);
+    }
+
+    private void SyncItemPickups(int to = -1, int ignore = -1)
+    {
+        var packet = Mod.GetPacket();
+        packet.Write((byte)AdventurePacketIdentifier.PlayerItemPickups);
+        new ItemPickups(_itemPickups.ToArray()).Serialize(packet);
+        packet.Send(to, ignore);
+    }
+
     public override void SaveData(TagCompound tag)
     {
         tag["kills"] = Kills;
         tag["deaths"] = Deaths;
+        tag["itemPickups"] = _itemPickups.ToArray();
     }
 
     public override void LoadData(TagCompound tag)
     {
         Kills = tag.Get<int>("kills");
         Deaths = tag.Get<int>("deaths");
+        _itemPickups = tag.Get<int[]>("itemPickups").ToHashSet();
     }
 
     public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
     {
         SyncStatistics(toWho, fromWho);
+
+        // Sync all of our pickups at once when we join
+        if (!Main.dedServ && newPlayer)
+            SyncItemPickups(toWho, fromWho);
     }
 
     public override void ModifyHurt(ref Player.HurtModifiers modifiers)
@@ -522,6 +575,20 @@ public class AdventurePlayer : ModPlayer
 
         if (!hasIncurredFalloff && playerDamageBalance.DefaultFalloff != null)
             modifiers.IncomingDamageMultiplier *= playerDamageBalance.DefaultFalloff.CalculateMultiplier(tileDistance);
+    }
+
+    public override bool OnPickup(Item item)
+    {
+        // FIXME: This could work for non-modded items, but I'm not so sure the item type ordinals are determinant.
+        //         We _can_ work under the assumption this one player will be played within one world with the same mods
+        //         always, but I'm not sure even that is good enough -- so let's just ignore them for now.
+        if (item.ModItem == null)
+        {
+            if (_itemPickups.Add(item.type) && Main.netMode == NetmodeID.MultiplayerClient)
+                SyncSingleItemPickup(item.type);
+        }
+
+        return true;
     }
 
     private void SendPingPong()

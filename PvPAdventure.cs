@@ -173,6 +173,17 @@ public class PvPAdventure : Mod
 
                 break;
             }
+            case AdventurePacketIdentifier.PlayerItemPickups:
+            {
+                var itemPickup = AdventurePlayer.ItemPickups.Deserialize(reader);
+                if (Main.dedServ)
+                {
+                    var player = Main.player[whoAmI];
+                    itemPickup.Apply(player.GetModPlayer<AdventurePlayer>());
+                }
+
+                break;
+            }
         }
     }
 
