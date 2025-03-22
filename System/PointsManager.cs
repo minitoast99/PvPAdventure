@@ -291,7 +291,7 @@ public class PointsManager : ModSystem
 
             var root = new UIElement
             {
-                Top = { Pixels = 325 },
+                Top = { Pixels = 280 },
                 Width = { Percent = 1.0f },
                 Height = { Percent = 1.0f }
             };
@@ -426,7 +426,7 @@ public class PointsManager : ModSystem
     }
 
     public class BossCompletionInterfaceLayer(PointsManager pointsManager)
-        : GameInterfaceLayer("PvPAdventure: Boss Completion", InterfaceScaleType.UI)
+        : GameInterfaceLayer("PvPAdventure: Boss Completion", InterfaceScaleType.None)
     {
         protected override bool DrawSelf()
         {
@@ -460,7 +460,8 @@ public class PointsManager : ModSystem
                     245);
 
             // Cast to int so no strange aliasing occurs on anything we render -- we only work with whole numbers in the end.
-            var containerPosition = new Vector2((int)((Main.screenWidth / 2.0f) - (containerSize.X / 2.0f)), 740);
+            var containerPosition = new Vector2((int)((Main.screenWidth / 2.0f) - (containerSize.X / 2.0f)),
+                Main.screenHeight - (1080 - 740));
 
             Utils.DrawInvBG(Main.spriteBatch, containerPosition.X, containerPosition.Y, containerSize.X,
                 containerSize.Y);
