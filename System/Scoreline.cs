@@ -36,9 +36,18 @@ public class Scoreline : ModSystem
             const int pointWidth = 50;
             const int pointHeight = 30;
 
+            var bounding = new Rectangle(
+                (Main.screenWidth / 2) - (timerWidth / 2) - (pointWidth * 2),
+                0,
+                timerWidth + (pointWidth * 5),
+                timerHeight);
+            bounding.Inflate(16, 16);
+
+            var colorModulate = bounding.Contains(Main.mouseX, Main.mouseY) ? 0.25f : 1.0f;
+
             Utils.DrawInvBG(Main.spriteBatch,
                 new((Main.screenWidth / 2) - (timerWidth / 2), 0, timerWidth, timerHeight),
-                Main.teamColor[(int)Team.None] * 0.7f);
+                Main.teamColor[(int)Team.None] * 0.7f * colorModulate);
 
             if (ModContent.GetInstance<GameManager>().CurrentPhase == GameManager.Phase.Playing)
             {
@@ -53,7 +62,7 @@ public class Scoreline : ModSystem
                         FontAssets.MouseText.Value,
                         text,
                         new((int)((Main.screenWidth / 2.0f) - (metrics.X / 2.0f)), 10.0f),
-                        Color.White,
+                        Color.White * colorModulate,
                         0.0f,
                         Vector2.Zero,
                         Vector2.One);
@@ -68,7 +77,7 @@ public class Scoreline : ModSystem
 
                 Utils.DrawInvBG(Main.spriteBatch,
                     new((Main.screenWidth / 2) - (timerWidth / 2) + offset, 0, pointWidth, pointHeight),
-                    Main.teamColor[(int)team] * 0.7f);
+                    Main.teamColor[(int)team] * 0.7f * colorModulate);
 
                 var text = ModContent.GetInstance<PointsManager>().Points[team].ToString();
                 var metrics = ChatManager.GetStringSize(FontAssets.MouseText.Value, text, Vector2.One);
@@ -76,7 +85,7 @@ public class Scoreline : ModSystem
                     FontAssets.MouseText.Value,
                     ModContent.GetInstance<PointsManager>().Points[team].ToString(),
                     new((int)((Main.screenWidth / 2.0f) + offset - (pointWidth / 2.0f) - (metrics.X / 2)), 6.0f),
-                    Color.White,
+                    Color.White * colorModulate,
                     0.0f,
                     Vector2.Zero,
                     Vector2.One);
