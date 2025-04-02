@@ -187,6 +187,14 @@ public class PvPAdventure : Mod
 
                 break;
             }
+            case AdventurePacketIdentifier.PlayerTeam:
+            {
+                var team = AdventurePlayer.Team.Deserialize(reader);
+                var player = Main.player[Main.dedServ ? whoAmI : team.Player];
+
+                player.team = (int)team.Value;
+                break;
+            }
         }
     }
 

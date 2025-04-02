@@ -11,6 +11,7 @@ using PvPAdventure.System;
 using PvPAdventure.System.Client;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Enums;
 using Terraria.GameContent.UI.Chat;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -116,6 +117,25 @@ public class AdventurePlayer : ModPlayer
         public void Serialize(BinaryWriter writer)
         {
             writer.Write(Canary);
+        }
+    }
+
+    // This mod packet is required as opposed to MessageID.PlayerTeam, because the latter would be rejected during early
+    // connection, which is important for us.
+    public sealed class Team(byte player, Terraria.Enums.Team team) : IPacket<Team>
+    {
+        public byte Player { get; set; } = player;
+        public Terraria.Enums.Team Value { get; set; } = team;
+
+        public static Team Deserialize(BinaryReader reader)
+        {
+            return new(reader.ReadByte(), (Terraria.Enums.Team)reader.ReadInt32());
+        }
+
+        public void Serialize(BinaryWriter writer)
+        {
+            writer.Write(Player);
+            writer.Write((int)Value);
         }
     }
 
@@ -509,6 +529,7 @@ public class AdventurePlayer : ModPlayer
         tag["kills"] = Kills;
         tag["deaths"] = Deaths;
         tag["itemPickups"] = ItemPickups.ToArray();
+        tag["team"] = Player.team;
     }
 
     public override void LoadData(TagCompound tag)
@@ -516,15 +537,24 @@ public class AdventurePlayer : ModPlayer
         Kills = tag.Get<int>("kills");
         Deaths = tag.Get<int>("deaths");
         ItemPickups = tag.Get<int[]>("itemPickups").ToHashSet();
+        Player.team = tag.Get<int>("team");
     }
 
     public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
     {
         SyncStatistics(toWho, fromWho);
 
-        // Sync all of our pickups at once when we join
-        if (!Main.dedServ && newPlayer)
-            SyncItemPickups(toWho, fromWho);
+        if (newPlayer)
+        {
+            // Sync all of our pickups at once when we join
+            if (!Main.dedServ)
+                SyncItemPickups(toWho, fromWho);
+
+            var packet = Mod.GetPacket();
+            packet.Write((byte)AdventurePacketIdentifier.PlayerTeam);
+            new Team((byte)Player.whoAmI, (Terraria.Enums.Team)Player.team).Serialize(packet);
+            packet.Send(toWho, fromWho);
+        }
     }
 
     public override void ModifyHurt(ref Player.HurtModifiers modifiers)
