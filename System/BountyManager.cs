@@ -147,9 +147,9 @@ public class BountyManager : ModSystem
 
             root.Append(bountyList);
 
-            var teamBounties = bountyManager.Bounties[(Team)Main.LocalPlayer.team];
             // FIXME: indentation cause we append root late
-            if (teamBounties.Count != 0)
+            if (bountyManager.Bounties.TryGetValue((Team)Main.LocalPlayer.team, out var teamBounties) &&
+                teamBounties.Count > 0)
             {
                 var page = teamBounties[0];
 
