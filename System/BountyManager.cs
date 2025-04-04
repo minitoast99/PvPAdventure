@@ -176,8 +176,7 @@ public class BountyManager : ModSystem
                     var i1 = (byte)i;
                     button.OnLeftClick += (evt, element) =>
                     {
-                        // FIXME: wtf??
-                        var packet = ModContent.GetInstance<BountyManager>().Mod.GetPacket();
+                        var packet = bountyManager.Mod.GetPacket();
                         packet.Write((byte)AdventurePacketIdentifier.BountyTransaction);
                         new Transaction(bountyManager.TransactionId, (byte)Main.LocalPlayer.team, 0, i1).Serialize(
                             packet);
