@@ -373,7 +373,7 @@ public class BountyManager : ModSystem
             .Where(player => player.active)
             .Where(player => player.team == who.team)
             .Select(player => player.GetModPlayer<AdventurePlayer>())
-            .Select(player => player._itemPickups)
+            .Select(player => player.ItemPickups)
             .SelectMany(set => set));
 
         if (itemPickupsForThisTeam.Contains(ItemID.SoulofMight) &&

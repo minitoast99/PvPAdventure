@@ -174,9 +174,9 @@ public class PvPAdventure : Mod
 
                 break;
             }
-            case AdventurePacketIdentifier.PlayerItemPickups:
+            case AdventurePacketIdentifier.PlayerItemPickup:
             {
-                var itemPickup = AdventurePlayer.ItemPickups.Deserialize(reader);
+                var itemPickup = AdventurePlayer.ItemPickup.Deserialize(reader);
                 if (Main.dedServ)
                 {
                     var player = Main.player[whoAmI];

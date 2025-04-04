@@ -30,9 +30,7 @@ public class AdventurePlayer : ModPlayer
 
     private readonly int[] _playerMeleeInvincibleTime = new int[Main.maxPlayers];
 
-    // FIXME: You cannot ship this.
-    // STOPSHIP
-    public HashSet<int> _itemPickups = new();
+    public HashSet<int> ItemPickups { get; private set; } = new();
 
     private const int TimeBetweenPingPongs = 3 * 60;
 
@@ -78,11 +76,11 @@ public class AdventurePlayer : ModPlayer
         }
     }
 
-    public sealed class ItemPickups(int[] items) : IPacket<ItemPickups>
+    public sealed class ItemPickup(int[] items) : IPacket<ItemPickup>
     {
         public int[] Items { get; } = items;
 
-        public static ItemPickups Deserialize(BinaryReader reader)
+        public static ItemPickup Deserialize(BinaryReader reader)
         {
             var length = reader.ReadInt32();
             var items = new int[length];
@@ -102,7 +100,7 @@ public class AdventurePlayer : ModPlayer
 
         public void Apply(AdventurePlayer adventurePlayer)
         {
-            adventurePlayer._itemPickups.UnionWith(items);
+            adventurePlayer.ItemPickups.UnionWith(items);
         }
     }
 
@@ -499,16 +497,16 @@ public class AdventurePlayer : ModPlayer
     private void SyncSingleItemPickup(int item, int to = -1, int ignore = -1)
     {
         var packet = Mod.GetPacket();
-        packet.Write((byte)AdventurePacketIdentifier.PlayerItemPickups);
-        new ItemPickups([item]).Serialize(packet);
+        packet.Write((byte)AdventurePacketIdentifier.PlayerItemPickup);
+        new ItemPickup([item]).Serialize(packet);
         packet.Send(to, ignore);
     }
 
     private void SyncItemPickups(int to = -1, int ignore = -1)
     {
         var packet = Mod.GetPacket();
-        packet.Write((byte)AdventurePacketIdentifier.PlayerItemPickups);
-        new ItemPickups(_itemPickups.ToArray()).Serialize(packet);
+        packet.Write((byte)AdventurePacketIdentifier.PlayerItemPickup);
+        new ItemPickup(ItemPickups.ToArray()).Serialize(packet);
         packet.Send(to, ignore);
     }
 
@@ -516,14 +514,14 @@ public class AdventurePlayer : ModPlayer
     {
         tag["kills"] = Kills;
         tag["deaths"] = Deaths;
-        tag["itemPickups"] = _itemPickups.ToArray();
+        tag["itemPickups"] = ItemPickups.ToArray();
     }
 
     public override void LoadData(TagCompound tag)
     {
         Kills = tag.Get<int>("kills");
         Deaths = tag.Get<int>("deaths");
-        _itemPickups = tag.Get<int[]>("itemPickups").ToHashSet();
+        ItemPickups = tag.Get<int[]>("itemPickups").ToHashSet();
     }
 
     public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
@@ -588,7 +586,7 @@ public class AdventurePlayer : ModPlayer
         //         always, but I'm not sure even that is good enough -- so let's just ignore them for now.
         if (item.ModItem == null)
         {
-            if (_itemPickups.Add(item.type) && Main.netMode == NetmodeID.MultiplayerClient)
+            if (ItemPickups.Add(item.type) && Main.netMode == NetmodeID.MultiplayerClient)
                 SyncSingleItemPickup(item.type);
         }
 
