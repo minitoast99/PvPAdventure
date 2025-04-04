@@ -1,3 +1,3 @@
 # PvP Adventure
-A mod that implements the Terraria PvP Adventure gamemode
+The complete Terraria PvP Adventure experience.
 
