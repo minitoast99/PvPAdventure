@@ -254,6 +254,7 @@ public abstract class BoundNpc : ModNPC
         {
             base.Transform(whoAmI);
             NPC.unlockedTruffleSpawn = true;
+            NetMessage.SendData(MessageID.WorldData);
         }
     }
 }
