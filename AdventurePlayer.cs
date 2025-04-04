@@ -459,12 +459,6 @@ public class AdventurePlayer : ModPlayer
         {
             pointsManager.BossCompletion.Active = true;
             Main.InGameUI.SetState(pointsManager.UiScoreboard);
-            // Main.InGameUI.SetState(ModContent.GetInstance<BountyManager>().UiBountyShop);
-            // ModContent.GetInstance<ObjectiveNotice>()
-            // .AddPlayerDeathNotice(Main.player[0], Main.player[0], Main.player[0].HeldItem);
-            // ModContent.GetInstance<ObjectiveNotice>().AddBossDeathNotice((Team)Main.player[0].team,
-            // Main.player[0].HeldItem, Main.npc.First(npc => npc.active));
-            // ModContent.GetInstance<ObjectiveNotice>().AddClaimReceivedNotice((Team)Main.player[0].team);
         }
         else if (keybinds.Scoreboard.JustReleased)
         {
