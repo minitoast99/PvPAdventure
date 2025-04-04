@@ -172,14 +172,13 @@ public class BountyManager : ModSystem
                         Height = { Pixels = 35.0f }
                     };
 
-                    // FIXME: dumb
-                    var i1 = (byte)i;
+                    var bountyIndex = (byte)i;
                     button.OnLeftClick += (evt, element) =>
                     {
                         var packet = bountyManager.Mod.GetPacket();
                         packet.Write((byte)AdventurePacketIdentifier.BountyTransaction);
-                        new Transaction(bountyManager.TransactionId, (byte)Main.LocalPlayer.team, 0, i1).Serialize(
-                            packet);
+                        new Transaction(bountyManager.TransactionId, (byte)Main.LocalPlayer.team, 0, bountyIndex)
+                            .Serialize(packet);
                         packet.Send();
                     };
 
