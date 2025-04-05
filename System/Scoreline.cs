@@ -28,6 +28,8 @@ public class Scoreline : ModSystem
 
     public sealed class Interface() : GameInterfaceLayer("PvPAdventure: Scoreline", InterfaceScaleType.None)
     {
+        private float _colorModulate = 1.0f;
+
         protected override bool DrawSelf()
         {
             const int timerWidth = 100;
@@ -43,11 +45,12 @@ public class Scoreline : ModSystem
                 timerHeight);
             bounding.Inflate(16, 16);
 
-            var colorModulate = bounding.Contains(Main.mouseX, Main.mouseY) ? 0.25f : 1.0f;
+            var target = bounding.Contains(Main.mouseX, Main.mouseY) ? 0.25f : 1.0f;
+            _colorModulate = (float)Utils.Lerp(_colorModulate, target, 1.0f / 16.0f);
 
             Utils.DrawInvBG(Main.spriteBatch,
                 new((Main.screenWidth / 2) - (timerWidth / 2), 0, timerWidth, timerHeight),
-                Main.teamColor[(int)Team.None] * 0.7f * colorModulate);
+                Main.teamColor[(int)Team.None] * 0.7f * _colorModulate);
 
             if (ModContent.GetInstance<GameManager>().CurrentPhase == GameManager.Phase.Playing)
             {
@@ -62,7 +65,7 @@ public class Scoreline : ModSystem
                         FontAssets.MouseText.Value,
                         text,
                         new((int)((Main.screenWidth / 2.0f) - (metrics.X / 2.0f)), 10.0f),
-                        Color.White * colorModulate,
+                        Color.White * _colorModulate,
                         0.0f,
                         Vector2.Zero,
                         Vector2.One);
@@ -77,7 +80,7 @@ public class Scoreline : ModSystem
 
                 Utils.DrawInvBG(Main.spriteBatch,
                     new((Main.screenWidth / 2) - (timerWidth / 2) + offset, 0, pointWidth, pointHeight),
-                    Main.teamColor[(int)team] * 0.7f * colorModulate);
+                    Main.teamColor[(int)team] * 0.7f * _colorModulate);
 
                 var text = ModContent.GetInstance<PointsManager>().Points[team].ToString();
                 var metrics = ChatManager.GetStringSize(FontAssets.MouseText.Value, text, Vector2.One);
@@ -85,7 +88,7 @@ public class Scoreline : ModSystem
                     FontAssets.MouseText.Value,
                     ModContent.GetInstance<PointsManager>().Points[team].ToString(),
                     new((int)((Main.screenWidth / 2.0f) + offset - (pointWidth / 2.0f) - (metrics.X / 2)), 6.0f),
-                    Color.White * colorModulate,
+                    Color.White * _colorModulate,
                     0.0f,
                     Vector2.Zero,
                     Vector2.One);
