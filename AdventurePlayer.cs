@@ -40,6 +40,7 @@ public class AdventurePlayer : ModPlayer
     private int _pingPongCanary;
     private Stopwatch _pingPongStopwatch;
     public TimeSpan? Latency { get; private set; }
+    public int PvPImmuneTime { get; private set; }
 
     private DiscordRestClient _discordClient;
 
@@ -325,6 +326,9 @@ public class AdventurePlayer : ModPlayer
             Player.SetItemAnimation(0);
             Player.SetItemTime(0);
         }
+
+        if (PvPImmuneTime > 0)
+            PvPImmuneTime--;
     }
 
     private bool CanRecall()
@@ -610,6 +614,15 @@ public class AdventurePlayer : ModPlayer
 
         if (!hasIncurredFalloff && playerDamageBalance.DefaultFalloff != null)
             modifiers.IncomingDamageMultiplier *= playerDamageBalance.DefaultFalloff.CalculateMultiplier(tileDistance);
+    }
+
+    public override void OnHurt(Player.HurtInfo info)
+    {
+        var adventureConfig = ModContent.GetInstance<AdventureConfig>();
+
+        if (info.PvP && info.CooldownCounter == CombatManager.PvPImmunityCooldownId &&
+            adventureConfig.Combat.MeleeInvincibilityFrames == 0)
+            PvPImmuneTime = adventureConfig.Combat.StandardInvincibilityFrames;
     }
 
     public override bool OnPickup(Item item)

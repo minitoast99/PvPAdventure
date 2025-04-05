@@ -249,6 +249,11 @@ Mods: {
 					Label: Player Damage Balance
 					Tooltip: ""
 				}
+
+				StandardInvincibilityFrames: {
+					Label: Standard Invincibility Frames
+					Tooltip: ""
+				}
 			}
 
 			AdventureClientConfig: {

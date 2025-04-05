@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using MonoMod.Cil;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -10,6 +11,7 @@ namespace PvPAdventure.System;
 public class CombatManager : ModSystem
 {
     private const bool PreventPersonalCombatModifications = true;
+    public const int PvPImmunityCooldownId = -100;
 
     public override void Load()
     {
@@ -28,6 +30,14 @@ public class CombatManager : ModSystem
         // fixes).
         On_NetMessage.SendPlayerHurt_int_PlayerDeathReason_int_int_bool_bool_int_int_int +=
             (_, _, _, _, _, _, _, _, _, _) => { };
+
+        // Override the cooldown counter/immunity cooldown ID and "proceed" flag for PvP damage.
+        IL_Player.Hurt_PlayerDeathReason_int_int_refHurtInfo_bool_bool_int_bool_float_float_float += EditPlayerHurt2;
+        // Don't presumptuously check Player.immune for projectile PvP damage -- player hurt will do it for you.
+        // Don't apply statuses conditionally on the value of Player.immune.
+        IL_Projectile.Damage += EditProjectileDamage;
+        // Don't presumptuously check Player.immune for melee PvP damage -- player hurt will do it for you.
+        IL_Player.ItemCheck_MeleeHitPVP += EditPlayerItemCheck_MeleeHitPVP;
     }
 
     public override bool HijackGetData(ref byte messageType, ref BinaryReader reader, int playerNumber)
@@ -62,21 +72,68 @@ public class CombatManager : ModSystem
         quiet = true;
 
         orig(self, info, quiet);
-
-        // FIXME: An IL patch might be slightly better.
-        //        Doing it this way isn't great, because anything introduced in-between the i-frames being set isn't correct
-        //        Meaning side effects are possible.
-        //        We assume here that anyone who cares is going to care after this method comes back, not during it.
-        //        IL Patching means it never has a moment to be wrong.
-        if (ModContent.GetInstance<AdventureConfig>().Combat.MeleeInvincibilityFrames > 0 && info.PvP)
-        {
-            self.immune = false;
-            self.immuneTime = 0;
-        }
     }
 
     private int OnMainDamageVar(On_Main.orig_DamageVar_float_int_float orig, float dmg, int percent, float luck)
     {
         return (int)Math.Round(dmg);
+    }
+
+    private void EditPlayerHurt2(ILContext il)
+    {
+        var cursor = new ILCursor(il);
+        // Find where we load Player.immune...
+        cursor.GotoNext(i => i.MatchLdfld<Player>("immune"))
+            // ...where we store it off to a local...
+            .GotoNext(i => i.MatchStloc0());
+
+        // ...then after that...
+        cursor.Index += 1;
+        // ...prepare a delegate call.
+        cursor.EmitLdarg0()
+            .EmitLdarg(5)
+            .EmitLdarga(7)
+            .EmitLdloca(0)
+            .EmitDelegate((Player self, bool pvp, ref int cooldownCounter, ref bool flag) =>
+            {
+                var adventurePlayer = self.GetModPlayer<AdventurePlayer>();
+
+                if (pvp)
+                {
+                    // Overwrite the cooldown counter, so that if the hurt succeeds, no other counter gets modified.
+                    cooldownCounter = PvPImmunityCooldownId;
+                    // Set the flag deciding if this hurt should proceed.
+                    flag = adventurePlayer.PvPImmuneTime == 0;
+                }
+            });
+    }
+
+    private void EditProjectileDamage(ILContext il)
+    {
+        var cursor = new ILCursor(il);
+        // Find the first load of Player.immune...
+        cursor.GotoNext(i => i.MatchLdfld<Player>("immune"));
+        // ...and go back to where the player instance is loaded...
+        cursor.Index -= 1;
+        // ...to remove it, the load, and the branch.
+        cursor.RemoveRange(3);
+
+        // Find the next load of Player.immune...
+        cursor.GotoNext(i => i.MatchLdfld<Player>("immune"));
+        // ...and remove it...
+        cursor.Remove();
+        // ...to replace it's loaded value with the result of our delegate.
+        cursor.EmitDelegate((Player self) => self.GetModPlayer<AdventurePlayer>().PvPImmuneTime > 0);
+    }
+
+    private void EditPlayerItemCheck_MeleeHitPVP(ILContext il)
+    {
+        var cursor = new ILCursor(il);
+        // Find the first load of Player.immune...
+        cursor.GotoNext(i => i.MatchLdfld<Player>("immune"));
+        // ...and go back to where the player instance is loaded...
+        cursor.Index -= 1;
+        // ...to remove it, the load, and the branch.
+        cursor.RemoveRange(3);
     }
 }

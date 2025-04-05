@@ -178,6 +178,8 @@ public class AdventureConfig : ModConfig
         public int RecentDamagePreservationFrames { get; set; }
 
         public PlayerDamageBalanceConfig PlayerDamageBalance { get; set; } = new();
+
+        [Range(0, 5 * 60)] [DefaultValue(8)] public int StandardInvincibilityFrames { get; set; }
     }
 
     public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref NetworkText message)
