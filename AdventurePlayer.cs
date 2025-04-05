@@ -11,7 +11,6 @@ using PvPAdventure.System;
 using PvPAdventure.System.Client;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.Enums;
 using Terraria.GameContent.UI.Chat;
 using Terraria.GameInput;
 using Terraria.ID;
