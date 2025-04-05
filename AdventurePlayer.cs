@@ -285,6 +285,15 @@ public class AdventurePlayer : ModPlayer
         return true;
     }
 
+    public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
+    {
+        if (npc.boss || AdventureNpc.IsPartOfEaterOfWorlds((short)npc.type) ||
+            AdventureNpc.IsPartOfTheDestroyer((short)npc.type))
+            cooldownSlot = ImmunityCooldownID.Bosses;
+
+        return true;
+    }
+
     public override void ResetEffects()
     {
         // FIXME: This does not truly belong here.
