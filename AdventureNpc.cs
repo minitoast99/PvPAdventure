@@ -234,8 +234,50 @@ public class AdventureNpc : GlobalNPC
 
     public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
     {
-        if (IsPartOfEaterOfWorlds((short)npc.type))
-            npcLoot.Add(ItemDropRule.ByCondition(new Conditions.LegacyHack_IsBossAndNotExpert(), ItemID.WormScarf));
+        void AddNonExpertBossLoot(int id)
+        {
+            npcLoot.Add(ItemDropRule.ByCondition(new Conditions.LegacyHack_IsBossAndNotExpert(), id));
+        }
+
+        if (IsPartOfEaterOfWorlds((short)npc.type) || npc.type == NPCID.BrainofCthulhu)
+            AddNonExpertBossLoot(ItemID.WormScarf);
+        else
+        {
+            switch (npc.type)
+            {
+                case NPCID.KingSlime:
+                    AddNonExpertBossLoot(ItemID.RoyalGel);
+                    break;
+                case NPCID.EyeofCthulhu:
+                    AddNonExpertBossLoot(ItemID.EoCShield);
+                    break;
+                case NPCID.QueenBee:
+                    AddNonExpertBossLoot(ItemID.HiveBackpack);
+                    break;
+                case NPCID.Deerclops:
+                    AddNonExpertBossLoot(ItemID.BoneHelm);
+                    break;
+                case NPCID.SkeletronHead:
+                    AddNonExpertBossLoot(ItemID.BoneGlove);
+                    break;
+                case NPCID.QueenSlimeBoss:
+                    AddNonExpertBossLoot(ItemID.VolatileGelatin);
+                    break;
+                case NPCID.TheDestroyer:
+                    AddNonExpertBossLoot(ItemID.MechanicalWagonPiece);
+                    break;
+                case NPCID.Retinazer:
+                case NPCID.Spazmatism:
+                    AddNonExpertBossLoot(ItemID.MechanicalWheelPiece);
+                    break;
+                case NPCID.SkeletronPrime:
+                    AddNonExpertBossLoot(ItemID.MechanicalBatteryPiece);
+                    break;
+                case NPCID.Plantera:
+                    AddNonExpertBossLoot(ItemID.SporeSac);
+                    break;
+            }
+        }
     }
 
     public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
