@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Enums;
@@ -38,11 +39,26 @@ public class Scoreline : ModSystem
             const int pointWidth = 50;
             const int pointHeight = 30;
 
+            var teamsWithPlayers = Main.player
+                .Where(player => player.active)
+                .Where(player => (Team)player.team != Team.None)
+                .GroupBy(player => player.team)
+                .Select(grouping => (Team)grouping.Key)
+                .ToHashSet();
+
             var bounding = new Rectangle(
-                (Main.screenWidth / 2) - (timerWidth / 2) - (pointWidth * 2),
+                (Main.screenWidth / 2) - (timerWidth / 2),
                 0,
-                timerWidth + (pointWidth * 5),
+                timerWidth,
                 timerHeight);
+
+            // Determine how large we are going to end up being
+            var widthOfAllPoints = ((teamsWithPlayers.Count + 2 - 1) / 2) * pointWidth;
+
+            // Inflate so that we expand from the center
+            bounding.Inflate(widthOfAllPoints, 0);
+
+            // Inflate a bit just for the sake of having a bit of padding for the cursor
             bounding.Inflate(16, 16);
 
             var target = bounding.Contains(Main.mouseX, Main.mouseY) ? 0.25f : 1.0f;
@@ -72,10 +88,15 @@ public class Scoreline : ModSystem
                 }
             }
 
-            var offset = 100;
+            // Start from the furthest left
+            var offset = -widthOfAllPoints;
+            // Iterate teams in a standardize order
             foreach (var team in Enum.GetValues<Team>())
             {
                 if (team == Team.None)
+                    continue;
+
+                if (!teamsWithPlayers.Contains(team))
                     continue;
 
                 Utils.DrawInvBG(Main.spriteBatch,
@@ -93,15 +114,11 @@ public class Scoreline : ModSystem
                     Vector2.Zero,
                     Vector2.One);
 
-                if (offset > 0)
-                {
-                    offset = -offset + 50;
-                }
-                else
-                {
-                    offset = -offset;
-                    offset += 100;
-                }
+                // Work our way to the right
+                offset += pointWidth;
+                // Skip over the timer that we are centered around
+                if (offset == 0)
+                    offset = timerWidth;
             }
 
             return base.DrawSelf();
