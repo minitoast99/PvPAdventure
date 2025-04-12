@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
 namespace PvPAdventure;
@@ -8,6 +9,7 @@ public class AdventureClientConfig : ModConfig
 
     public PlayerOutlineConfig PlayerOutline { get; set; } = new();
     public bool ShiftEnterOpensAllChat { get; set; }
+    [DefaultValue(true)] public bool ShowPauseMessage { get; set; }
 
     public class PlayerOutlineConfig
     {

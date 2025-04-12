@@ -220,6 +220,10 @@ public class AdventurePlayer : ModPlayer
         if (region == null || !region.CanUseWormhole)
             return false;
 
+        // This is now a possibility from our multiplayer pause.
+        if (Main.gamePaused)
+            return false;
+
         return orig(self);
     }
 

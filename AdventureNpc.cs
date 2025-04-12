@@ -232,6 +232,15 @@ public class AdventureNpc : GlobalNPC
         ModContent.GetInstance<PointsManager>().AwardNpcKillToTeam((Team)lastDamager.team, npc);
     }
 
+    public override bool? CanChat(NPC npc)
+    {
+        // This is now a possibility from our multiplayer pause.
+        if (Main.gamePaused)
+            return false;
+
+        return null;
+    }
+
     public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
     {
         void AddNonExpertBossLoot(int id)
