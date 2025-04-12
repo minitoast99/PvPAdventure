@@ -18,11 +18,33 @@ public class AdventureItem : GlobalItem
 
     public override void SetDefaults(Item item)
     {
+        var adventureConfig = ModContent.GetInstance<AdventureConfig>();
+
         if (RecallItems[item.type])
         {
-            var recallTime = ModContent.GetInstance<AdventureConfig>().RecallFrames;
+            var recallTime = adventureConfig.RecallFrames;
             item.useTime = recallTime * 2;
             item.useAnimation = recallTime * 2;
+        }
+
+        // Can't construct an ItemDefinition too early -- it'll call GetName and won't be graceful on failure.
+        if (ItemID.Search.TryGetName(item.type, out var name) &&
+            adventureConfig.ItemStatistics.TryGetValue(new ItemDefinition(name), out var statistics))
+        {
+            if (statistics.Damage != null)
+                item.damage = statistics.Damage.Value;
+            if (statistics.UseTime != null)
+                item.useTime = statistics.UseTime.Value;
+            if (statistics.ShootSpeed != null)
+                item.shootSpeed = statistics.ShootSpeed.Value;
+            if (statistics.Crit != null)
+                item.crit = statistics.Crit.Value;
+            if (statistics.Mana != null)
+                item.mana = statistics.Mana.Value;
+            if (statistics.Scale != null)
+                item.scale = statistics.Scale.Value;
+            if (statistics.Knockback != null)
+                item.knockBack = statistics.Knockback.Value;
         }
     }
 

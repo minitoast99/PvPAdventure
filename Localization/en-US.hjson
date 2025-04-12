@@ -98,6 +98,11 @@ Mods: {
 					Label: Remove Prefixes
 					Tooltip: ""
 				}
+
+				ItemStatistics: {
+					Label: Item Statistics
+					Tooltip: ""
+				}
 			}
 
 			PointsConfig: {
@@ -332,6 +337,63 @@ Mods: {
 				}
 
 				Tooltip: ""
+			}
+
+			Statistics: {
+				Tooltip: ""
+
+				Damage: {
+					Label: Damage
+					Tooltip: ""
+				}
+
+				UseTime: {
+					Label: Use Time
+					Tooltip: ""
+				}
+
+				ShootSpeed: {
+					Label: Shoot Speed
+					Tooltip: ""
+				}
+
+				Crit: {
+					Label: Crit
+					Tooltip: ""
+				}
+
+				Mana: {
+					Label: Mana
+					Tooltip: ""
+				}
+
+				Scale: {
+					Label: Scale
+					Tooltip: ""
+				}
+
+				Knockback: {
+					Label: Knockback
+					Tooltip: ""
+				}
+			}
+
+			OptionalInt: {
+				Tooltip: ""
+
+				Value: {
+					Label: Value
+					Tooltip: ""
+				}
+			}
+
+			OptionalFloat: {
+				Tooltip: ""
+
+				Value: {
+					Label: Value
+					Tooltip: ""
+				}
 			}
 		}
 

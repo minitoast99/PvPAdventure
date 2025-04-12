@@ -182,6 +182,47 @@ public class AdventureConfig : ModConfig
         [Range(0, 5 * 60)] [DefaultValue(8)] public int StandardInvincibilityFrames { get; set; }
     }
 
+    public class Statistics
+    {
+        // FIXME: tModLoader does not have struct support, so nullables (System.Nullable) won't work -- and would
+        //        require some extra handling to display in the UI properly. (1)
+        //        Make an incredibly simplified "optional" type, where it is good enough to indicate an "empty" by
+        //        holding a null reference to it.
+        //        Can't do any better than this -- even trying to use CustomModConfigItem fails because _someone_ made
+        //        most of the UI mod config elements internal, so we can't extend their functionality without uselessly
+        //        re-implementing them, which I won't condone. (2)
+        //        Can't use a generic class like Optional<T> because UI attributes needs to go onto the property, and
+        //        it cannot be repeated, and the Range attribute actually cares about the underlying type you give it
+        //        when specifying a limit! (3)
+        //        Don't forget that floats ONLY have sliders, which have HUGE inaccuracy problems if you put the range
+        //        maximum range higher, which is always the case -- there is genuinely no possible way to specify a
+        //        float value that is anywhere near considered "precise" or "precise enough" in the config. (4)
+        //
+        //        Yes, you heard right, there are 4 issues all right here, stemming from tModLoader's poor code.
+
+        public class OptionalInt
+        {
+            [Range(0, 1000)] public int Value { get; set; }
+        }
+
+        public class OptionalFloat
+        {
+            [Increment(0.05f)]
+            [Range(0.0f, 100.0f)]
+            public float Value { get; set; }
+        }
+
+        [DefaultValue(null)] [NullAllowed] public OptionalInt Damage { get; set; }
+        [DefaultValue(null)] [NullAllowed] public OptionalInt UseTime { get; set; }
+        [DefaultValue(null)] [NullAllowed] public OptionalFloat ShootSpeed { get; set; }
+        [DefaultValue(null)] [NullAllowed] public OptionalInt Crit { get; set; }
+        [DefaultValue(null)] [NullAllowed] public OptionalInt Mana { get; set; }
+        [DefaultValue(null)] [NullAllowed] public OptionalFloat Scale { get; set; }
+        [DefaultValue(null)] [NullAllowed] public OptionalFloat Knockback { get; set; }
+    }
+
+    [ReloadRequired] public Dictionary<ItemDefinition, Statistics> ItemStatistics { get; set; } = new();
+
     public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref NetworkText message)
     {
         if (pendingConfig is not AdventureConfig pendingAdventureConfig)
