@@ -10,6 +10,7 @@ using MonoMod.Cil;
 using PvPAdventure.System;
 using PvPAdventure.System.Client;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent.UI.Chat;
 using Terraria.GameInput;
@@ -156,6 +157,9 @@ public class AdventurePlayer : ModPlayer
         // Always consider the respawn time for non-pvp deaths.
         On_Player.GetRespawnTime += OnPlayerGetRespawnTime;
         On_Player.Spawn += OnPlayerSpawn;
+
+        // Allow player hurt sound to be silenced or not, without regards to the networked value or mutating it.
+        IL_Player.Hurt_HurtInfo_bool += EditPlayerHurt;
     }
 
     private void OnPlayerPlaceThing_Tiles(On_Player.orig_PlaceThing_Tiles orig, Player self)
@@ -247,6 +251,21 @@ public class AdventurePlayer : ModPlayer
             .GotoPrev(i => i.MatchLdarg(4))
             // ...and remove the load and subsequent branch.
             .RemoveRange(2);
+    }
+
+    private void EditPlayerHurt(ILContext il)
+    {
+        var cursor = new ILCursor(il);
+
+        // Find the load of Player.HurtInfo.SoundDisabled...
+        cursor.GotoNext(i => i.MatchLdfld<Player.HurtInfo>("SoundDisabled"))
+            // ...and remove it...
+            .Remove()
+            // ...emitting a load of argument 0 (this)...
+            .EmitLdarg0()
+            // ...and a delegate, whose return value will take the place of the above-removed load.
+            .EmitDelegate((Player.HurtInfo hurtInfo, Player target) =>
+                ShouldSilenceHurtSound(target, hurtInfo) ?? hurtInfo.SoundDisabled);
     }
 
     private int OnPlayerGetRespawnTime(On_Player.orig_GetRespawnTime orig, Player self, bool pvp) => orig(self, false);
@@ -430,8 +449,26 @@ public class AdventurePlayer : ModPlayer
             ModContent.GetInstance<AdventureConfig>().Combat.RecentDamagePreservationFrames);
     }
 
+    public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genDust,
+        ref PlayerDeathReason damageSource)
+    {
+        // Only silence death sound on clients that we hurt that aren't ourselves
+        if (!Main.dedServ && pvp && Player.whoAmI != Main.myPlayer && damageSource.SourcePlayerIndex == Main.myPlayer)
+        {
+            var marker = ModContent.GetInstance<AdventureClientConfig>().SoundEffect.PlayerKillMarker;
+            if (marker != null && marker.SilenceVanilla)
+                playSound = false;
+        }
+
+        return true;
+    }
+
     public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
     {
+        // Only play kill markers on clients that we hurt that aren't ourselves
+        if (!Main.dedServ && pvp && damageSource.SourcePlayerIndex == Main.myPlayer && Player.whoAmI != Main.myPlayer)
+            PlayKillMarker((int)damage);
+
         if (Main.netMode == NetmodeID.MultiplayerClient)
             return;
 
@@ -621,9 +658,16 @@ public class AdventurePlayer : ModPlayer
 
     public override void OnHurt(Player.HurtInfo info)
     {
+        if (!info.PvP)
+            return;
+
         var adventureConfig = ModContent.GetInstance<AdventureConfig>();
 
-        if (info.PvP && info.CooldownCounter == CombatManager.PvPImmunityCooldownId &&
+        // Only play hit markers on clients that we hurt that aren't ourselves
+        if (!Main.dedServ && Player.whoAmI != Main.myPlayer && info.DamageSource.SourcePlayerIndex == Main.myPlayer)
+            PlayHitMarker(info.Damage);
+
+        if (info.CooldownCounter == CombatManager.PvPImmunityCooldownId &&
             adventureConfig.Combat.MeleeInvincibilityFrames == 0)
             PvPImmuneTime = adventureConfig.Combat.StandardInvincibilityFrames;
     }
@@ -664,6 +708,34 @@ public class AdventurePlayer : ModPlayer
         Latency = _pingPongStopwatch.Elapsed / 2;
         _pingPongStopwatch = null;
         _pingPongCanary++;
+    }
+
+    private static bool? ShouldSilenceHurtSound(Player target, Player.HurtInfo info)
+    {
+        // Only silence hurt sound on clients that we hurt that aren't ourselves
+        if (!Main.dedServ && info.PvP && target.whoAmI != Main.myPlayer &&
+            info.DamageSource.SourcePlayerIndex == Main.myPlayer)
+        {
+            var marker = ModContent.GetInstance<AdventureClientConfig>().SoundEffect.PlayerHitMarker;
+            if (marker != null && marker.SilenceVanilla)
+                return true;
+        }
+
+        return null;
+    }
+
+    private static void PlayHitMarker(int damage)
+    {
+        var marker = ModContent.GetInstance<AdventureClientConfig>().SoundEffect.PlayerHitMarker;
+        if (marker != null)
+            SoundEngine.PlaySound(marker.Create(damage));
+    }
+
+    private static void PlayKillMarker(int damage)
+    {
+        var marker = ModContent.GetInstance<AdventureClientConfig>().SoundEffect.PlayerKillMarker;
+        if (marker != null)
+            SoundEngine.PlaySound(marker.Create(damage));
     }
 
     public class PingCommand : ModCommand

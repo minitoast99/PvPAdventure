@@ -278,6 +278,11 @@ Mods: {
 					Tooltip: ""
 					Label: Show Pause Message
 				}
+
+				SoundEffect: {
+					Label: Sound Effect
+					Tooltip: ""
+				}
 			}
 
 			PlayerOutlineConfig: {
@@ -399,6 +404,122 @@ Mods: {
 					Label: Value
 					Tooltip: ""
 				}
+			}
+
+			HitMarkerConfig: {
+				Sound: {
+					Label: Sound
+					Tooltip: ""
+				}
+
+				Volume: {
+					Label: Volume
+					Tooltip: ""
+				}
+
+				PitchMinimum: {
+					Label: Pitch Minimum
+					Tooltip: ""
+				}
+
+				PitchMaximum: {
+					Label: Pitch Maximum
+					Tooltip: ""
+				}
+
+				Tooltip: ""
+
+				SoundPath: {
+					Tooltip: ""
+					Label: Sound Path
+				}
+			}
+
+			SoundEffectConfig: {
+				Tooltip: ""
+
+				NpcHitMarker: {
+					Label: Npc Hit Marker
+					Tooltip: ""
+				}
+
+				PlayerHitMarker: {
+					Label: Player Hit Marker
+					Tooltip: ""
+				}
+
+				PlayerKillMarker: {
+					Label: Player Kill Marker
+					Tooltip: ""
+				}
+			}
+
+			PlayerHitMarkerConfig: {
+				Tooltip: ""
+
+				SilenceVanilla: {
+					Label: Silence Vanilla
+					Tooltip: ""
+				}
+			}
+
+			KillMarkerConfig: {
+				SoundPath: {
+					Tooltip: ""
+					Label: Sound Path
+				}
+			}
+
+			PlayerKillMarkerConfig: {
+				SilenceVanilla: {
+					Tooltip: ""
+					Label: Silence Vanilla
+				}
+
+				Tooltip: ""
+			}
+
+			MarkerConfig`1: {
+				PitchMaximum: {
+					Tooltip: ""
+					Label: Pitch Maximum
+				}
+
+				PitchMinimum: {
+					Tooltip: ""
+					Label: Pitch Minimum
+				}
+
+				Volume: {
+					Tooltip: ""
+					Label: Volume
+				}
+
+				Sound: {
+					Tooltip: ""
+					Label: Sound
+				}
+			}
+
+			Killsound: {
+				Part2.Label: Part2
+				FatalCarCrash.Label: Fatal Car Crash
+				Shronker.Label: Shronker
+				Sharkron.Label: Sharkron
+				Ronaldoz.Label: Ronaldoz
+				Zacharry.Label: Zacharry
+				Tooltip: ""
+			}
+
+			Hitsound: {
+				Part1.Label: Part1
+				MarrowMurder.Label: Marrow Murder
+				Squelchy.Label: Squelchy
+				Crash.Label: Crash
+				Blip.Label: Blip
+				Buwee.Label: BuWEEEEE
+				OlBetsy.Label: Ol' Betsy
+				Tooltip: ""
 			}
 		}
 

@@ -4,6 +4,7 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using PvPAdventure.System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.Chat;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -289,6 +290,20 @@ public class AdventureNpc : GlobalNPC
         }
     }
 
+    // This only runs on the attacking player
+    public override void OnHitByItem(NPC npc, Player player, Item item, NPC.HitInfo hit, int damageDone)
+    {
+        if (!Main.dedServ)
+            PlayHitMarker(damageDone);
+    }
+
+    // This only runs on the attacking player
+    public override void OnHitByProjectile(NPC npc, Projectile projectile, NPC.HitInfo hit, int damageDone)
+    {
+        if (!Main.dedServ)
+            PlayHitMarker(damageDone);
+    }
+
     public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
     {
         if (ModContent.GetInstance<GameManager>()?.CurrentPhase == GameManager.Phase.Waiting)
@@ -300,6 +315,13 @@ public class AdventureNpc : GlobalNPC
         // Reduce the timeLeft requirement for Queen Bee despawn.
         if (npc.type == NPCID.QueenBee && npc.timeLeft <= NPC.activeTime - (4.5 * 60))
             npc.active = false;
+    }
+
+    private static void PlayHitMarker(int damage)
+    {
+        var marker = ModContent.GetInstance<AdventureClientConfig>().SoundEffect.NpcHitMarker;
+        if (marker != null)
+            SoundEngine.PlaySound(marker.Create(damage));
     }
 
     public static bool IsPartOfEaterOfWorlds(short type) =>
