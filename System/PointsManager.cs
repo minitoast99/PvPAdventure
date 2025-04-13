@@ -439,7 +439,11 @@ public class PointsManager : ModSystem
             var teamIconsTexture = TextureAssets.Pvp[1].Value;
 
             var adventureConfig = ModContent.GetInstance<AdventureConfig>();
-            var bosses = adventureConfig.BossOrder.Select(npcDefinition => (short)npcDefinition.Type).ToList();
+            var bosses = adventureConfig.BossOrder
+                .Select(npcDefinition => (short)npcDefinition.Type)
+                // Remove invalid/unloaded NPCs
+                .Where(id => id != -1)
+                .ToList();
             var numberOfBosses = bosses.Count;
 
             var onlyDisplayWorldEvilBoss = ModContent.GetInstance<AdventureConfig>().OnlyDisplayWorldEvilBoss &&
