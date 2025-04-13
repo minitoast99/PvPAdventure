@@ -352,6 +352,11 @@ Mods: {
 					Tooltip: ""
 				}
 
+				UseAnimation: {
+					Label: Use Animation
+					Tooltip: ""
+				}
+
 				ShootSpeed: {
 					Label: Shoot Speed
 					Tooltip: ""

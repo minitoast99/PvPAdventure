@@ -35,6 +35,8 @@ public class AdventureItem : GlobalItem
                 item.damage = statistics.Damage.Value;
             if (statistics.UseTime != null)
                 item.useTime = statistics.UseTime.Value;
+            if (statistics.UseAnimation != null)
+                item.useAnimation = statistics.UseAnimation.Value;
             if (statistics.ShootSpeed != null)
                 item.shootSpeed = statistics.ShootSpeed.Value;
             if (statistics.Crit != null)

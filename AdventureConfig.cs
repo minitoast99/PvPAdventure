@@ -214,6 +214,7 @@ public class AdventureConfig : ModConfig
 
         [DefaultValue(null)] [NullAllowed] public OptionalInt Damage { get; set; }
         [DefaultValue(null)] [NullAllowed] public OptionalInt UseTime { get; set; }
+        [DefaultValue(null)] [NullAllowed] public OptionalInt UseAnimation { get; set; }
         [DefaultValue(null)] [NullAllowed] public OptionalFloat ShootSpeed { get; set; }
         [DefaultValue(null)] [NullAllowed] public OptionalInt Crit { get; set; }
         [DefaultValue(null)] [NullAllowed] public OptionalInt Mana { get; set; }
