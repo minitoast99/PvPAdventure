@@ -182,7 +182,7 @@ public class AdventureConfig : ModConfig
         [Range(0, 5 * 60)] [DefaultValue(8)] public int StandardInvincibilityFrames { get; set; }
     }
 
-    public class Statistics
+    public class Statistics : IEquatable<Statistics>
     {
         // FIXME: tModLoader does not have struct support, so nullables (System.Nullable) won't work -- and would
         //        require some extra handling to display in the UI properly. (1)
@@ -200,16 +200,48 @@ public class AdventureConfig : ModConfig
         //
         //        Yes, you heard right, there are 4 issues all right here, stemming from tModLoader's poor code.
 
-        public class OptionalInt
+        public class OptionalInt : IEquatable<OptionalInt>
         {
             [Range(0, 1000)] public int Value { get; set; }
+
+            public bool Equals(OptionalInt other)
+            {
+                if (ReferenceEquals(null, other)) return false;
+                if (ReferenceEquals(this, other)) return true;
+                return Value == other.Value;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                return obj.GetType() == GetType() && Equals((OptionalInt)obj);
+            }
+
+            public override int GetHashCode() => Value;
         }
 
-        public class OptionalFloat
+        public class OptionalFloat : IEquatable<OptionalFloat>
         {
             [Increment(0.05f)]
             [Range(0.0f, 100.0f)]
             public float Value { get; set; }
+
+            public bool Equals(OptionalFloat other)
+            {
+                if (ReferenceEquals(null, other)) return false;
+                if (ReferenceEquals(this, other)) return true;
+                return Value.Equals(other.Value);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                return obj.GetType() == GetType() && Equals((OptionalFloat)obj);
+            }
+
+            public override int GetHashCode() => Value.GetHashCode();
         }
 
         [DefaultValue(null)] [NullAllowed] public OptionalInt Damage { get; set; }
@@ -220,6 +252,26 @@ public class AdventureConfig : ModConfig
         [DefaultValue(null)] [NullAllowed] public OptionalInt Mana { get; set; }
         [DefaultValue(null)] [NullAllowed] public OptionalFloat Scale { get; set; }
         [DefaultValue(null)] [NullAllowed] public OptionalFloat Knockback { get; set; }
+
+        public bool Equals(Statistics other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(Damage, other.Damage) && Equals(UseTime, other.UseTime) &&
+                   Equals(UseAnimation, other.UseAnimation) && Equals(ShootSpeed, other.ShootSpeed) &&
+                   Equals(Crit, other.Crit) && Equals(Mana, other.Mana) && Equals(Scale, other.Scale) &&
+                   Equals(Knockback, other.Knockback);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((Statistics)obj);
+        }
+
+        public override int GetHashCode() =>
+            HashCode.Combine(Damage, UseTime, UseAnimation, ShootSpeed, Crit, Mana, Scale, Knockback);
     }
 
     [ReloadRequired] public Dictionary<ItemDefinition, Statistics> ItemStatistics { get; set; } = new();
