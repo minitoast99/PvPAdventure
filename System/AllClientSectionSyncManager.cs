@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace PvPAdventure.System;
 
 [Autoload(Side = ModSide.Server)]
-public class AllPlayerSectionSyncManager : ModSystem
+public class AllClientSectionSyncManager : ModSystem
 {
     private bool _broadcasting;
 
@@ -22,12 +22,12 @@ public class AllPlayerSectionSyncManager : ModSystem
             try
             {
                 _broadcasting = true;
-                foreach (var player in Main.ActivePlayers)
+                foreach (var client in Netplay.Clients)
                 {
-                    if (player.whoAmI == whoami)
+                    if (client.Id == whoami || !client.IsActive || client.State != 10)
                         continue;
 
-                    NetMessage.SendSection(player.whoAmI, sectionx, sectiony);
+                    NetMessage.SendSection(client.Id, sectionx, sectiony);
                 }
             }
             finally
