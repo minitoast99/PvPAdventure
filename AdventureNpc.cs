@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -315,6 +315,20 @@ public class AdventureNpc : GlobalNPC
         // Reduce the timeLeft requirement for Queen Bee despawn.
         if (npc.type == NPCID.QueenBee && npc.timeLeft <= NPC.activeTime - (4.5 * 60))
             npc.active = false;
+    }
+
+    public override void ModifyShop(NPCShop shop)
+    {
+        // The Steampunker sells the Jetpack at moon phase 4 and after during hardmode.
+        // Change it to be during moon phase 5 and later.
+        if (shop.NpcType == NPCID.Steampunker && shop.TryGetEntry(ItemID.Jetpack, out var entry))
+        {
+            if (((List<Condition>)entry.Conditions).Remove(Condition.MoonPhasesHalf1))
+                entry.AddCondition(Condition.MoonPhaseWaxingCrescent);
+            else
+                Mod.Logger.Warn(
+                    "Failed to remove moon phase condition for Steampunker's Jetpack shop entry -- not changing it any further.");
+        }
     }
 
     private static void PlayHitMarker(int damage)
