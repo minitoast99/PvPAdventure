@@ -103,6 +103,11 @@ Mods: {
 					Label: Item Statistics
 					Tooltip: ""
 				}
+
+				WorldGeneration: {
+					Tooltip: ""
+					Label: World Generation
+				}
 			}
 
 			PointsConfig: {
@@ -519,6 +524,25 @@ Mods: {
 				Blip.Label: Blip
 				Buwee.Label: BuWEEEEE
 				OlBetsy.Label: Ol' Betsy
+				Tooltip: ""
+			}
+
+			WorldGenerationConfig: {
+				LifeFruitMinimumDistanceBetween: {
+					Tooltip: ""
+					Label: Life Fruit Minimum Distance Between
+				}
+
+				LifeFruitExpertChanceDenominator: {
+					Tooltip: ""
+					Label: Life Fruit Expert Chance Denominator
+				}
+
+				LifeFruitChanceDenominator: {
+					Tooltip: ""
+					Label: Life Fruit Chance Denominator
+				}
+
 				Tooltip: ""
 			}
 		}

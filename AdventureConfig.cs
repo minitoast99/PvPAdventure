@@ -276,6 +276,17 @@ public class AdventureConfig : ModConfig
 
     [ReloadRequired] public Dictionary<ItemDefinition, Statistics> ItemStatistics { get; set; } = new();
 
+    public class WorldGenerationConfig
+    {
+        [DefaultValue(2)] public int LifeFruitChanceDenominator { get; set; } = 2;
+
+        [DefaultValue(2)] public int LifeFruitExpertChanceDenominator { get; set; } = 2;
+
+        [DefaultValue(2)] public int LifeFruitMinimumDistanceBetween { get; set; } = 2;
+    }
+
+    public WorldGenerationConfig WorldGeneration { get; set; } = new();
+
     public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref NetworkText message)
     {
         if (pendingConfig is not AdventureConfig pendingAdventureConfig)
