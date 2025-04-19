@@ -113,6 +113,11 @@ Mods: {
 					Label: Prevent Auto Reuse
 					Tooltip: This will also prevent the autofire setting
 				}
+
+				NpcBalance: {
+					Label: Npc Balance
+					Tooltip: ""
+				}
 			}
 
 			PointsConfig: {
@@ -549,6 +554,29 @@ Mods: {
 				}
 
 				Tooltip: ""
+			}
+
+			NpcBalanceConfig: {
+				Tooltip: ""
+
+				LifeMaxMultipliers: {
+					Label: Life Max Multipliers
+					Tooltip: ""
+				}
+
+				DamageMultipliers: {
+					Label: Damage Multipliers
+					Tooltip: ""
+				}
+			}
+
+			FloatStatistic: {
+				Tooltip: ""
+
+				Value: {
+					Label: Value
+					Tooltip: ""
+				}
 			}
 		}
 

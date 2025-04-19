@@ -93,6 +93,22 @@ public class AdventureNpc : GlobalNPC
         if (entity.isLikeATownNPC)
             // FIXME: Should be marked as dontTakeDamage instead, doesn't function for some reason.
             entity.immortal = true;
+
+        var adventureConfig = ModContent.GetInstance<AdventureConfig>();
+
+        // Can't construct an NPCDefinition too early -- it'll call GetName and won't be graceful on failure.
+        if (NPCID.Search.TryGetName(entity.type, out var name))
+        {
+            {
+                if (adventureConfig.NpcBalance.LifeMaxMultipliers.TryGetValue(new(name), out var multiplier))
+                    entity.lifeMax = (int)(entity.lifeMax * multiplier.Value);
+            }
+
+            {
+                if (adventureConfig.NpcBalance.DamageMultipliers.TryGetValue(new(name), out var multiplier))
+                    entity.damage = (int)(entity.lifeMax * multiplier.Value);
+            }
+        }
     }
 
     public override void OnSpawn(NPC npc, IEntitySource source)

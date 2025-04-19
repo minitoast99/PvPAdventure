@@ -289,6 +289,19 @@ public class AdventureConfig : ModConfig
 
     public List<ItemDefinition> PreventAutoReuse { get; set; } = new();
 
+    public class NpcBalanceConfig
+    {
+        public class FloatStatistic
+        {
+            [Range(0.0f, 5.0f)] public float Value { get; set; }
+        }
+
+        public Dictionary<NPCDefinition, FloatStatistic> LifeMaxMultipliers { get; set; } = new();
+        public Dictionary<NPCDefinition, FloatStatistic> DamageMultipliers { get; set; } = new();
+    }
+
+    public NpcBalanceConfig NpcBalance { get; set; } = new();
+
     public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref NetworkText message)
     {
         if (pendingConfig is not AdventureConfig pendingAdventureConfig)
