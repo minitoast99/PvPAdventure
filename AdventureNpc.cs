@@ -106,7 +106,7 @@ public class AdventureNpc : GlobalNPC
 
             {
                 if (adventureConfig.NpcBalance.DamageMultipliers.TryGetValue(new(name), out var multiplier))
-                    entity.damage = (int)(entity.lifeMax * multiplier.Value);
+                    entity.damage = (int)(entity.damage * multiplier.Value);
             }
         }
     }
