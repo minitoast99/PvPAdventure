@@ -35,6 +35,31 @@ public class AdventurePlayer : ModPlayer
 
     private const int TimeBetweenPingPongs = 3 * 60;
 
+    private static readonly HashSet<short> BossNpcsForImmunityCooldown =
+    [
+        NPCID.QueenSlimeMinionBlue,
+        NPCID.QueenSlimeMinionPink,
+        NPCID.QueenSlimeMinionPurple,
+        NPCID.WallofFleshEye,
+        NPCID.TheHungry,
+        NPCID.TheHungryII,
+        NPCID.LeechHead,
+        NPCID.LeechBody,
+        NPCID.LeechTail,
+        NPCID.Probe,
+        NPCID.PlanterasHook,
+        NPCID.PlanterasTentacle,
+        NPCID.Spore,
+        NPCID.PrimeCannon,
+        NPCID.PrimeSaw,
+        NPCID.PrimeVice,
+        NPCID.PrimeLaser,
+        NPCID.GolemHead,
+        NPCID.GolemFistLeft,
+        NPCID.GolemFistRight,
+        NPCID.GolemHeadFree
+    ];
+
     // Intentionally zero-initialize this so we get a ping/pong ASAP.
     private int _nextPingPongTime;
     private int _pingPongCanary;
@@ -311,7 +336,7 @@ public class AdventurePlayer : ModPlayer
     public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
     {
         if (npc.boss || AdventureNpc.IsPartOfEaterOfWorlds((short)npc.type) ||
-            AdventureNpc.IsPartOfTheDestroyer((short)npc.type))
+            AdventureNpc.IsPartOfTheDestroyer((short)npc.type) || BossNpcsForImmunityCooldown.Contains((short)npc.type))
             cooldownSlot = ImmunityCooldownID.Bosses;
 
         return true;

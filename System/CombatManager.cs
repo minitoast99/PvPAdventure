@@ -23,6 +23,8 @@ public class CombatManager : ModSystem
         ProjectileID.EyeLaser,
         ProjectileID.QueenSlimeSmash,
         ProjectileID.QueenSlimeGelAttack,
+        ProjectileID.QueenSlimeMinionBlueSpike,
+        ProjectileID.QueenSlimeMinionPinkBall,
         ProjectileID.CursedFlameHostile,
         ProjectileID.EyeFire,
         ProjectileID.DeathLaser,
@@ -38,7 +40,10 @@ public class CombatManager : ModSystem
         ProjectileID.CultistBossFireBall,
         ProjectileID.CultistBossFireBallClone,
         ProjectileID.Sharknado,
-        ProjectileID.Cthulunado
+        ProjectileID.Cthulunado,
+        // This is also shot by Gastropods, but that's acceptable fallout.
+        ProjectileID.PinkLaser,
+        ProjectileID.BombSkeletronPrime,
     ];
 
     public const int PvPImmunityCooldownId = -100;
