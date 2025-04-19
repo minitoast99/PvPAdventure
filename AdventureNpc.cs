@@ -41,6 +41,8 @@ public class AdventureNpc : GlobalNPC
         // Ensure that transformed NPCs (usually those bound) are also immortal.
         On_NPC.Transform += OnNPCTransform;
         On_NPC.ScaleStats += OnNPCScaleStats;
+        // Spawn the Old Man if Skeletron naturally despawns.
+        IL_NPC.CheckActive += EditNPCCheckActive;
     }
 
     private void OnNPCScaleStats(On_NPC.orig_ScaleStats orig, NPC self, int? activeplayerscount,
@@ -200,6 +202,56 @@ public class AdventureNpc : GlobalNPC
         if (self.isLikeATownNPC)
             // FIXME: Should be marked as dontTakeDamage instead, doesn't function for some reason.
             self.immortal = true;
+    }
+
+    private void EditNPCCheckActive(ILContext il)
+    {
+        var cursor = new ILCursor(il);
+
+        // First, find the assignment to Entity.active...
+        cursor.GotoNext(i => i.MatchStfld<Entity>("active"));
+
+        // ...and go past the assignment...
+        cursor.Index += 1;
+
+        // ...to load this...
+        cursor.EmitLdarg0()
+            // ...and emit a delegate to possibly spawn the Old Man.
+            .EmitDelegate((NPC npc) =>
+            {
+                // Only for Skeletron
+                if (npc.type != NPCID.SkeletronHead)
+                    return;
+
+                // Not on multiplayer clients
+                if (Main.netMode == NetmodeID.MultiplayerClient)
+                    return;
+
+                // Only if Skeletron hasn't been defeated already
+                if (NPC.downedBoss3)
+                    return;
+
+                // Only if there isn't already an Old Man
+                if (Main.npc.Any(predicateNpc => predicateNpc.active && predicateNpc.type == NPCID.OldMan))
+                    return;
+
+                Mod.Logger.Info("Spawning Old Man at the dungeon due to Skeletron despawn");
+                var oldMan = NPC.NewNPC(
+                    Entity.GetSource_TownSpawn(),
+                    Main.dungeonX * 16 + 8,
+                    Main.dungeonY * 16,
+                    NPCID.OldMan
+                );
+
+                if (oldMan != Main.maxNPCs)
+                {
+                    Main.npc[oldMan].homeless = false;
+                    Main.npc[oldMan].homeTileX = Main.dungeonX;
+                    Main.npc[oldMan].homeTileY = Main.dungeonY;
+
+                    NetMessage.SendData(MessageID.SyncNPC, number: oldMan);
+                }
+            });
     }
 
     public override bool? CanBeHitByProjectile(NPC npc, Projectile projectile)
