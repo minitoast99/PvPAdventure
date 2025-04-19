@@ -108,6 +108,11 @@ Mods: {
 					Tooltip: ""
 					Label: World Generation
 				}
+
+				PreventAutoReuse: {
+					Label: Prevent Auto Reuse
+					Tooltip: This will also prevent the autofire setting
+				}
 			}
 
 			PointsConfig: {

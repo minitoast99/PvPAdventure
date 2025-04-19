@@ -711,6 +711,14 @@ public class AdventurePlayer : ModPlayer
         return true;
     }
 
+    public override bool? CanAutoReuseItem(Item item)
+    {
+        if (ModContent.GetInstance<AdventureConfig>().PreventAutoReuse.Contains(new(item.type)))
+            return false;
+
+        return null;
+    }
+
     private void SendPingPong()
     {
         _pingPongStopwatch = Stopwatch.StartNew();

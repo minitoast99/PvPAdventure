@@ -287,6 +287,8 @@ public class AdventureConfig : ModConfig
 
     public WorldGenerationConfig WorldGeneration { get; set; } = new();
 
+    public List<ItemDefinition> PreventAutoReuse { get; set; } = new();
+
     public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref NetworkText message)
     {
         if (pendingConfig is not AdventureConfig pendingAdventureConfig)
