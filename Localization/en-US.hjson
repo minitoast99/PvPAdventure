@@ -559,6 +559,11 @@ Mods: {
 					Label: Plantera Bulb Chance Denominator
 					Tooltip: ""
 				}
+
+				ChlorophyteSpreadChanceDenominator: {
+					Tooltip: ""
+					Label: Chlorophyte Spread Chance Denominator
+				}
 			}
 
 			NpcBalanceConfig: {

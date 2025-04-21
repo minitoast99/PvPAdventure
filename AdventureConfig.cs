@@ -285,6 +285,8 @@ public class AdventureConfig : ModConfig
         [DefaultValue(2)] public int LifeFruitMinimumDistanceBetween { get; set; } = 2;
 
         [DefaultValue(30)] public int PlanteraBulbChanceDenominator { get; set; } = 30;
+
+        [DefaultValue(1)] public int ChlorophyteSpreadChanceDenominator { get; set; } = 1;
     }
 
     public WorldGenerationConfig WorldGeneration { get; set; } = new();

@@ -1,6 +1,7 @@
 using MonoMod.Cil;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.Utilities;
 
 namespace PvPAdventure.System;
 
@@ -9,6 +10,7 @@ public class WorldGenerationManager : ModSystem
     public override void Load()
     {
         IL_WorldGen.UpdateWorld_GrassGrowth += EditWorldGenUpdateWorld_GrassGrowth;
+        IL_WorldGen.hardUpdateWorld += OnWorldGenhardUpdateWorld;
     }
 
     private void EditWorldGenUpdateWorld_GrassGrowth(ILContext il)
@@ -57,5 +59,21 @@ public class WorldGenerationManager : ModSystem
             // ...and replace it with a delegate that loads from our config instance.
             .EmitDelegate(() =>
                 ModContent.GetInstance<AdventureConfig>().WorldGeneration.LifeFruitMinimumDistanceBetween);
+    }
+
+
+    private void OnWorldGenhardUpdateWorld(ILContext il)
+    {
+        var cursor = new ILCursor(il);
+
+        // Find the call to WorldGen.genRand.Next(3)...
+        cursor.GotoNext(i => i.MatchCallvirt<UnifiedRandom>("Next") && i.Previous.MatchLdcI4(3));
+        //  ...and go back to the constant load...
+        cursor.Index -= 1;
+        // ... to remove it...
+        cursor.Remove()
+            // ...and replace it with a delegate that loads from our config instance.
+            .EmitDelegate(() =>
+                ModContent.GetInstance<AdventureConfig>().WorldGeneration.ChlorophyteSpreadChanceDenominator);
     }
 }
