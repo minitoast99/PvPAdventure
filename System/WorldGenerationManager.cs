@@ -15,6 +15,16 @@ public class WorldGenerationManager : ModSystem
     {
         var cursor = new ILCursor(il);
 
+        // Find the first reference to NPC.downedMechBoss3...
+        cursor.GotoNext(i => i.MatchLdsfld<NPC>("downedMechBoss3"));
+
+        // ...and go to the constant load of the Plantera Bulb denominator
+        cursor.Index += 3;
+
+        // ...and replace it with a delegate that loads from our config instance.
+        cursor.Remove().EmitDelegate(() =>
+            ModContent.GetInstance<AdventureConfig>().WorldGeneration.PlanteraBulbChanceDenominator);
+
         // Find the first reference to NPC.downedMechBossAny...
         cursor.GotoNext(i => i.MatchLdsfld<NPC>("downedMechBossAny"));
 

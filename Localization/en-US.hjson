@@ -554,6 +554,11 @@ Mods: {
 				}
 
 				Tooltip: ""
+
+				PlanteraBulbChanceDenominator: {
+					Label: Plantera Bulb Chance Denominator
+					Tooltip: ""
+				}
 			}
 
 			NpcBalanceConfig: {

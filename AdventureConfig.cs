@@ -283,6 +283,8 @@ public class AdventureConfig : ModConfig
         [DefaultValue(2)] public int LifeFruitExpertChanceDenominator { get; set; } = 2;
 
         [DefaultValue(2)] public int LifeFruitMinimumDistanceBetween { get; set; } = 2;
+
+        [DefaultValue(30)] public int PlanteraBulbChanceDenominator { get; set; } = 30;
     }
 
     public WorldGenerationConfig WorldGeneration { get; set; } = new();
