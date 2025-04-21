@@ -43,6 +43,8 @@ public class AdventureNpc : GlobalNPC
         On_NPC.ScaleStats += OnNPCScaleStats;
         // Spawn the Old Man if Skeletron naturally despawns.
         IL_NPC.CheckActive += EditNPCCheckActive;
+        // Remove requirement for no existing NPCs in the world for some natural NPC spawns.
+        IL_NPC.SpawnNPC += EditNPCSpawnNPC;
     }
 
     private void OnNPCScaleStats(On_NPC.orig_ScaleStats orig, NPC self, int? activeplayerscount,
@@ -268,6 +270,33 @@ public class AdventureNpc : GlobalNPC
                     NetMessage.SendData(MessageID.SyncNPC, number: oldMan);
                 }
             });
+    }
+
+    private void EditNPCSpawnNPC(ILContext il)
+    {
+        var cursor = new ILCursor(il);
+
+        void RemoveAnyNPCsCalls(int type)
+        {
+            // Go back to the beginning.
+            cursor.Index = 0;
+
+            // For every NPC.AnyNPCs(type) call we can match...
+            while (cursor.TryGotoNext(i => i.MatchCall<NPC>("AnyNPCs") && i.Previous.MatchLdcI4(type)))
+            {
+                // ...go back to the constant load...
+                cursor.Index -= 1;
+                // ...to remove it, the call, and the branch.
+                cursor.RemoveRange(3);
+            }
+        }
+
+        RemoveAnyNPCsCalls(NPCID.WyvernHead);
+        RemoveAnyNPCsCalls(NPCID.Mothron);
+        RemoveAnyNPCsCalls(NPCID.BigMimicCorruption);
+        RemoveAnyNPCsCalls(NPCID.BigMimicCrimson);
+        RemoveAnyNPCsCalls(NPCID.BigMimicHallow);
+        RemoveAnyNPCsCalls(NPCID.BigMimicJungle);
     }
 
     public override bool? CanBeHitByProjectile(NPC npc, Projectile projectile)
