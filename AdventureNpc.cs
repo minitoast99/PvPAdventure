@@ -385,6 +385,8 @@ public class AdventureNpc : GlobalNPC
                     break;
             }
         }
+
+        AdventureDropDatabase.ModifyNPCLoot(npc, npcLoot);
     }
 
     // This only runs on the attacking player
