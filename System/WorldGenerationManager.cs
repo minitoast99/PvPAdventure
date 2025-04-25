@@ -74,6 +74,6 @@ public class WorldGenerationManager : ModSystem
         cursor.Remove()
             // ...and replace it with a delegate that loads from our config instance.
             .EmitDelegate(() =>
-                ModContent.GetInstance<AdventureConfig>().WorldGeneration.ChlorophyteSpreadChanceDenominator);
+                ModContent.GetInstance<AdventureConfig>().WorldGeneration.ChlorophyteSpreadChanceModifier);
     }
 }

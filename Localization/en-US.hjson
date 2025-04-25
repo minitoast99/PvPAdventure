@@ -560,9 +560,9 @@ Mods: {
 					Tooltip: ""
 				}
 
-				ChlorophyteSpreadChanceDenominator: {
+				ChlorophyteSpreadChanceModifier: {
+					Label: Chlorophyte Spread Chance Modifier
 					Tooltip: ""
-					Label: Chlorophyte Spread Chance Denominator
 				}
 			}
 
