@@ -3,46 +3,92 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace PvPAdventure.System
+namespace PvPAdventure.System;
+
+[Autoload(Side = ModSide.Both)]
+public class RecipeManager : ModSystem
 {
-    [Autoload]
-    public class RecipeManager : ModSystem
+    public override void AddRecipes()
     {
-        private readonly List<List<int>> _lootTables =
-        [
-            [ItemID.FlyingKnife, ItemID.DaedalusStormbow, ItemID.CrystalVileShard, ItemID.IlluminantHook],
-            [ItemID.ChainGuillotines, ItemID.DartRifle, ItemID.ClingerStaff, ItemID.PutridScent, ItemID.WormHook],
-            [ItemID.FetidBaghnakhs, ItemID.DartPistol, ItemID.SoulDrain, ItemID.FleshKnuckles, ItemID.TendonHook],
-            [ItemID.TitanGlove, ItemID.MagicDagger, ItemID.StarCloak, ItemID.CrossNecklace, ItemID.PhilosophersStone, ItemID.DualHook],
-            [ItemID.RazorbladeTyphoon, ItemID.Flairon, ItemID.BubbleGun, ItemID.Tsunami, ItemID.TempestStaff],
-            [ItemID.BreakerBlade, ItemID.ClockworkAssaultRifle, ItemID.LaserRifle, ItemID.FireWhip],
-            [
-                ItemID.GolemFist, ItemID.PossessedHatchet, ItemID.Stynger, ItemID.StaffofEarth, ItemID.HeatRay,
-                ItemID.SunStone, ItemID.EyeoftheGolem
-            ],
-            [ItemID.Flairon, ItemID.Tsunami, ItemID.RazorbladeTyphoon, ItemID.BubbleGun, ItemID.TempestStaff]
-        ];
+        CreateDuplicateDropRecipe([
+            ItemID.FlyingKnife,
+            ItemID.DaedalusStormbow,
+            ItemID.CrystalVileShard,
+            ItemID.IlluminantHook
+        ], 3);
 
-        public override void AddRecipes()
-        {
-            foreach (var lootTable in _lootTables)
-                CreateDuplicateDropRecipe(lootTable, 3);
-        }
+        CreateDuplicateDropRecipe([
+            ItemID.ChainGuillotines,
+            ItemID.DartRifle,
+            ItemID.ClingerStaff,
+            ItemID.PutridScent,
+            ItemID.WormHook
+        ], 3);
 
-        private static void CreateDuplicateDropRecipe(List<int> lootTable, int amountOfMaterial)
+        CreateDuplicateDropRecipe([
+            ItemID.FetidBaghnakhs,
+            ItemID.DartPistol,
+            ItemID.SoulDrain,
+            ItemID.FleshKnuckles,
+            ItemID.TendonHook
+        ], 3);
+
+        CreateDuplicateDropRecipe([
+            ItemID.TitanGlove,
+            ItemID.MagicDagger,
+            ItemID.StarCloak,
+            ItemID.CrossNecklace,
+            ItemID.PhilosophersStone,
+            ItemID.DualHook
+        ], 3);
+
+        CreateDuplicateDropRecipe([
+            ItemID.RazorbladeTyphoon,
+            ItemID.Flairon,
+            ItemID.BubbleGun,
+            ItemID.Tsunami,
+            ItemID.TempestStaff
+        ], 3);
+
+        CreateDuplicateDropRecipe([
+            ItemID.BreakerBlade,
+            ItemID.ClockworkAssaultRifle,
+            ItemID.LaserRifle,
+            ItemID.FireWhip
+        ], 3);
+
+        CreateDuplicateDropRecipe([
+            ItemID.GolemFist,
+            ItemID.PossessedHatchet,
+            ItemID.Stynger,
+            ItemID.StaffofEarth,
+            ItemID.HeatRay,
+            ItemID.SunStone,
+            ItemID.EyeoftheGolem
+        ], 3);
+
+        CreateDuplicateDropRecipe([
+            ItemID.Flairon,
+            ItemID.Tsunami,
+            ItemID.RazorbladeTyphoon,
+            ItemID.BubbleGun,
+            ItemID.TempestStaff
+        ], 3);
+    }
+
+    private static void CreateDuplicateDropRecipe(List<int> lootTable, int amountOfMaterial)
+    {
+        for (var i = 0; i < lootTable.Count; i++)
         {
-            for (int i = 0; i < lootTable.Count; i++)
+            for (var j = 0; j < lootTable.Count; j++)
             {
-                for (int j = 0; j < lootTable.Count; j++)
-                {
-                    if (j == i)
-                        continue;
+                if (j == i)
+                    continue;
 
-                    Recipe.Create(lootTable[i])
-                        .AddIngredient(lootTable[j], amountOfMaterial)
-                        .DisableDecraft()
-                        .Register();
-                }
+                Recipe.Create(lootTable[i])
+                    .AddIngredient(lootTable[j], amountOfMaterial)
+                    .DisableDecraft()
+                    .Register();
             }
         }
     }
