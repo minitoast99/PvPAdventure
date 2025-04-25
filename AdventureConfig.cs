@@ -105,6 +105,20 @@ public class AdventureConfig : ModConfig
         }
     }
 
+    public class ConfigItem
+    {
+        public ItemDefinition Item { get; set; } = new();
+        public PrefixDefinition Prefix { get; set; } = new();
+        private int _stack = 1;
+
+        // NOTE: Just for QOL. Can be screwed with by changing the above item after setting this.
+        public int Stack
+        {
+            get => _stack;
+            set => _stack = Math.Clamp(value, 1, new Item(Item.Type, 1, Prefix.Type).maxStack);
+        }
+    }
+
     public class Condition
     {
         public enum WorldProgressionState
@@ -126,20 +140,6 @@ public class AdventureConfig : ModConfig
 
     public class Bounty
     {
-        public class ConfigItem
-        {
-            public ItemDefinition Item { get; set; } = new();
-            public PrefixDefinition Prefix { get; set; } = new();
-            private int _stack = 1;
-
-            // NOTE: Just for QOL. Can be screwed with by changing the above item after setting this.
-            public int Stack
-            {
-                get => _stack;
-                set => _stack = Math.Clamp(value, 1, new Item(Item.Type, 1, Prefix.Type).maxStack);
-            }
-        }
-
         public List<ConfigItem> Items { get; set; } = [];
         public Condition Conditions { get; set; } = new();
     }
@@ -305,6 +305,13 @@ public class AdventureConfig : ModConfig
     }
 
     public NpcBalanceConfig NpcBalance { get; set; } = new();
+
+    public class ChestItemReplacement
+    {
+        public List<ConfigItem> Items { get; set; } = new();
+    }
+
+    public Dictionary<ItemDefinition, ChestItemReplacement> ChestItemReplacements { get; set; } = new();
 
     public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref NetworkText message)
     {

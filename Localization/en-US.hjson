@@ -118,6 +118,11 @@ Mods: {
 					Label: Npc Balance
 					Tooltip: ""
 				}
+
+				ChestItemReplacements: {
+					Label: Chest Item Replacements
+					Tooltip: ""
+				}
 			}
 
 			PointsConfig: {
@@ -585,6 +590,15 @@ Mods: {
 
 				Value: {
 					Label: Value
+					Tooltip: ""
+				}
+			}
+
+			ChestItemReplacement: {
+				Tooltip: ""
+
+				Items: {
+					Label: Items
 					Tooltip: ""
 				}
 			}
