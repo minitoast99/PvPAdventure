@@ -202,7 +202,7 @@ public class AdventureConfig : ModConfig
 
         public class OptionalInt : IEquatable<OptionalInt>
         {
-            [Range(0, 1000)] public int Value { get; set; }
+            [Range(0, 1000000)] public int Value { get; set; }
 
             public bool Equals(OptionalInt other)
             {
@@ -252,6 +252,7 @@ public class AdventureConfig : ModConfig
         [DefaultValue(null)] [NullAllowed] public OptionalInt Mana { get; set; }
         [DefaultValue(null)] [NullAllowed] public OptionalFloat Scale { get; set; }
         [DefaultValue(null)] [NullAllowed] public OptionalFloat Knockback { get; set; }
+        [DefaultValue(null)] [NullAllowed] public OptionalInt Value { get; set; }
 
         public bool Equals(Statistics other)
         {
@@ -260,7 +261,7 @@ public class AdventureConfig : ModConfig
             return Equals(Damage, other.Damage) && Equals(UseTime, other.UseTime) &&
                    Equals(UseAnimation, other.UseAnimation) && Equals(ShootSpeed, other.ShootSpeed) &&
                    Equals(Crit, other.Crit) && Equals(Mana, other.Mana) && Equals(Scale, other.Scale) &&
-                   Equals(Knockback, other.Knockback);
+                   Equals(Knockback, other.Knockback) && Equals(Value, other.Value);
         }
 
         public override bool Equals(object obj)
@@ -270,8 +271,20 @@ public class AdventureConfig : ModConfig
             return obj.GetType() == GetType() && Equals((Statistics)obj);
         }
 
-        public override int GetHashCode() =>
-            HashCode.Combine(Damage, UseTime, UseAnimation, ShootSpeed, Crit, Mana, Scale, Knockback);
+        public override int GetHashCode()
+        {
+            var hashCode = new HashCode();
+            hashCode.Add(Damage);
+            hashCode.Add(UseTime);
+            hashCode.Add(UseAnimation);
+            hashCode.Add(ShootSpeed);
+            hashCode.Add(Crit);
+            hashCode.Add(Mana);
+            hashCode.Add(Scale);
+            hashCode.Add(Knockback);
+            hashCode.Add(Value);
+            return hashCode.ToHashCode();
+        }
     }
 
     [ReloadRequired] public Dictionary<ItemDefinition, Statistics> ItemStatistics { get; set; } = new();

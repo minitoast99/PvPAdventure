@@ -406,6 +406,11 @@ Mods: {
 					Label: Knockback
 					Tooltip: ""
 				}
+
+				Value: {
+					Tooltip: ""
+					Label: Value
+				}
 			}
 
 			OptionalInt: {
