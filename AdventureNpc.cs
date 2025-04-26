@@ -45,6 +45,8 @@ public class AdventureNpc : GlobalNPC
         IL_NPC.CheckActive += EditNPCCheckActive;
         // Remove requirement for no existing NPCs in the world for some natural NPC spawns.
         IL_NPC.SpawnNPC += EditNPCSpawnNPC;
+        // Make Guide Voodoo Doll spawn Wall of Flesh without the Guide NPC being alive.
+        On_Item.CheckLavaDeath += OnItemCheckLavaDeath;
     }
 
     private void OnNPCScaleStats(On_NPC.orig_ScaleStats orig, NPC self, int? activeplayerscount,
@@ -92,7 +94,7 @@ public class AdventureNpc : GlobalNPC
 
     public override void SetDefaults(NPC entity)
     {
-        if (entity.isLikeATownNPC)
+        if (entity.isLikeATownNPC && entity.type != NPCID.Guide)
             // FIXME: Should be marked as dontTakeDamage instead, doesn't function for some reason.
             entity.immortal = true;
 
@@ -217,7 +219,7 @@ public class AdventureNpc : GlobalNPC
     {
         orig(self, newtype);
 
-        if (self.isLikeATownNPC)
+        if (self.isLikeATownNPC && self.type != NPCID.Guide)
             // FIXME: Should be marked as dontTakeDamage instead, doesn't function for some reason.
             self.immortal = true;
     }
@@ -297,6 +299,28 @@ public class AdventureNpc : GlobalNPC
         RemoveAnyNPCsCalls(NPCID.BigMimicCrimson);
         RemoveAnyNPCsCalls(NPCID.BigMimicHallow);
         RemoveAnyNPCsCalls(NPCID.BigMimicJungle);
+    }
+
+    private void OnItemCheckLavaDeath(On_Item.orig_CheckLavaDeath orig, Item self, int i)
+    {
+        if (self.type == ItemID.GuideVoodooDoll)
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return;
+
+            self.active = false;
+            self.type = ItemID.None;
+            self.stack = 0;
+
+            NPC.SpawnWOF(self.position);
+
+            if (Main.dedServ)
+                NetMessage.SendData(MessageID.SyncItem, number: i);
+        }
+        else
+        {
+            orig(self, i);
+        }
     }
 
     public override bool? CanBeHitByProjectile(NPC npc, Projectile projectile)
@@ -428,6 +452,27 @@ public class AdventureNpc : GlobalNPC
                 Mod.Logger.Warn(
                     "Failed to remove moon phase condition for Steampunker's Jetpack shop entry -- not changing it any further.");
         }
+    }
+
+    public override bool CheckDead(NPC npc)
+    {
+        if (npc.type == NPCID.Guide)
+        {
+            if (Collision.LavaCollision(npc.position, npc.width, npc.height))
+            {
+                NPC.SpawnWOF(npc.position);
+
+                // If the Wall of Flesh is alive, good enough, we can die.
+                // NOTE: This will cause DoDeathEvents to then invoke NPC.SpawnWOF again, but that's okay, it'll just fail.
+                if (NPC.AnyNPCs(NPCID.WallofFlesh))
+                    return true;
+            }
+
+            npc.life = 1;
+            return false;
+        }
+
+        return true;
     }
 
     private static void PlayHitMarker(int damage)
