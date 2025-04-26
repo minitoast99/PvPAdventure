@@ -54,7 +54,12 @@ public class AdventureConfig : ModConfig
         new(ProjectileID.BouncyDynamite)
     ];
 
-    public Dictionary<int, int> InvasionSizes { get; set; } = new();
+    public class InvasionSizeValue
+    {
+        [Range(0, 1000)] public int Value { get; set; }
+    }
+
+    public Dictionary<int, InvasionSizeValue> InvasionSizes { get; set; } = new();
 
     [Range(0, 60 * 60)]
     [DefaultValue(4 * 60)]

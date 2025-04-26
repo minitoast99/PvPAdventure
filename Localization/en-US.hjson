@@ -607,6 +607,15 @@ Mods: {
 					Tooltip: ""
 				}
 			}
+
+			InvasionSizeValue: {
+				Value: {
+					Tooltip: ""
+					Label: Value
+				}
+
+				Tooltip: ""
+			}
 		}
 
 		Item.Disabled: Cannot be used in this gamemode

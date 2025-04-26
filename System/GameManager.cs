@@ -73,10 +73,10 @@ public class GameManager : ModSystem
             return;
 
         // We shouldn't increase the invasion size, only ever decrease it.
-        if (Main.invasionSize > invasionSize)
+        if (Main.invasionSize > invasionSize.Value)
         {
             Mod.Logger.Info($"Reducing invasion {type} size from {Main.invasionSize} to {invasionSize}");
-            Main.invasionSize = Main.invasionSizeStart = Main.invasionProgressMax = invasionSize;
+            Main.invasionSize = Main.invasionSizeStart = Main.invasionProgressMax = invasionSize.Value;
         }
     }
 
