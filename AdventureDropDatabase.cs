@@ -153,7 +153,7 @@ public static class AdventureDropDatabase
                     drop is LeadingConditionRule);
 
                 var stynger = ItemDropRule.Common(ItemID.Stynger);
-                stynger.OnSuccess(ItemDropRule.Common(ItemID.StyngerBolt, 1, 60, 180), hideLootReport: true);
+                stynger.OnSuccess(ItemDropRule.Common(ItemID.StyngerBolt, 1, 60, 99), hideLootReport: true);
 
                 npcLoot.Add(
                     new OneFromRulesRule(1,
