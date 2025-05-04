@@ -57,7 +57,10 @@ public class AdventurePlayer : ModPlayer
         NPCID.GolemHead,
         NPCID.GolemFistLeft,
         NPCID.GolemFistRight,
-        NPCID.GolemHeadFree
+        NPCID.GolemHeadFree,
+        NPCID.Sharkron,
+        NPCID.Sharkron2,
+        NPCID.DetonatingBubble
     ];
 
     // Intentionally zero-initialize this so we get a ping/pong ASAP.
