@@ -74,6 +74,11 @@ public class RecipeManager : ModSystem
             ItemID.BubbleGun,
             ItemID.TempestStaff
         ], 3);
+
+        Recipe.Create(ItemID.Headstone)
+            .AddIngredient(ItemID.StoneBlock, 50)
+            .AddTile(TileID.HeavyWorkBench)
+            .Register();
     }
 
     private static void CreateDuplicateDropRecipe(List<int> lootTable, int amountOfMaterial)
