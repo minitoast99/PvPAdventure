@@ -516,6 +516,19 @@ public class AdventurePlayer : ModPlayer
         if (Main.netMode == NetmodeID.MultiplayerClient)
             return;
 
+        // Remove the Dungeon Guardian when it kills a player.
+        if (damageSource.SourceNPCIndex != -1)
+        {
+            var npc = Main.npc[damageSource.SourceNPCIndex];
+            if (npc?.type == NPCID.DungeonGuardian)
+            {
+                npc.life = 0;
+                npc.netSkip = -1;
+                if (Main.dedServ)
+                    NetMessage.SendData(MessageID.SyncNPC, number: npc.whoAmI);
+            }
+        }
+
         try
         {
             Player killer = null;
