@@ -746,6 +746,23 @@ public class AdventurePlayer : ModPlayer
         return null;
     }
 
+    public override void UpdateBadLifeRegen()
+    {
+        if (Player.HasBuff(BuffID.CursedInferno))
+        {
+            Player.lifeRegenTime = 0.0f;
+            // Reduce damage by 12 flat, from 24.
+            Player.lifeRegen += 12;
+        }
+
+        if (Player.HasBuff(BuffID.Venom))
+        {
+            Player.lifeRegenTime = 0.0f;
+            // Reduce damage by 18 flat, from 30.
+            Player.lifeRegen += 18;
+        }
+    }
+
     private void SendPingPong()
     {
         _pingPongStopwatch = Stopwatch.StartNew();
