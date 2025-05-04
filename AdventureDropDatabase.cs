@@ -214,6 +214,10 @@ public static class AdventureDropDatabase
                 );
 
                 break;
+
+            case NPCID.SkeletronHead:
+                npcLoot.Add(ItemDropRule.Common(ItemID.GoldenKey));
+                break;
         }
     }
 }
