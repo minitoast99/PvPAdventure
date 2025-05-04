@@ -50,6 +50,23 @@ public class AdventureItem : GlobalItem
             if (statistics.Value != null)
                 item.value = statistics.Value.Value;
         }
+
+        ItemID.Sets.ShimmerTransformToItem[item.type] = item.type switch
+        {
+            ItemID.CursedFlame => ItemID.Ichor,
+            ItemID.Ichor => ItemID.CursedFlame,
+            ItemID.CrystalNinjaHelmet => ItemID.CrystalNinjaChestplate,
+            ItemID.CrystalNinjaChestplate => ItemID.CrystalNinjaLeggings,
+            ItemID.CrystalNinjaLeggings => ItemID.CrystalNinjaHelmet,
+            ItemID.GladiatorHelmet => ItemID.GladiatorBreastplate,
+            ItemID.GladiatorBreastplate => ItemID.GladiatorLeggings,
+            ItemID.GladiatorLeggings => ItemID.GladiatorHelmet,
+            ItemID.PaladinsHammer => ItemID.PaladinsShield,
+            ItemID.PaladinsShield => ItemID.PaladinsHammer,
+            ItemID.MaceWhip => ItemID.Keybrand,
+            ItemID.Keybrand => ItemID.MaceWhip,
+            _ => ItemID.Sets.ShimmerTransformToItem[item.type]
+        };
     }
 
     public override bool CanUseItem(Item item, Player player)
