@@ -124,6 +124,11 @@ public static class AdventureDropDatabase
                     ModifyDropRate(drop, ItemID.ButterflyDust, 1, 1);
                 break;
 
+            case NPCID.Mothron:
+                foreach (var drop in drops)
+                    ModifyDropRate(drop, ItemID.BrokenHeroSword, 1, 2);
+                break;
+
             case NPCID.SkeletonArcher:
                 foreach (var drop in drops)
                     ModifyDropRate(drop, ItemID.MagicQuiver, 1, 30);
