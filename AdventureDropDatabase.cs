@@ -133,7 +133,7 @@ public static class AdventureDropDatabase
             case NPCID.LihzahrdCrawler:
             case NPCID.FlyingSnake:
                 foreach (var drop in drops)
-                    ModifyDropRate(drop, ItemID.LihzahrdPowerCell, 1, 33);
+                    ModifyDropRate(drop, ItemID.LihzahrdPowerCell, 1, 50);
                 break;
 
             case NPCID.EyeofCthulhu:
