@@ -37,12 +37,7 @@ public static class AdventureDropDatabase
         foreach (var ruleChainAttempt in rule.ChainedRules)
             ModifyDropRate(ruleChainAttempt.RuleToChain, type, numerator, denominator);
     }
-    public class NotInHardmodeCondition : IItemDropRuleCondition
-    {
-        public bool CanDrop(DropAttemptInfo info) => !Main.hardMode;
-        public bool CanShowItemDropInUI() => true;
-        public string GetConditionDescription() => "Drops in pre-Hardmode";
-    }
+
     public static void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
     {
         var drops = npcLoot.Get();
@@ -270,7 +265,7 @@ public static class AdventureDropDatabase
 
             case NPCID.GiantTortoise:
                 foreach (var drop in drops)
-                    ModifyDropRate(drop, ItemID.TurtleShell, 1, 5);
+                    ModifyDropRate(drop, ItemID.TurtleShell, 1, 4);
                 break;
 
             case NPCID.GiantCursedSkull:
@@ -278,15 +273,7 @@ public static class AdventureDropDatabase
                     ModifyDropRate(drop, ItemID.ShadowJoustingLance, 1, 12);
                 break;
 
-            case NPCID.WallofFlesh:
-                npcLoot.Add(new LeadingConditionRule(new NotInHardmodeCondition()))
-                    .OnSuccess(ItemDropRule.OneFromOptions(1,
-                        ItemID.SummonerEmblem,
-                        ItemID.RangerEmblem,
-                        ItemID.WarriorEmblem,
-                        ItemID.SorcererEmblem
-                    ));
-                break;
+
         }
     }
 }
