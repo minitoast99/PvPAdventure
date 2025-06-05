@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using PvPAdventure.System;
 using Terraria;
@@ -98,12 +99,15 @@ public class AdventureProjectile : GlobalProjectile
             return;
         }
 
-        // This implementation differs from vanilla in two key ways:
+        // This implementation differs from vanilla:
         //   - The None team isn't counted when looking for teammates.
         //     - Two players on the None team fighting would end up healing the person you attacked.
         //   - Player life steal is entirely disregarded.
+        //   - All nearby teammates are healed, instead of only the one with the largest health deficit.
 
-        var healMultiplier = ModContent.GetInstance<AdventureConfig>().Combat.GhostHealMultiplier;
+        var adventureConfig = ModContent.GetInstance<AdventureConfig>();
+
+        var healMultiplier = adventureConfig.Combat.GhostHealMultiplier;
         healMultiplier -= self.numHits * 0.05f;
         if (healMultiplier <= 0f)
             return;
@@ -115,8 +119,7 @@ public class AdventureProjectile : GlobalProjectile
         if (!self.CountsAsClass(DamageClass.Magic))
             return;
 
-        var targetPlayer = self.owner;
-        var targetPlayerHealthDeficit = 0;
+        var maxDistance = adventureConfig.Combat.GhostHealMaxDistance;
         for (var i = 0; i < Main.maxPlayers; i++)
         {
             var player = Main.player[i];
@@ -127,30 +130,23 @@ public class AdventureProjectile : GlobalProjectile
             if (player.team == (int)Team.None || player.team != Main.player[self.owner].team)
                 continue;
 
-            if (self.Distance(player.Center) > 3000.0f)
+            if (self.Distance(player.Center) > maxDistance)
                 continue;
 
-            var healthDeficit = player.statLifeMax2 - Main.player[i].statLife;
-            if (healthDeficit <= targetPlayerHealthDeficit)
-                continue;
-
-            targetPlayer = i;
-            targetPlayerHealthDeficit = healthDeficit;
+            // FIXME: Can't set the context properly because of poor TML visibility to ProjectileSourceID.
+            Projectile.NewProjectile(
+                self.GetSource_OnHit(victim),
+                position.X,
+                position.Y,
+                0f,
+                0f,
+                298,
+                0,
+                0f,
+                self.owner,
+                i,
+                heal
+            );
         }
-
-        // FIXME: Can't set the context properly because of poor TML visibility to ProjectileSourceID.
-        Projectile.NewProjectile(
-            self.GetSource_OnHit(victim),
-            position.X,
-            position.Y,
-            0f,
-            0f,
-            298,
-            0,
-            0f,
-            self.owner,
-            targetPlayer,
-            heal
-        );
     }
 }
