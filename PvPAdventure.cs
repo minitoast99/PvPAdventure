@@ -1,6 +1,5 @@
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
 using PvPAdventure.System;
@@ -212,12 +211,5 @@ public class PvPAdventure : Mod
                 break;
             }
         }
-    }
-
-    internal void DisableOurselfAndReload()
-    {
-        var modLoaderType = typeof(ModLoader);
-        modLoaderType.GetMethod("DisableMod", BindingFlags.NonPublic | BindingFlags.Static)!.Invoke(null, [Name]);
-        modLoaderType.GetMethod("Reload", BindingFlags.NonPublic | BindingFlags.Static)!.Invoke(null, null);
     }
 }
