@@ -13,8 +13,6 @@ namespace PvPAdventure;
 
 public class PvPAdventure : Mod
 {
-    internal static Color NpcChatColor = new(245, 133, 34);
-
     public override void Load()
     {
         // This mod should only ever be loaded when connecting to a server, it should never be loaded beforehand.
