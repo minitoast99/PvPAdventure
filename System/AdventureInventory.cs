@@ -141,7 +141,8 @@ public class AdventureInventory : ModSystem
 
             // If the mouse is intersecting, start modulating down, otherwise modulate back up.
             var target = bounding.Contains(Main.mouseX, Main.mouseY) ? 0.25f : 1.0f;
-            _hotbarColorModulate = (float)Utils.Lerp(_hotbarColorModulate, target, 1.0f / 128.0f);
+            _hotbarColorModulate = (float)Utils.Lerp(_hotbarColorModulate, target,
+                Main._drawInterfaceGameTime.ElapsedGameTime.TotalSeconds);
 
             alpha = (byte)(alpha * _hotbarColorModulate);
         });
