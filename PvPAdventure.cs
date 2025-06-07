@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Xna.Framework;
+using MonoMod.Cil;
 using PvPAdventure.System;
 using Terraria;
 using Terraria.Enums;
@@ -30,6 +31,22 @@ public class PvPAdventure : Mod
                 args.Allowed = true;
             };
         }
+
+        // Don't set Player.mouseInterface when mousing over buffs.
+        IL_Main.DrawBuffIcon += EditMainDrawBuffIcon;
+    }
+
+    private void EditMainDrawBuffIcon(ILContext il)
+    {
+        var cursor = new ILCursor(il);
+
+        // First, find a store to Player.mouseInterface...
+        // NOTE: The reference we find actually relates to gamepad, which we don't touch.
+        cursor.GotoNext(i => i.MatchStfld<Player>("mouseInterface"));
+        // ...and go past the gamepad interactions...
+        cursor.Index += 2;
+        // ...to remove the loads and stores to Player.mouseInterface for non-gamepad.
+        cursor.RemoveRange(5);
     }
 
     public override void HandlePacket(BinaryReader reader, int whoAmI)
