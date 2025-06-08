@@ -38,6 +38,9 @@ public class PlayerOutlines : ModSystem
             if (team == Team.None)
                 return;
 
+            if (drawinfo.drawPlayer.dead)
+                return;
+
             var screenBounds = new Rectangle((int)Main.screenPosition.X, (int)Main.screenPosition.Y, Main.screenWidth,
                 Main.screenHeight);
             var playerBounds = drawinfo.drawPlayer.getRect();
