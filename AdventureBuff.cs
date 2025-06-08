@@ -1,4 +1,6 @@
+using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -47,5 +49,41 @@ public class AdventureBuff : GlobalBuff
             return false;
 
         return true;
+    }
+    public class ShinyStoneHotswap : ModBuff
+    {
+        public override string Texture => $"PvPAdventure/Assets/Buff/ShinyStoneHotswap";
+
+        public override void SetStaticDefaults()
+        {
+            Main.debuff[Type] = true;
+            Main.buffNoSave[Type] = true;
+            Main.buffNoTimeDisplay[Type] = false; // Show timer
+        }
+    }
+    public class RemoveFlaskBuffsOnDeath : ModPlayer
+    {
+        // Array of buff IDs to remove on death
+        private readonly int[] buffsToRemove = { 71, 73, 74, 75, 76, 77, 78, 79 }; //Every single Flask buff that doesn't go away on death for some reason
+
+        public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
+        {
+
+            for (int i = 0; i < Player.MaxBuffs; i++)
+            {
+                int buffType = Player.buffType[i];
+
+
+                foreach (int buffId in buffsToRemove)
+                {
+                    if (buffType == buffId)
+                    {
+                        Player.DelBuff(i); // Remove the buff
+                        i--; // Adjust index since we removed a buff
+                        break;
+                    }
+                }
+            }
+        }
     }
 }
