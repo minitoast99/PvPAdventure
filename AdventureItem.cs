@@ -95,7 +95,6 @@ public class AdventureItem : GlobalItem
             if (statistics.Value != null)
                 item.value = statistics.Value.Value;
         }
-
         if (item.type == ItemID.SpectrePickaxe || item.type == ItemID.ShroomiteDiggingClaw)
             item.pick = 210;
     }
