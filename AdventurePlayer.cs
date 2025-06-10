@@ -613,8 +613,8 @@ public class AdventurePlayer : ModPlayer
 
         if (Player.beetleOffense)
         {
-            Player.GetDamage<MeleeDamageClass>() += 0.10f;
-            Player.GetAttackSpeed<MeleeDamageClass>() += 0.10f;
+            Player.GetDamage<MeleeDamageClass>() += 0;
+            Player.GetAttackSpeed<MeleeDamageClass>() += 0;
         }
         else
         {
