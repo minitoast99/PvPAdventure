@@ -223,6 +223,8 @@ public static class AdventureDropDatabase
 
             case NPCID.SkeletronHead:
                 npcLoot.Add(ItemDropRule.Common(ItemID.GoldenKey));
+                foreach (var drop in drops)
+                    ModifyDropRate(drop, ItemID.SkeletronHand, 1, 1);
                 break;
 
             case NPCID.MartianSaucerCore:
