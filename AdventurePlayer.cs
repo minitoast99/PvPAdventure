@@ -204,6 +204,27 @@ public class AdventurePlayer : ModPlayer
         BuffID.Sets.TimeLeftDoesNotDecrease[BuffID.BeetleMight1] = true;
         BuffID.Sets.TimeLeftDoesNotDecrease[BuffID.BeetleMight2] = true;
         BuffID.Sets.TimeLeftDoesNotDecrease[BuffID.BeetleMight3] = true;
+
+        Main.persistentBuff[BuffID.WeaponImbueVenom] = false;
+        Main.persistentBuff[BuffID.WeaponImbueCursedFlames] = false;
+        Main.persistentBuff[BuffID.WeaponImbueFire] = false;
+        Main.persistentBuff[BuffID.WeaponImbueGold] = false;
+        Main.persistentBuff[BuffID.WeaponImbueIchor] = false;
+        Main.persistentBuff[BuffID.WeaponImbueNanites] = false;
+        Main.persistentBuff[BuffID.WeaponImbueConfetti] = false;
+        Main.persistentBuff[BuffID.WeaponImbuePoison] = false;
+    }
+
+    public override void Unload()
+    {
+        Main.persistentBuff[BuffID.WeaponImbueVenom] = true;
+        Main.persistentBuff[BuffID.WeaponImbueCursedFlames] = true;
+        Main.persistentBuff[BuffID.WeaponImbueFire] = true;
+        Main.persistentBuff[BuffID.WeaponImbueGold] = true;
+        Main.persistentBuff[BuffID.WeaponImbueIchor] = true;
+        Main.persistentBuff[BuffID.WeaponImbueNanites] = true;
+        Main.persistentBuff[BuffID.WeaponImbueConfetti] = true;
+        Main.persistentBuff[BuffID.WeaponImbuePoison] = true;
     }
 
     private void OnPlayerPlaceThing_Tiles(On_Player.orig_PlaceThing_Tiles orig, Player self)
