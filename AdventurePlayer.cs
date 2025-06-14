@@ -852,12 +852,7 @@ public class AdventurePlayer : ModPlayer
 
     public override void PostUpdateEquips()
     {
-        if (Player.beetleOffense)
-        {
-            Player.GetDamage<MeleeDamageClass>() += 0.10f;
-            Player.GetAttackSpeed<MeleeDamageClass>() += 0.10f;
-        }
-        else
+        if (!Player.beetleOffense)
         {
             // If we don't have the beetle offense set bonus, remove all possible buffs.
             Player.ClearBuff(BuffID.BeetleMight1);
