@@ -8,6 +8,19 @@ namespace PvPAdventure;
 
 public static class AdventureDropDatabase
 {
+    private class AdventureIsPreHardmode : IItemDropRuleCondition
+    {
+        public AdventureIsPreHardmode()
+        {
+        }
+
+        public static AdventureIsPreHardmode The { get; } = new();
+
+        public bool CanDrop(DropAttemptInfo info) => !Main.hardMode;
+        public bool CanShowItemDropInUI() => true;
+        public string GetConditionDescription() => "Drops pre-hardmode";
+    }
+
     private static void ModifyDropRate(IItemDropRule rule, int type, int numerator, int denominator)
     {
         if (rule is CommonDrop commonDrop && commonDrop.itemId == type)
@@ -237,6 +250,16 @@ public static class AdventureDropDatabase
                     }
                 }
 
+                break;
+
+            case NPCID.WallofFlesh:
+                npcLoot.Add(new LeadingConditionRule(new AdventureIsPreHardmode()))
+                    .OnSuccess(ItemDropRule.OneFromOptions(1, [
+                        ItemID.WarriorEmblem,
+                        ItemID.RangerEmblem,
+                        ItemID.SorcererEmblem,
+                        ItemID.SummonerEmblem
+                    ]));
                 break;
         }
     }
