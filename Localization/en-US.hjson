@@ -643,7 +643,11 @@ Mods: {
 			}
 		}
 
-		Item.Disabled: Cannot be used in this gamemode
+		Item: {
+			Disabled: Cannot be used in this gamemode
+			NoUndergroundEmpressButterfly: Cannot be released here underground
+		}
+
 		Player.CannotRecall: Cannot recall!
 		Tiles.LockedLihzahrdChest.MapEntry: Locked Lihzahrd Chest
 		Sandstorm: "[c/FFC864:Desert winds are picking up...]"

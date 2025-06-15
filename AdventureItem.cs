@@ -85,6 +85,9 @@ public class AdventureItem : GlobalItem
 
     public override bool CanUseItem(Item item, Player player)
     {
+        if (item.type == ItemID.EmpressButterfly && player.position.Y > Main.worldSurface * 16)
+            return false;
+
         return !ModContent.GetInstance<AdventureConfig>().PreventUse
             .Any(itemDefinition => item.type == itemDefinition.Type);
     }
@@ -128,6 +131,21 @@ public class AdventureItem : GlobalItem
             {
                 OverrideColor = Color.Red
             });
+        }
+        else
+        {
+            var isUnderground = Main.LocalPlayer.position.Y > Main.worldSurface * 16;
+            if (item.type == ItemID.EmpressButterfly)
+            {
+                if (isUnderground)
+                {
+                    tooltips.Add(new TooltipLine(Mod, "NoUndergroundEmpressButterfly",
+                        Language.GetTextValue("Mods.PvPAdventure.Item.NoUndergroundEmpressButterfly"))
+                    {
+                        OverrideColor = Color.Red
+                    });
+                }
+            }
         }
     }
 
