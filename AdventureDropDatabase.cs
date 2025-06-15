@@ -266,6 +266,11 @@ public static class AdventureDropDatabase
                 foreach (var drop in drops)
                     ModifyDropRate(drop, ItemID.TurtleShell, 1, 5);
                 break;
+
+            case NPCID.GiantCursedSkull:
+                foreach (var drop in drops)
+                    ModifyDropRate(drop, ItemID.ShadowJoustingLance, 1, 12);
+                break;
         }
     }
 }
