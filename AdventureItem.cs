@@ -51,25 +51,33 @@ public class AdventureItem : GlobalItem
                 item.value = statistics.Value.Value;
         }
 
-        ItemID.Sets.ShimmerTransformToItem[item.type] = item.type switch
-        {
-            ItemID.CursedFlame => ItemID.Ichor,
-            ItemID.Ichor => ItemID.CursedFlame,
-            ItemID.CrystalNinjaHelmet => ItemID.CrystalNinjaChestplate,
-            ItemID.CrystalNinjaChestplate => ItemID.CrystalNinjaLeggings,
-            ItemID.CrystalNinjaLeggings => ItemID.CrystalNinjaHelmet,
-            ItemID.GladiatorHelmet => ItemID.GladiatorBreastplate,
-            ItemID.GladiatorBreastplate => ItemID.GladiatorLeggings,
-            ItemID.GladiatorLeggings => ItemID.GladiatorHelmet,
-            ItemID.PaladinsHammer => ItemID.PaladinsShield,
-            ItemID.PaladinsShield => ItemID.PaladinsHammer,
-            ItemID.MaceWhip => ItemID.Keybrand,
-            ItemID.Keybrand => ItemID.MaceWhip,
-            _ => ItemID.Sets.ShimmerTransformToItem[item.type]
-        };
-
         if (item.type == ItemID.SpectrePickaxe || item.type == ItemID.ShroomiteDiggingClaw)
             item.pick = 210;
+    }
+
+    public override void SetStaticDefaults()
+    {
+        void AddCircularShimmerTransform(params int[] items)
+        {
+            for (var i = 1; i < items.Length; i++)
+                ItemID.Sets.ShimmerTransformToItem[items[i - 1]] = items[i];
+
+            ItemID.Sets.ShimmerTransformToItem[items[^1]] = items[0];
+        }
+
+        AddCircularShimmerTransform(ItemID.CursedFlame, ItemID.Ichor);
+        AddCircularShimmerTransform(
+            ItemID.CrystalNinjaHelmet,
+            ItemID.CrystalNinjaChestplate,
+            ItemID.CrystalNinjaLeggings
+        );
+        AddCircularShimmerTransform(
+            ItemID.GladiatorHelmet,
+            ItemID.GladiatorBreastplate,
+            ItemID.GladiatorLeggings
+        );
+        AddCircularShimmerTransform(ItemID.PaladinsHammer, ItemID.PaladinsShield);
+        AddCircularShimmerTransform(ItemID.MaceWhip, ItemID.Keybrand);
     }
 
     public override bool CanUseItem(Item item, Player player)
