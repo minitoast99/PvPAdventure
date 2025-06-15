@@ -78,6 +78,9 @@ public class AdventureItem : GlobalItem
         );
         AddCircularShimmerTransform(ItemID.PaladinsHammer, ItemID.PaladinsShield);
         AddCircularShimmerTransform(ItemID.MaceWhip, ItemID.Keybrand);
+        AddCircularShimmerTransform(ItemID.SniperRifle, ItemID.RifleScope);
+        AddCircularShimmerTransform(ItemID.Tabi, ItemID.BlackBelt);
+        AddCircularShimmerTransform(ItemID.PiggyBank, ItemID.MoneyTrough);
     }
 
     public override bool CanUseItem(Item item, Player player)
