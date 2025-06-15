@@ -10,7 +10,7 @@ public static class AdventureDropDatabase
 {
     private class AdventureIsPreHardmode : IItemDropRuleCondition
     {
-        public AdventureIsPreHardmode()
+        private AdventureIsPreHardmode()
         {
         }
 
@@ -254,7 +254,7 @@ public static class AdventureDropDatabase
                 break;
 
             case NPCID.WallofFlesh:
-                npcLoot.Add(new LeadingConditionRule(new AdventureIsPreHardmode()))
+                npcLoot.Add(new LeadingConditionRule(AdventureIsPreHardmode.The))
                     .OnSuccess(ItemDropRule.OneFromOptions(1, [
                         ItemID.WarriorEmblem,
                         ItemID.RangerEmblem,
