@@ -646,6 +646,7 @@ Mods: {
 		Item: {
 			Disabled: Cannot be used in this gamemode
 			NoUndergroundEmpressButterfly: Cannot be released here underground
+			NoUndergroundQueenSlimeCrystal: Cannot be summoned here underground
 		}
 
 		Player.CannotRecall: Cannot recall!

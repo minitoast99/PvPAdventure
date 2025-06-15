@@ -85,8 +85,19 @@ public class AdventureItem : GlobalItem
 
     public override bool CanUseItem(Item item, Player player)
     {
-        if (item.type == ItemID.EmpressButterfly && player.position.Y > Main.worldSurface * 16)
-            return false;
+        var isUnderground = player.position.Y > Main.worldSurface * 16;
+        var isHallow = player.ZoneHallow;
+
+        if (item.type == ItemID.EmpressButterfly)
+        {
+            if (isUnderground)
+                return false;
+        }
+        else if (item.type == ItemID.QueenSlimeCrystal)
+        {
+            if (isUnderground && isHallow)
+                return false;
+        }
 
         return !ModContent.GetInstance<AdventureConfig>().PreventUse
             .Any(itemDefinition => item.type == itemDefinition.Type);
@@ -135,12 +146,24 @@ public class AdventureItem : GlobalItem
         else
         {
             var isUnderground = Main.LocalPlayer.position.Y > Main.worldSurface * 16;
+            var isHallow = Main.LocalPlayer.ZoneHallow;
             if (item.type == ItemID.EmpressButterfly)
             {
                 if (isUnderground)
                 {
                     tooltips.Add(new TooltipLine(Mod, "NoUndergroundEmpressButterfly",
                         Language.GetTextValue("Mods.PvPAdventure.Item.NoUndergroundEmpressButterfly"))
+                    {
+                        OverrideColor = Color.Red
+                    });
+                }
+            }
+            else if (item.type == ItemID.QueenSlimeCrystal)
+            {
+                if (isHallow && isUnderground)
+                {
+                    tooltips.Add(new TooltipLine(Mod, "NoUndergroundQueenSlimeCrystal",
+                        Language.GetTextValue("Mods.PvPAdventure.Item.NoUndergroundQueenSlimeCrystal"))
                     {
                         OverrideColor = Color.Red
                     });
