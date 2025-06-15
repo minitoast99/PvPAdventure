@@ -89,6 +89,7 @@ public static class AdventureDropDatabase
             case NPCID.TacticalSkeleton:
                 foreach (var drop in drops)
                     ModifyDropRate(drop, ItemID.TacticalShotgun, 1, 10);
+                npcLoot.Add(ItemDropRule.Common(ItemID.RifleScope, 6));
                 break;
 
             case NPCID.SkeletonCommando:
