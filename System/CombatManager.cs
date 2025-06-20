@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using MonoMod.Cil;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -135,10 +136,12 @@ public class CombatManager : ModSystem
         cursor.Index += 1;
         // ...prepare a delegate call.
         cursor.EmitLdarg0()
+            .EmitLdarg1()
             .EmitLdarg(5)
             .EmitLdarga(7)
             .EmitLdloca(0)
-            .EmitDelegate((Player self, bool pvp, ref int cooldownCounter, ref bool flag) =>
+            .EmitDelegate((Player self, PlayerDeathReason damageSource, bool pvp, ref int cooldownCounter,
+                ref bool flag) =>
             {
                 var adventurePlayer = self.GetModPlayer<AdventurePlayer>();
 
@@ -147,7 +150,7 @@ public class CombatManager : ModSystem
                     // Overwrite the cooldown counter, so that if the hurt succeeds, no other counter gets modified.
                     cooldownCounter = PvPImmunityCooldownId;
                     // Set the flag deciding if this hurt should proceed.
-                    flag = adventurePlayer.PvPImmuneTime == 0;
+                    flag = adventurePlayer.PvPImmuneTime[damageSource.SourcePlayerIndex] == 0;
                 }
             });
     }
@@ -167,7 +170,12 @@ public class CombatManager : ModSystem
         // ...and remove it...
         cursor.Remove();
         // ...to replace it's loaded value with the result of our delegate.
-        cursor.EmitDelegate((Player self) => self.GetModPlayer<AdventurePlayer>().PvPImmuneTime > 0);
+        cursor
+            .EmitLdarg0()
+            // If we don't have a player owner somehow, allow it regardless.
+            .EmitDelegate((Player self, Projectile projectile) => !projectile.TryGetOwner(out var owner) ||
+                                                                  self.GetModPlayer<AdventurePlayer>()
+                                                                      .PvPImmuneTime[owner.whoAmI] > 0);
 
         // Find the first call to ModProjectile.CooldownSlot (property)...
         cursor.GotoNext(i => i.MatchCallvirt<ModProjectile>("get_CooldownSlot"));
