@@ -115,13 +115,13 @@ public class AdventureInventory : ModSystem
         var cursor = new ILCursor(il);
 
         // First, find the first store to the local which holds the alpha for hotbar inventory backing...
-        cursor.GotoNext(i => i.MatchStloc(15));
+        cursor.GotoNext(i => i.MatchStloc(16));
         // ...and then find the next one...
-        cursor.GotoNext(i => i.MatchStloc(15));
+        cursor.GotoNext(i => i.MatchStloc(16));
         // ...and go past it and a bit more for branching...
         cursor.Index += 2;
         // ...to prepare a delegate call, taking a ref to the alpha value.
-        cursor.EmitLdloca(15);
+        cursor.EmitLdloca(16);
         cursor.EmitDelegate((ref byte alpha) =>
         {
             const int numberOfHotbarSlots = 10;
