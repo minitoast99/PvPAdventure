@@ -1007,7 +1007,7 @@ public class AdventurePlayer : ModPlayer
             {
                 var ping = player.GetModPlayer<AdventurePlayer>().Latency;
                 if (ping != null)
-                    caller.Reply($"{player.name}: {ping.Value.Milliseconds}ms");
+                    caller.Reply($"{player.name}: {ping.Value.TotalMilliseconds}ms");
             }
         }
 

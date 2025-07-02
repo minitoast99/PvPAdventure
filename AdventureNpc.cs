@@ -47,6 +47,8 @@ public class AdventureNpc : GlobalNPC
         IL_NPC.SpawnNPC += EditNPCSpawnNPC;
         // Make Guide Voodoo Doll spawn Wall of Flesh without the Guide NPC being alive.
         On_Item.CheckLavaDeath += OnItemCheckLavaDeath;
+        // Prevent some global drop rules from being registered.
+        On_ItemDropDatabase.RegisterToGlobal += AdventureDropDatabase.OnItemDropDatabaseRegisterToGlobal;
     }
 
     private void OnNPCScaleStats(On_NPC.orig_ScaleStats orig, NPC self, int? activeplayerscount,

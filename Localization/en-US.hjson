@@ -623,6 +623,16 @@ Mods: {
 					Label: Damage Multipliers
 					Tooltip: ""
 				}
+
+				NoMechanicalBossSummonDrops: {
+					Label: No Mechanical Boss Summon Drops
+					Tooltip: ""
+				}
+
+				NoBiomeKeyDrops: {
+					Label: No Biome Key Drops
+					Tooltip: ""
+				}
 			}
 
 			FloatStatistic: {

@@ -280,4 +280,25 @@ public static class AdventureDropDatabase
 
         }
     }
+
+    public static IItemDropRule OnItemDropDatabaseRegisterToGlobal(On_ItemDropDatabase.orig_RegisterToGlobal orig,
+        ItemDropDatabase self, IItemDropRule entry)
+    {
+        var adventureConfig = ModContent.GetInstance<AdventureConfig>();
+
+        var disallowed = false;
+
+        disallowed |= entry is MechBossSpawnersDropRule && adventureConfig.NpcBalance.NoMechanicalBossSummonDrops;
+        disallowed |= entry is ItemDropWithConditionRule { itemId: ItemID.JungleKey };
+        disallowed |= entry is ItemDropWithConditionRule { itemId: ItemID.CorruptionKey };
+        disallowed |= entry is ItemDropWithConditionRule { itemId: ItemID.CrimsonKey };
+        disallowed |= entry is ItemDropWithConditionRule { itemId: ItemID.HallowedKey };
+        disallowed |= entry is ItemDropWithConditionRule { itemId: ItemID.FrozenKey };
+        disallowed |= entry is ItemDropWithConditionRule { itemId: ItemID.DungeonDesertKey };
+
+        if (!disallowed)
+            orig(self, entry);
+
+        return entry;
+    }
 }
