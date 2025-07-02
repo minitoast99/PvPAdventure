@@ -159,6 +159,11 @@ public static class AdventureDropDatabase
                     ModifyDropRate(drop, ItemID.MagicQuiver, 1, 30);
                 break;
 
+            case NPCID.RedDevil:
+                foreach (var drop in drops)
+                    ModifyDropRate(drop, ItemID.UnholyTrident, 1, 10);
+                break;
+
             case NPCID.Lihzahrd:
             case NPCID.LihzahrdCrawler:
             case NPCID.FlyingSnake:
