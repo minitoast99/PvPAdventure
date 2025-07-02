@@ -514,6 +514,39 @@ public class RecipeManager : ModSystem
             }
         }
 
+        public class AnyBrickwall1: ModSystem
+        {
+            public static RecipeGroup AnyBrickwall;
+            public static int[] PrimaryItems => new int[] {
+            ItemID.NecromanticSign,
+            ItemID.ShadowbeamStaff,
+            ItemID.RocketLauncher,
+            ItemID.PaladinsHammer
+        };
+
+            public override void AddRecipeGroups()
+            {
+                // Main group with trophy as first item (for icon)
+                AnyBrickwall = new RecipeGroup(() => Language.GetTextValue("Any Brick Wall"), PrimaryItems);
+                RecipeGroup.RegisterGroup("PvPAdventure:AnyBrickWall", AnyBrickwall);
+
+                // Create exclude subgroups while maintaining icon as first item
+                foreach (int itemID in PrimaryItems.Where(id => id != ItemID.NecromanticSign))
+                {
+                    var validItems = PrimaryItems
+                        .Where(id => id != itemID && id != ItemID.NecromanticSign)
+                        .Prepend(ItemID.NecromanticSign) // Keep item first for icon
+                        .ToArray();
+
+                    RecipeGroup group = new RecipeGroup(
+                        () => Language.GetTextValue("Any Brick Wall"),
+                        validItems
+                    );
+                    RecipeGroup.RegisterGroup($"PvPAdventure:AnyBrickWallExclude{itemID}", group);
+                }
+            }
+        }
+
         public class RecipeSystem : ModSystem
         {
             public override void AddRecipes()
@@ -632,6 +665,16 @@ public class RecipeManager : ModSystem
                         .DisableDecraft()
                         .Register();
                 }
+                // Primary Mimic recipes (Relic remains icon)
+                foreach (int itemID in AnyBrickwall1.PrimaryItems.Where(id => id != ItemID.NecromanticSign))
+                {
+                    Recipe.Create(itemID)
+                        .AddRecipeGroup($"PvPAdventure:AnyBrickWallExclude{itemID}", 3)
+                        .AddCondition(shimmerCondition)
+                        .DisableDecraft()
+                        .Register();
+                }
+
             }
         }
     }
