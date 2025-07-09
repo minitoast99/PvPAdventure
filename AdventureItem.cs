@@ -65,6 +65,12 @@ public class AdventureItem : GlobalItem
     {
         var adventureConfig = ModContent.GetInstance<AdventureConfig>();
 
+        if (item.type == ItemID.LihzahrdPowerCell)
+        {
+
+            item.rare = ItemRarityID.Yellow;
+        }
+
         if (RecallItems[item.type])
         {
             var recallTime = adventureConfig.RecallFrames;
