@@ -476,6 +476,54 @@ public class AdventureProjectile : GlobalProjectile
             }
         }
     }
+    public class NightglowMouseHoming : GlobalProjectile
+    {
+        public override bool AppliesToEntity(Projectile projectile, bool lateInstantiation)
+        {
+            return projectile.type == ProjectileID.FairyQueenMagicItemShot;
+        }
+
+        // We Initialize timer in SetDefaults
+        public override void SetDefaults(Projectile projectile)
+        {
+            if (projectile.type == ProjectileID.FairyQueenMagicItemShot)
+            {
+                projectile.localAI[0] = 0f; // Homing delay timer
+                projectile.netUpdate = true;
+            }
+        }
+
+        public override void AI(Projectile projectile)
+        {
+            if (projectile.owner != Main.myPlayer) return;
+            Player player = Main.player[projectile.owner];
+            if (player.dead || !player.active) return;
+
+            // Increment homing delay timer
+            projectile.localAI[0]++;
+
+            // Only start homing after 60 frames
+            if (projectile.localAI[0] < 60f) return;
+
+            Vector2 cursorPosition = Main.MouseWorld;
+            Vector2 toCursor = cursorPosition - projectile.Center;
+            float distance = toCursor.Length();
+
+            // Only home when cursor is beyond minimum distance
+
+
+            float baseSpeed = 20f;
+            float accelerationFactor = 1.5f;
+            float turnStrength = 0.05f;
+
+            Vector2 direction = toCursor.SafeNormalize(Vector2.Zero);
+            Vector2 targetVelocity = direction * baseSpeed * accelerationFactor;
+
+            projectile.velocity = Vector2.Lerp(projectile.velocity, targetVelocity, turnStrength);
+            projectile.rotation = projectile.velocity.ToRotation() + MathHelper.PiOver2;
+
+        }
+    }
 }
     
 
