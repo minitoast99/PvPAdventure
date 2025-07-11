@@ -547,6 +547,211 @@ public class RecipeManager : ModSystem
             }
         }
 
+        public class AnyGold1 : ModSystem
+        {
+            public static RecipeGroup AnyGold;
+            public static int[] PrimaryItems => new int[] {
+            ItemID.CloudinaBottle,
+            ItemID.HermesBoots,
+            ItemID.FlareGun,
+            ItemID.ShoeSpikes,
+            ItemID.BandofRegeneration,
+            ItemID.Mace
+        };
+
+            public override void AddRecipeGroups()
+            {
+                // Main group with trophy as first item (for icon)
+                AnyGold = new RecipeGroup(() => Language.GetTextValue("Any Gold Chest Item"), PrimaryItems);
+                RecipeGroup.RegisterGroup("PvPAdventure:AnyGold", AnyGold);
+
+                // Create exclude subgroups while maintaining icon as first item
+                foreach (int itemID in PrimaryItems.Where(id => id != ItemID.GoldenChest))
+                {
+                    var validItems = PrimaryItems
+                        .Where(id => id != itemID && id != ItemID.GoldenChest)
+                        .Prepend(ItemID.GoldenChest) // Keep item first for icon
+                        .ToArray();
+
+                    RecipeGroup group = new RecipeGroup(
+                        () => Language.GetTextValue("Any Gold Chest Item"),
+                        validItems
+                    );
+                    RecipeGroup.RegisterGroup($"PvPAdventure:AnyGoldExclude{itemID}", group);
+                }
+            }
+        }
+
+        public class AnyJungle1 : ModSystem
+        {
+            public static RecipeGroup AnyJungle;
+            public static int[] PrimaryItems => new int[] {
+            ItemID.AnkletoftheWind,
+            ItemID.Boomstick,
+            ItemID.StaffofRegrowth,
+            ItemID.FlowerBoots,
+            ItemID.FiberglassFishingPole,
+            ItemID.FeralClaws
+        };
+
+            public override void AddRecipeGroups()
+            {
+                // Main group with trophy as first item (for icon)
+                AnyJungle = new RecipeGroup(() => Language.GetTextValue("Any Gold Chest Item"), PrimaryItems);
+                RecipeGroup.RegisterGroup("PvPAdventure:AnyJungle", AnyJungle);
+
+                // Create exclude subgroups while maintaining icon as first item
+                foreach (int itemID in PrimaryItems.Where(id => id != ItemID.SwampThingBanner))
+                {
+                    var validItems = PrimaryItems
+                        .Where(id => id != itemID && id != ItemID.SwampThingBanner)
+                        .Prepend(ItemID.SwampThingBanner) // Keep item first for icon
+                        .ToArray();
+
+                    RecipeGroup group = new RecipeGroup(
+                        () => Language.GetTextValue("Any Jungle Chest Item"),
+                        validItems
+                    );
+                    RecipeGroup.RegisterGroup($"PvPAdventure:AnyJungleExclude{itemID}", group);
+                }
+            }
+        }
+
+        public class AnyDesert1 : ModSystem
+        {
+            public static RecipeGroup AnyHighDesert;
+            public static int[] PrimaryItems => new int[] {
+            ItemID.MysticCoilSnake,
+            ItemID.SandBoots,
+            ItemID.AncientChisel
+        };
+
+            public override void AddRecipeGroups()
+            {
+                // Main group with trophy as first item (for icon)
+                AnyHighDesert = new RecipeGroup(() => Language.GetTextValue("Any High Desert Chest Item"), PrimaryItems);
+                RecipeGroup.RegisterGroup("PvPAdventure:AnyHighDesert", AnyHighDesert);
+
+                // Create exclude subgroups while maintaining icon as first item
+                foreach (int itemID in PrimaryItems.Where(id => id != ItemID.PharaohsMask))
+                {
+                    var validItems = PrimaryItems
+                        .Where(id => id != itemID && id != ItemID.PharaohsMask)
+                        .Prepend(ItemID.PharaohsMask) // Keep item first for icon
+                        .ToArray();
+
+                    RecipeGroup group = new RecipeGroup(
+                        () => Language.GetTextValue("Any High Desert Chest Item"),
+                        validItems
+                    );
+                    RecipeGroup.RegisterGroup($"PvPAdventure:AnyHighDesertExclude{itemID}", group);
+                }
+            }
+        }
+
+        public class AnyDesert2 : ModSystem
+        {
+            public static RecipeGroup AnyLowDesert;
+            public static int[] PrimaryItems => new int[] {
+            ItemID.SandstorminaBottle,
+            ItemID.ThunderSpear,
+            ItemID.ThunderStaff
+        };
+
+            public override void AddRecipeGroups()
+            {
+                // Main group with trophy as first item (for icon)
+                AnyLowDesert = new RecipeGroup(() => Language.GetTextValue("Any Low Desert Chest Item"), PrimaryItems);
+                RecipeGroup.RegisterGroup("PvPAdventure:AnyLowDesert", AnyLowDesert);
+
+                // Create exclude subgroups while maintaining icon as first item
+                foreach (int itemID in PrimaryItems.Where(id => id != ItemID.PharaohsRobe))
+                {
+                    var validItems = PrimaryItems
+                        .Where(id => id != itemID && id != ItemID.PharaohsRobe)
+                        .Prepend(ItemID.PharaohsRobe) // Keep item first for icon
+                        .ToArray();
+
+                    RecipeGroup group = new RecipeGroup(
+                        () => Language.GetTextValue("Any Low Desert Chest Item"),
+                        validItems
+                    );
+                    RecipeGroup.RegisterGroup($"PvPAdventure:AnyLowDesertExclude{itemID}", group);
+                }
+            }
+        }
+
+        public class AnyIce1 : ModSystem
+        {
+            public static RecipeGroup AnyIce;
+            public static int[] PrimaryItems => new int[] {
+            ItemID.FlurryBoots,
+            ItemID.BlizzardinaBottle,
+            ItemID.SnowballCannon,
+            ItemID.IceSkates,
+            ItemID.IceBlade,
+            ItemID.IceBoomerang,
+            ItemID.Fish
+
+        };
+
+            public override void AddRecipeGroups()
+            {
+                // Main group with trophy as first item (for icon)
+                AnyIce = new RecipeGroup(() => Language.GetTextValue("Any Ice Chest Item"), PrimaryItems);
+                RecipeGroup.RegisterGroup("PvPAdventure:AnyIce", AnyIce);
+
+                // Create exclude subgroups while maintaining icon as first item
+                foreach (int itemID in PrimaryItems.Where(id => id != ItemID.SnowballLauncher))
+                {
+                    var validItems = PrimaryItems
+                        .Where(id => id != itemID && id != ItemID.SnowballLauncher)
+                        .Prepend(ItemID.SnowballLauncher) // Keep item first for icon
+                        .ToArray();
+
+                    RecipeGroup group = new RecipeGroup(
+                        () => Language.GetTextValue("Any Ice Chest Item"),
+                        validItems
+                    );
+                    RecipeGroup.RegisterGroup($"PvPAdventure:AnyIceExclude{itemID}", group);
+                }
+            }
+        }
+
+        public class AnySky1 : ModSystem
+        {
+            public static RecipeGroup AnySky;
+            public static int[] PrimaryItems => new int[] {
+            ItemID.ShinyRedBalloon,
+            ItemID.Starfury,
+            ItemID.CelestialMagnet,
+            ItemID.CreativeWings,
+            ItemID.LuckyHorseshoe
+
+        };
+
+            public override void AddRecipeGroups()
+            {
+                // Main group with trophy as first item (for icon)
+                AnySky = new RecipeGroup(() => Language.GetTextValue("Any Sky Chest Item"), PrimaryItems);
+                RecipeGroup.RegisterGroup("PvPAdventure:AnySky", AnySky);
+
+                // Create exclude subgroups while maintaining icon as first item
+                foreach (int itemID in PrimaryItems.Where(id => id != ItemID.CreativeWings))
+                {
+                    var validItems = PrimaryItems
+                        .Where(id => id != itemID && id != ItemID.CreativeWings)
+                        .Prepend(ItemID.CreativeWings) // Keep item first for icon
+                        .ToArray();
+
+                    RecipeGroup group = new RecipeGroup(
+                        () => Language.GetTextValue("Any Sky Chest Item"),
+                        validItems
+                    );
+                    RecipeGroup.RegisterGroup($"PvPAdventure:AnySkyExclude{itemID}", group);
+                }
+            }
+        }
         public class RecipeSystem : ModSystem
         {
             public override void AddRecipes()
@@ -674,7 +879,60 @@ public class RecipeManager : ModSystem
                         .DisableDecraft()
                         .Register();
                 }
-
+                // Primary Mimic recipes (Relic remains icon)
+                foreach (int itemID in AnyGold1.PrimaryItems.Where(id => id != ItemID.GoldChest))
+                {
+                    Recipe.Create(itemID)
+                        .AddRecipeGroup($"PvPAdventure:AnyGoldExclude{itemID}", 3)
+                        .AddCondition(shimmerCondition)
+                        .DisableDecraft()
+                        .Register();
+                }
+                // Primary Mimic recipes (Relic remains icon)
+                foreach (int itemID in AnyJungle1.PrimaryItems.Where(id => id != ItemID.SwampThingBanner))
+                {
+                    Recipe.Create(itemID)
+                        .AddRecipeGroup($"PvPAdventure:AnyJungleExclude{itemID}", 3)
+                        .AddCondition(shimmerCondition)
+                        .DisableDecraft()
+                        .Register();
+                }
+                // Primary Mimic recipes (Relic remains icon)
+                foreach (int itemID in AnyDesert1.PrimaryItems.Where(id => id != ItemID.PharaohsMask))
+                {
+                    Recipe.Create(itemID)
+                        .AddRecipeGroup($"PvPAdventure:AnyHighDesertExclude{itemID}", 3)
+                        .AddCondition(shimmerCondition)
+                        .DisableDecraft()
+                        .Register();
+                }
+                // Primary Mimic recipes (Relic remains icon)
+                foreach (int itemID in AnyDesert2.PrimaryItems.Where(id => id != ItemID.PharaohsRobe))
+                {
+                    Recipe.Create(itemID)
+                        .AddRecipeGroup($"PvPAdventure:AnyLowDesertExclude{itemID}", 3)
+                        .AddCondition(shimmerCondition)
+                        .DisableDecraft()
+                        .Register();
+                }
+                // Primary Mimic recipes (Relic remains icon)
+                foreach (int itemID in AnyIce1.PrimaryItems.Where(id => id != ItemID.SnowballLauncher))
+                {
+                    Recipe.Create(itemID)
+                        .AddRecipeGroup($"PvPAdventure:AnyIceExclude{itemID}", 2)
+                        .AddCondition(shimmerCondition)
+                        .DisableDecraft()
+                        .Register();
+                }
+                // Primary Mimic recipes (Relic remains icon)
+                foreach (int itemID in AnySky1.PrimaryItems.Where(id => id != ItemID.CreativeWings))
+                {
+                    Recipe.Create(itemID)
+                        .AddRecipeGroup($"PvPAdventure:AnySkyExclude{itemID}", 2)
+                        .AddCondition(shimmerCondition)
+                        .DisableDecraft()
+                        .Register();
+                }
             }
         }
     }
