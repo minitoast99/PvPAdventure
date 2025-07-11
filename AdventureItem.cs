@@ -16,51 +16,6 @@ public class AdventureItem : GlobalItem
         ItemID.Sets.Factory.CreateBoolSet(ItemID.MagicMirror, ItemID.CellPhone, ItemID.IceMirror, ItemID.Shellphone,
             ItemID.ShellphoneSpawn);
 
-    public class GelatinCrystalRestriction : GlobalItem
-    {
-        public override bool CanUseItem(Item item, Player player)
-        {
-            if (item.type == ItemID.QueenSlimeCrystal)
-            {
-                bool isUnderground = player.position.Y > Main.worldSurface * 16;
-                bool inUndergroundHallow = isUnderground && player.ZoneHallow;
-
-                if (inUndergroundHallow)
-                {
-                    Main.NewText("Queen Slime refuses to emerge in the corrupted crystals here!", 255, 50, 50);
-                    return false;
-                }
-
-                // Still block summon in other underground areas but without message
-                if (isUnderground)
-                {
-                    return false;
-                }
-            }
-            return base.CanUseItem(item, player);
-        }
-    }
-    public class PrismaticLacewingRestriction : GlobalItem
-    {
-        public override bool CanUseItem(Item item, Player player)
-        {
-            // Target Prismatic Lacewing (Empress summon item)
-            if (item.type == ItemID.EmpressButterfly)
-            {
-                // Check if player is below surface level
-                bool isUnderground = player.position.Y > Main.worldSurface * 16;
-                bool inUndergroundHallow = isUnderground && player.ZoneHallow;
-
-                if (isUnderground)
-                {
-                    Main.NewText("The sacred light refuses to manifest in these corrupted depths!", 200, 150, 255);
-                    return false;
-                }
-            }
-            return base.CanUseItem(item, player);
-        }
-    }
-
     public override void SetDefaults(Item item)
     {
         var adventureConfig = ModContent.GetInstance<AdventureConfig>();
@@ -145,7 +100,22 @@ public class AdventureItem : GlobalItem
         }
         else if (item.type == ItemID.QueenSlimeCrystal)
         {
-            if (isUnderground && isHallow)
+            if (isUnderground)
+                return false;
+        }
+        else if (item.type == ItemID.MechanicalEye)
+        {
+            if (isUnderground)
+                return false;
+        }
+        else if (item.type == ItemID.MechanicalSkull)
+        {
+            if (isUnderground)
+                return false;
+        }
+        else if (item.type == ItemID.MechanicalWorm)
+        {
+            if (isUnderground)
                 return false;
         }
 
