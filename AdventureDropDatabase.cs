@@ -50,14 +50,14 @@ public static class AdventureDropDatabase
         {
             case NPCID.BoneLee:
                 foreach (var drop in drops)
-                    ModifyDropRate(drop, ItemID.Tabi, 1, 4);
+                    ModifyDropRate(drop, ItemID.Tabi, 1, 1);
                 break;
 
             case NPCID.Paladin:
                 foreach (var drop in drops)
                 {
-                    ModifyDropRate(drop, ItemID.PaladinsHammer, 3, 20);
-                    ModifyDropRate(drop, ItemID.PaladinsShield, 3, 20);
+                    ModifyDropRate(drop, ItemID.PaladinsHammer, 3, 3);
+                    ModifyDropRate(drop, ItemID.PaladinsShield, 3, 3);
                 }
 
                 break;
@@ -75,35 +75,36 @@ public static class AdventureDropDatabase
             case NPCID.Necromancer:
             case NPCID.NecromancerArmored:
                 foreach (var drop in drops)
-                    ModifyDropRate(drop, ItemID.ShadowbeamStaff, 1, 10);
+                    ModifyDropRate(drop, ItemID.ShadowbeamStaff, 1, 1);
                 break;
 
             case NPCID.RaggedCaster:
             case NPCID.RaggedCasterOpenCoat:
                 foreach (var drop in drops)
-                    ModifyDropRate(drop, ItemID.SpectreStaff, 1, 10);
+                    ModifyDropRate(drop, ItemID.SpectreStaff, 1, 1);
                 break;
 
             case NPCID.DiabolistRed:
             case NPCID.DiabolistWhite:
                 foreach (var drop in drops)
-                    ModifyDropRate(drop, ItemID.InfernoFork, 1, 10);
+                    ModifyDropRate(drop, ItemID.InfernoFork, 1, 1);
                 break;
 
             case NPCID.SkeletonSniper:
                 foreach (var drop in drops)
-                    ModifyDropRate(drop, ItemID.SniperRifle, 1, 10);
+                    ModifyDropRate(drop, ItemID.SniperRifle, 1, 1);
+                npcLoot.Add(ItemDropRule.Common(ItemID.RifleScope, 1));
                 break;
 
             case NPCID.TacticalSkeleton:
                 foreach (var drop in drops)
-                    ModifyDropRate(drop, ItemID.TacticalShotgun, 1, 10);
-                npcLoot.Add(ItemDropRule.Common(ItemID.RifleScope, 6));
+                    ModifyDropRate(drop, ItemID.TacticalShotgun, 1, 1);
+                npcLoot.Add(ItemDropRule.Common(ItemID.RifleScope, 1));
                 break;
 
             case NPCID.SkeletonCommando:
                 foreach (var drop in drops)
-                    ModifyDropRate(drop, ItemID.RocketLauncher, 1, 10);
+                    ModifyDropRate(drop, ItemID.RocketLauncher, 1, 1);
                 break;
 
             case NPCID.RustyArmoredBonesAxe:
