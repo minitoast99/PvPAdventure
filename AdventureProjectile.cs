@@ -505,9 +505,9 @@ public class AdventureProjectile : GlobalProjectile
                 var cursorPosition = Main.MouseWorld;
                 var toCursor = cursorPosition - projectile.Center;
 
-                var baseSpeed = 30.0f;
-                var accelerationFactor = 2.5f;
-                var turnStrength = 0.01f;
+                var baseSpeed = 20.0f;
+                var accelerationFactor = 1.5f;
+                var turnStrength = 0.035f;
 
                 var direction = toCursor.SafeNormalize(Vector2.Zero);
                 var targetVelocity = direction * baseSpeed * accelerationFactor;
