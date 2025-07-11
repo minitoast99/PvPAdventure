@@ -494,26 +494,28 @@ public class AdventureProjectile : GlobalProjectile
                 return;
             }
 
-
             if (!projectile.TryGetOwner(out var owner))
                 return;
 
             if (owner.whoAmI != Main.myPlayer)
                 return;
 
-            var cursorPosition = Main.MouseWorld;
-            var toCursor = cursorPosition - projectile.Center;
+            if (owner.itemAnimation > 0 && owner.HeldItem.type == ItemID.FairyQueenMagicItem)
+            {
+                var cursorPosition = Main.MouseWorld;
+                var toCursor = cursorPosition - projectile.Center;
 
-            var baseSpeed = 20.0f;
-            var accelerationFactor = 1.5f;
-            var turnStrength = 0.05f;
+                var baseSpeed = 30.0f;
+                var accelerationFactor = 2.5f;
+                var turnStrength = 0.01f;
 
-            var direction = toCursor.SafeNormalize(Vector2.Zero);
-            var targetVelocity = direction * baseSpeed * accelerationFactor;
+                var direction = toCursor.SafeNormalize(Vector2.Zero);
+                var targetVelocity = direction * baseSpeed * accelerationFactor;
 
-            projectile.velocity = Vector2.Lerp(projectile.velocity, targetVelocity, turnStrength);
-            projectile.rotation = projectile.velocity.ToRotation() * MathHelper.PiOver2;
-            projectile.netUpdate = true;
+                projectile.velocity = Vector2.Lerp(projectile.velocity, targetVelocity, turnStrength);
+                projectile.rotation = projectile.velocity.ToRotation() * MathHelper.PiOver2;
+                projectile.netUpdate = true;
+            }
         }
     }
 }
