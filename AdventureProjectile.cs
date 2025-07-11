@@ -476,52 +476,44 @@ public class AdventureProjectile : GlobalProjectile
             }
         }
     }
-    public class NightglowMouseHoming : GlobalProjectile
+    public class AdventureNightglow : GlobalProjectile
     {
-        public override bool AppliesToEntity(Projectile projectile, bool lateInstantiation)
-        {
-            return projectile.type == ProjectileID.FairyQueenMagicItemShot;
-        }
+        public override bool AppliesToEntity(Projectile entity, bool lateInstantiation) =>
+            entity.type == ProjectileID.FairyQueenMagicItemShot;
 
-        // We Initialize timer in SetDefaults
-        public override void SetDefaults(Projectile projectile)
+        public override void SetDefaults(Projectile entity)
         {
-            if (projectile.type == ProjectileID.FairyQueenMagicItemShot)
-            {
-                projectile.localAI[0] = 0f; // Homing delay timer
-                projectile.netUpdate = true;
-            }
+            entity.localAI[0] = 0;
         }
 
         public override void AI(Projectile projectile)
         {
-            if (projectile.owner != Main.myPlayer) return;
-            Player player = Main.player[projectile.owner];
-            if (player.dead || !player.active) return;
-
-            // Increment homing delay timer
-            projectile.localAI[0]++;
-
-            // Only start homing after 60 frames
-            if (projectile.localAI[0] < 60f) return;
-
-            Vector2 cursorPosition = Main.MouseWorld;
-            Vector2 toCursor = cursorPosition - projectile.Center;
-            float distance = toCursor.Length();
-
-            // Only home when cursor is beyond minimum distance
+            if (projectile.localAI[0] <= 60)
+            {
+                projectile.localAI[0]++;
+                return;
+            }
 
 
-            float baseSpeed = 20f;
-            float accelerationFactor = 1.5f;
-            float turnStrength = 0.05f;
+            if (!projectile.TryGetOwner(out var owner))
+                return;
 
-            Vector2 direction = toCursor.SafeNormalize(Vector2.Zero);
-            Vector2 targetVelocity = direction * baseSpeed * accelerationFactor;
+            if (owner.whoAmI != Main.myPlayer)
+                return;
+
+            var cursorPosition = Main.MouseWorld;
+            var toCursor = cursorPosition - projectile.Center;
+
+            var baseSpeed = 20.0f;
+            var accelerationFactor = 1.5f;
+            var turnStrength = 0.05f;
+
+            var direction = toCursor.SafeNormalize(Vector2.Zero);
+            var targetVelocity = direction * baseSpeed * accelerationFactor;
 
             projectile.velocity = Vector2.Lerp(projectile.velocity, targetVelocity, turnStrength);
-            projectile.rotation = projectile.velocity.ToRotation() + MathHelper.PiOver2;
-
+            projectile.rotation = projectile.velocity.ToRotation() * MathHelper.PiOver2;
+            projectile.netUpdate = true;
         }
     }
 }
