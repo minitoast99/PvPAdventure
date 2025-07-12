@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using MonoMod.Cil;
 using PvPAdventure.System;
 using Terraria;
 using Terraria.DataStructures;
@@ -19,6 +20,8 @@ public class AdventureProjectile : GlobalProjectile
 
         // Adapt Spectre Hood set bonus "Ghost Heal" to be better suited for PvP.
         On_Projectile.ghostHeal += OnProjectileghostHeal;
+
+        IL_Projectile.Damage += EditProjectileDamage;
     }
 
     private static EntitySource_ItemUse GetItemUseSource(Projectile projectile, Projectile lastProjectile)
@@ -151,5 +154,24 @@ public class AdventureProjectile : GlobalProjectile
                 personalHeal
             );
         }
+    }
+
+    private void EditProjectileDamage(ILContext il)
+    {
+        var cursor = new ILCursor(il);
+
+        // First, match Projectile.playerImmune that is sometime followed by 40...
+        cursor.GotoNext(i => i.MatchLdfld<Projectile>("playerImmune") && i.Next.Next.MatchLdcI4(40));
+
+        cursor.Index += 2;
+        cursor.Remove()
+            .EmitLdarg0()
+            .EmitDelegate((Projectile self) =>
+            {
+                if (self.type == ProjectileID.PiercingStarlight)
+                    return 4;
+
+                return 40;
+            });
     }
 }
