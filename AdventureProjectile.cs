@@ -21,6 +21,7 @@ public class AdventureProjectile : GlobalProjectile
         // Adapt Spectre Hood set bonus "Ghost Heal" to be better suited for PvP.
         On_Projectile.ghostHeal += OnProjectileghostHeal;
 
+        // Make Starlight only give 4-iframes (Projectile.playerImmune).
         IL_Projectile.Damage += EditProjectileDamage;
     }
 
@@ -163,8 +164,11 @@ public class AdventureProjectile : GlobalProjectile
         // First, match Projectile.playerImmune that is sometime followed by 40...
         cursor.GotoNext(i => i.MatchLdfld<Projectile>("playerImmune") && i.Next.Next.MatchLdcI4(40));
 
+        // ...and go to the load of a value...
         cursor.Index += 2;
+        // ...to remove it...
         cursor.Remove()
+            // ...and prepare a delegate call.
             .EmitLdarg0()
             .EmitDelegate((Projectile self) =>
             {
