@@ -46,6 +46,9 @@ public static class AdventureDropDatabase
     {
         var drops = npcLoot.Get();
 
+        foreach (var drop in drops)
+            ModifyDropRate(drop, ItemID.Kraken, 1, 20);
+
         switch (npc.type)
         {
             case NPCID.BoneLee:
