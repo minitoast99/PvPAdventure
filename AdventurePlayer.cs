@@ -591,7 +591,92 @@ public class AdventurePlayer : ModPlayer
     }
 
     private bool hadShinyStoneLastFrame;
+    public class AncientChiselHotswap : ModPlayer
+    {
+        private bool hadAncientChiselLastFrame;
+        private int ancientChiselSlot = -1; // Track which slot had the Ancient Chisel
+        private int disabledSlot = -1; // Track which slot is currently disabled
 
+        public override void PostUpdateEquips()
+        {
+            // Check if Ancient Chisel is equipped and in which slot
+            int currentChiselSlot = GetAncientChiselSlot();
+            bool hasAncientChisel = currentChiselSlot != -1;
+
+            // Apply debuff when Ancient Chisel is removed (transition from equipped to not equipped)
+            if (hadAncientChiselLastFrame && !hasAncientChisel)
+            {
+                Player.AddBuff(ModContent.BuffType<AncientChiselHotswapBuff>(), 15 * 60 * 60); // 60 seconds
+                disabledSlot = ancientChiselSlot; // Remember which slot to disable
+            }
+
+            // Update tracking variables for next frame
+            if (hasAncientChisel)
+            {
+                ancientChiselSlot = currentChiselSlot;
+                hadAncientChiselLastFrame = true;
+            }
+            else
+            {
+                hadAncientChiselLastFrame = false;
+            }
+
+            // Handle disabled slot restrictions
+            if (Player.HasBuff(ModContent.BuffType<AncientChiselHotswapBuff>()) && disabledSlot != -1)
+            {
+                RestrictDisabledSlot(disabledSlot);
+            }
+            else if (!Player.HasBuff(ModContent.BuffType<AncientChiselHotswapBuff>()))
+            {
+                // Reset disabled slot when debuff expires
+                disabledSlot = -1;
+            }
+        }
+
+        private int GetAncientChiselSlot()
+        {
+            for (int i = 3; i < 10; i++) // Check all accessory slots
+            {
+                if (Player.armor[i].type == ItemID.AncientChisel &&
+                   (i < 7 || !Player.hideVisibleAccessory[i - 3]))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        private void RestrictDisabledSlot(int slotIndex)
+        {
+            if (slotIndex >= 3 && slotIndex < 10)
+            {
+                // Check if there's a non-Ancient Chisel item in the disabled slot
+                if (!Player.armor[slotIndex].IsAir && Player.armor[slotIndex].type != ItemID.AncientChisel)
+                {
+                    // Remove non-Ancient Chisel items from the disabled slot
+                    // and return them to the player's inventory
+                    Item removedItem = Player.armor[slotIndex].Clone();
+                    Player.armor[slotIndex] = new Item(); // Clear the slot
+
+                    // Try to add the item to the player's inventory
+                    Item leftoverItem = Player.GetItem(Player.whoAmI, removedItem, GetItemSettings.InventoryEntityToPlayerInventorySettings);
+
+                    // If inventory is full and there are leftovers, drop them on the ground
+                    if (!leftoverItem.IsAir)
+                    {
+                        Player.DropItem(Player.GetSource_Misc("SlotRestriction"), Player.position, ref leftoverItem);
+                    }
+                }
+            }
+        }
+
+        // Method to check if a slot is disabled (can be used by other systems)
+        public bool IsSlotDisabled(int slotIndex)
+        {
+            return Player.HasBuff(ModContent.BuffType<AncientChiselHotswapBuff>()) &&
+                   disabledSlot == slotIndex;
+        }
+    }
     public override void PostUpdateEquips()
     {
         // Check if Shiny Stone is equipped
@@ -1029,5 +1114,17 @@ public class ShinyStoneHotswap : ModBuff
         Main.debuff[Type] = true;
         Main.buffNoSave[Type] = true;
         Main.buffNoTimeDisplay[Type] = false; // Show timer
+    }
+}
+public class AncientChiselHotswapBuff : ModBuff
+{
+    public override string Texture => $"PvPAdventure/Assets/Buff/AncientChiselHotswapBuff";
+
+    public override void SetStaticDefaults()
+    {
+        Main.debuff[Type] = true;
+        Main.buffNoSave[Type] = true;
+        Main.buffNoTimeDisplay[Type] = false; // Show timer
+        Main.persistentBuff[Type] = true;
     }
 }

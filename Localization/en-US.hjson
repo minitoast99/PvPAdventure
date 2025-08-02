@@ -711,6 +711,11 @@ Mods: {
 				DisplayName: Shiny Stone Hotswap
 				Description: Shiny Stone is charging up!
 			}
+
+			AncientChiselHotswapBuff: {
+				DisplayName: THE CURSE OF THE ANCIENT CHISEL
+				Description: YOU CAN'T USE THAT heckin' ACCESSORY SLOT!
+			}
 		}
 	}
 }
