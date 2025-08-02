@@ -533,7 +533,7 @@ public class AdventureProjectile : GlobalProjectile
         {
             if (projectile.type == ProjectileID.MaceWhip)
             {
-                projectile.WhipSettings.RangeMultiplier = 1.58f; // this is like 20% range
+                projectile.WhipSettings.RangeMultiplier = 1.33f; // this is like 20% range
 
             }
         }
