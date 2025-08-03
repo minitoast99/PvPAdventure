@@ -559,5 +559,49 @@ public class AdventureProjectile : GlobalProjectile
                 return 40;
             });
     }
+    public class WhipBuffs : GlobalProjectile
+    {
+        public override void ModifyHitPlayer(Projectile projectile, Player target, ref Player.HurtModifiers modifiers)
+        {
+            if (projectile.type == ProjectileID.SwordWhip && target.hostile)
+            {
+                if (projectile.owner >= 0 && projectile.owner < Main.maxPlayers)
+                {
+                    Player attacker = Main.player[projectile.owner];
+                    if (attacker != null && attacker.active && attacker != target && attacker.hostile)
+                    {
+                        int buffDuration = 420;
+                        attacker.AddBuff(BuffID.SwordWhipPlayerBuff, buffDuration);
+                    }
+                }
+            }
+            if (projectile.type == ProjectileID.ThornWhip && target.hostile)
+            {
+                if (projectile.owner >= 0 && projectile.owner < Main.maxPlayers)
+                {
+                    Player attacker = Main.player[projectile.owner];
+
+                    if (attacker != null && attacker.active && attacker != target && attacker.hostile)
+                    {
+                        int buffDuration = 420;
+                        attacker.AddBuff(BuffID.ThornWhipPlayerBuff, buffDuration);
+                    }
+                }
+            }
+            if (projectile.type == ProjectileID.ScytheWhip && target.hostile)
+            {
+                if (projectile.owner >= 0 && projectile.owner < Main.maxPlayers)
+                {
+                    Player attacker = Main.player[projectile.owner];
+
+                    if (attacker != null && attacker.active && attacker != target && attacker.hostile)
+                    {
+                        int buffDuration = 420;
+                        attacker.AddBuff(BuffID.ScytheWhipPlayerBuff, buffDuration);
+                    }
+                }
+            }
+        }
+    }
 }
 
