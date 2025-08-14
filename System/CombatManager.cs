@@ -83,6 +83,8 @@ public class CombatManager : ModSystem
         IL_Player.OnHurt_Part2 += EditPlayerOnHurt_Part2;
         // Remove player immunity check, so it doesn't influence whether Paladin's Shield damage reduction occurs.
         IL_Player.TeammateHasPalidinShieldAndCanTakeDamage += EditPlayerTeammateHasPalidinShieldAndCanTakeDamage;
+        // Don't network player stealth.
+        IL_Player.OnHurt_Part1 += EditPlayerOnHurt_Part1;
     }
 
     public override bool HijackGetData(ref byte messageType, ref BinaryReader reader, int playerNumber)
@@ -240,5 +242,17 @@ public class CombatManager : ModSystem
         cursor.Index -= 3;
         // ...to remove some loads and branches (functionally removing immunity influence).
         cursor.RemoveRange(5);
+    }
+
+    private void EditPlayerOnHurt_Part1(ILContext il)
+    {
+        var cursor = new ILCursor(il);
+
+        // Find the first reference to NetMessage.SendData...
+        cursor.GotoNext(i => i.MatchCall<NetMessage>("SendData"));
+        // ...go back past it's invocation prologue and a conditional check...
+        cursor.Index -= 15;
+        // ...to remove it all.
+        cursor.RemoveRange(16);
     }
 }
