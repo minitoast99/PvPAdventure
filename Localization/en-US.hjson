@@ -716,12 +716,17 @@ Mods: {
 				DisplayName: THE CURSE OF THE ANCIENT CHISEL
 				Description: YOU CAN'T USE THAT heckin' ACCESSORY SLOT!
 			}
+
+			NewIchorPlayerDebuff: {
+				DisplayName: Ichor
+				Description: Defense reduced by one third
+			}
 		}
 	}
 }
 
 BuffDescription: {
-	BeetleMight1: Melee damage and speed increase by 15%
+	BeetleMight1: Melee damage and speed increase by 15% 
 	BeetleMight2: Melee damage and speed increase by 25%
 	BeetleMight3: Melee damage increase by 30% and melee speed increase by 45%
 }
