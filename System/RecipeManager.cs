@@ -85,11 +85,11 @@ public class RecipeManager : ModSystem
 
 
 
-
         int[] itemsToRemove = new int[]
     {
             ItemID.TrueNightsEdge,
-            ItemID.MoonlordArrow
+            ItemID.MoonlordArrow,
+            ItemID.ShroomiteBar
     };
 
         for (int i = 0; i < Main.recipe.Length; i++)
@@ -100,6 +100,14 @@ public class RecipeManager : ModSystem
                 recipe.DisableRecipe();
             }
         }
+
+        //shroomite bar crafting cost reduction
+
+        Recipe.Create(ItemID.ShroomiteBar)
+            .AddIngredient(ItemID.GlowingMushroom, 3)
+            .AddIngredient(ItemID.ChlorophyteBar, 1)
+            .AddTile(TileID.Autohammer)
+            .Register();
 
         //temp sudo terrablade
         Recipe.Create(ItemID.TrueNightsEdge)
