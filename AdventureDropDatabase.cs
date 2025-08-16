@@ -123,7 +123,7 @@ public static class AdventureDropDatabase
             case NPCID.HellArmoredBonesMace:
             case NPCID.HellArmoredBonesSword:
                 foreach (var drop in drops)
-                    ModifyDropRate(drop, ItemID.MaceWhip, 3, 400);
+                    ModifyDropRate(drop, ItemID.MaceWhip, 1, 10);
                 break;
 
             case NPCID.BlackRecluse:
@@ -154,7 +154,7 @@ public static class AdventureDropDatabase
 
             case NPCID.GiantCursedSkull:
                 foreach (var drop in drops)
-                    ModifyDropRate(drop, ItemID.ShadowJoustingLance, 1, 12);
+                    ModifyDropRate(drop, ItemID.ShadowJoustingLance, 1, 1);
                 break;
 
             case NPCID.Mothron:
