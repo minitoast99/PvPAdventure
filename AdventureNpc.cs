@@ -489,4 +489,17 @@ public class AdventureNpc : GlobalNPC
 
     public static bool IsPartOfTheDestroyer(short type) =>
         type is NPCID.TheDestroyer or NPCID.TheDestroyerBody or NPCID.TheDestroyerTail;
+
+    public class TavernkeepDespawn : GlobalNPC
+    {
+        public override void PostAI(NPC npc)
+        {
+            if (npc.type == NPCID.BartenderUnconscious)
+            {
+                npc.active = false;
+                npc.life = 0;
+
+            }
+        }
+    }
 }
