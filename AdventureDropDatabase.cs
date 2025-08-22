@@ -284,8 +284,24 @@ public static class AdventureDropDatabase
                         ItemID.SorcererEmblem,
                         ItemID.SummonerEmblem
                     ]));
+
                 break;
 
+            case NPCID.DukeFishron:
+
+                npcLoot.RemoveWhere(drop =>
+                    (drop is CommonDrop commonDrop && commonDrop.itemId == ItemID.FishronWings) ||
+                    drop is DropBasedOnExpertMode);
+
+                npcLoot.Add(new LeadingConditionRule(AdventureIsPreHardmode.The))
+                    .OnSuccess(ItemDropRule.OneFromOptions(1, [
+                        ItemID.TempestStaff,
+                        ItemID.RazorbladeTyphoon,
+                        ItemID.BubbleGun,
+                        ItemID.Tsunami,
+                        ItemID.Flairon
+                    ]));
+                break;
         }
     }
 

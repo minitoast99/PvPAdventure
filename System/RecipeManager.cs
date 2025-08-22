@@ -139,7 +139,6 @@ public class RecipeManager : ModSystem
             }
         }
     }
-
     public class AnyGolem1 : ModSystem
     {
         public static RecipeGroup AnyGolemPrimary;
@@ -289,6 +288,7 @@ public class RecipeManager : ModSystem
             ItemID.Flairon,
             ItemID.Tsunami,
             ItemID.TempestStaff,
+            ItemID.FishronWings,
         };
 
         public override void AddRecipeGroups()
