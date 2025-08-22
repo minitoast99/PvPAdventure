@@ -89,7 +89,10 @@ public class RecipeManager : ModSystem
     {
             ItemID.TrueNightsEdge,
             ItemID.MoonlordArrow,
-            ItemID.ShroomiteBar
+            ItemID.ShroomiteBar,
+            ItemID.WormFood,
+            ItemID.ChlorophyteBar,
+            ItemID.SpectreBar
     };
 
         for (int i = 0; i < Main.recipe.Length; i++)
@@ -107,6 +110,23 @@ public class RecipeManager : ModSystem
             .AddIngredient(ItemID.GlowingMushroom, 3)
             .AddIngredient(ItemID.ChlorophyteBar, 1)
             .AddTile(TileID.Autohammer)
+            .Register();
+
+        Recipe.Create(ItemID.WormFood)
+            .AddIngredient(ItemID.RottenChunk, 6)
+            .AddIngredient(ItemID.VilePowder, 10)
+            .AddTile(TileID.DemonAltar)
+            .Register();
+
+        Recipe.Create(ItemID.ChlorophyteBar)
+            .AddIngredient(ItemID.ChlorophyteOre, 4)
+            .AddTile(TileID.AdamantiteForge)
+            .Register();
+
+        Recipe.Create(ItemID.SpectreBar, 3)
+            .AddIngredient(ItemID.ChlorophyteBar, 3)
+            .AddIngredient(ItemID.Ectoplasm, 1)
+            .AddTile(TileID.AdamantiteForge)
             .Register();
 
         //temp sudo terrablade
