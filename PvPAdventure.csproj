@@ -5,6 +5,7 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Assets\NPC\Bound\BoundDemolitionist.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Discord" />
