@@ -723,6 +723,10 @@ public class AdventurePlayer : ModPlayer
             Player.noKnockback = true;
         }
 
+        if (Player.hasPaladinShield)
+        {
+            Player.buffImmune[BuffID.PaladinsShield] = true;
+        }
     }
 
     private bool IsShinyStoneEquipped()
@@ -1134,6 +1138,7 @@ public class NewIchorPlayer : ModPlayer
 
     public override void PostUpdateEquips()
     {
+
         if (hasDefenseReduction)
         {
             // Calculate 33% reduction (rounded down)
